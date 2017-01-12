@@ -51,8 +51,8 @@ class cat_clientes
         $i = 0;
         $sQuery = "";
         $oCliente = null;
-        if($oAD->Conecta()){
-            $sQuery = "exec [1G_TRIMEX].[dbo].buscarTodos;";
+        if($oAD->Conecta2()){
+            $sQuery = "exec [1G_TRIMEX].[dbo].buscarTodosClientes;";
             $rst = $oAD->ejecutaQuery($sQuery);
             $oAD->Desconecta();
         }
@@ -132,7 +132,6 @@ class cat_clientes
             $oAD->Desconecta();
         }
         return $nAfectados;
-
     }
 
 }

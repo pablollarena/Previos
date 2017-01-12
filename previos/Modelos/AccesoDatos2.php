@@ -1,31 +1,33 @@
-﻿<?php
+<?php
+
 /**
  * Created by PhpStorm.
- * User: Pablo
- * Date: 03/08/2016
- * Time: 01:57 PM
+ * User: PLLARENA
+ * Date: 09/01/2017
+ * Time: 13:25
  */
-class AccesoDatos
+class AccesoDatos2
 {
+
     private $oConexion=null;
     function Conecta(){
         $bRet=false;
         try{
-			$serverName = "SERVER-RECO\Trimex";
-			$conexion = array("Database"=>"1G_TRIMEX","UID"=>"sa", "PWD"=>"sa2530", "CharacterSet"=>"UTF-8");
+            $serverName = "SERVER-RECO\Trimex";
+            $conexion = array("Database"=>"Previos","UID"=>"sa", "PWD"=>"sa2530", "CharacterSet"=>"UTF-8");
             $this->oConexion=sqlsrv_connect($serverName, $conexion);
-            
+
         }catch(Exception $ex){
             throw $ex;
         }
         if( ($errors = sqlsrv_errors() ) != null) {
-			foreach( $errors as $error ) {
-				echo "message: ".$error[ 'message']."<br />";
-			}
-		}else{
-			$bRet=true;
-		}
-		return $bRet;
+            foreach( $errors as $error ) {
+                echo "message: ".$error[ 'message']."<br />";
+            }
+        }else{
+            $bRet=true;
+        }
+        return $bRet;
     }
 
     function Desconecta(){
