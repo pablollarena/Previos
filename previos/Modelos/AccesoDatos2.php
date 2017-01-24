@@ -6,11 +6,13 @@
  * Date: 09/01/2017
  * Time: 13:25
  */
+error_reporting(0);
 class AccesoDatos2
 {
 
     private $oConexion=null;
-    function Conecta(){
+    /* Este método no se utilizará debido a que la conexión queda configurada en los métodos de ejecutaQuery y ejecutaComando
+    /*function Conecta(){
         $bRet=false;
         try{
             $serverName = "SERVER-RECO\Trimex";
@@ -22,14 +24,14 @@ class AccesoDatos2
         }
         if( ($errors = sqlsrv_errors() ) != null) {
             foreach( $errors as $error ) {
-                echo "message: ".$error[ 'message']."<br />";
+
             }
         }else{
             $bRet=true;
         }
         return $bRet;
     }
-
+ */
     function Desconecta(){
         $bRet=true;
         if($this->oConexion !=null){
@@ -38,6 +40,9 @@ class AccesoDatos2
         return $bRet;
     }
     function ejecutaQuery($psQuery){
+        $serverName = "SERVER-RECO\Trimex";
+        $conexion = array("Database"=>"Previos","UID"=>"sa", "PWD"=>"sa2530", "CharacterSet"=>"UTF-8");
+        $conn = sqlsrv_connect($serverName, $conexion);
         $arrRS=null;
         $rst=null;
         $oLinea=null;
@@ -48,12 +53,13 @@ class AccesoDatos2
             throw new Exception("AccesoDatos->ejecutaQuery(): Falta indicar el query");
         }
         try{
-            $rst=$this->oConexion->sqlsrv_query($psQuery);
+            $rst=sqlsrv_query($conn,$psQuery);
         }catch(Exception $ex){
             throw $ex;
         }
+
         if($this->oConexion->error==""){
-            while($oLinea = $rst->fetch_object()){
+            while($oLinea = sqlsrv_fetch_object($rst)){
                 foreach($oLinea as $sValCol){
                     $arrRS[$i][$j]=$sValCol;
                     $j++;
@@ -61,7 +67,7 @@ class AccesoDatos2
                 $j=0;
                 $i++;
             }
-            $rst->close();
+            sqlsrv_close($conn);
         }
         else{
             throw new Exception($this->oConexion->error);

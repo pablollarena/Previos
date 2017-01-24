@@ -81,7 +81,6 @@ class cat_user
 
 
     function buscarCvePass () {
-
         $oAD2 = new AccesoDatos2();
         $sQuery = "";
         $rst = null;
@@ -90,11 +89,9 @@ class cat_user
         if($this->getUsr() == "" and $this->getPass() == ""){
             throw new Exception("cat_user->buscarCvePass: error datos incompletos");
         }else{
-            if ($oAD2->Conecta()){
-                $sQuery="exec [Previos].[dbo].[buscarCvePass] ".$this->getUsr().",".$this->getPass().";";
+                $sQuery="exec [Previos].[dbo].[buscarCvePass] '".$this->getUsr()."','".$this->getPass()."';";
                 $rst=$oAD2->ejecutaQuery($sQuery);
                 $oAD2->Desconecta();
-            }
             if ($rst){
                 $this->setGrp(new sis_grp());
                 $this->setIdUsr($rst[0][0]);

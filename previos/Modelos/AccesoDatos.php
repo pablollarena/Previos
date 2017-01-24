@@ -8,7 +8,7 @@
 class AccesoDatos
 {
     private $oConexion=null;
-    function Conecta(){
+    /*function Conecta(){
         $bRet=false;
         try{
 			$serverName = "SERVER-RECO\Trimex";
@@ -27,7 +27,7 @@ class AccesoDatos
 		}
 		return $bRet;
     }
-
+*/
     function Desconecta(){
         $bRet=true;
         if($this->oConexion !=null){
@@ -36,6 +36,9 @@ class AccesoDatos
         return $bRet;
     }
     function ejecutaQuery($psQuery){
+        $serverName = "SERVER-RECO\Trimex";
+        $conexion = array("Database"=>"1G_TRIMEX","UID"=>"sa", "PWD"=>"sa2530", "CharacterSet"=>"UTF-8");
+        $conn = sqlsrv_connect($serverName, $conexion);
         $arrRS=null;
         $rst=null;
         $oLinea=null;
@@ -46,12 +49,13 @@ class AccesoDatos
             throw new Exception("AccesoDatos->ejecutaQuery(): Falta indicar el query");
         }
         try{
-            $rst=$this->oConexion->sqlsrv_query($psQuery);
+            $rst=sqlsrv_query($conn,$psQuery);
         }catch(Exception $ex){
             throw $ex;
         }
+
         if($this->oConexion->error==""){
-            while($oLinea = $rst->fetch_object()){
+            while($oLinea = sqlsrv_fetch_object($rst)){
                 foreach($oLinea as $sValCol){
                     $arrRS[$i][$j]=$sValCol;
                     $j++;
@@ -59,7 +63,7 @@ class AccesoDatos
                 $j=0;
                 $i++;
             }
-            $rst->close();
+            sqlsrv_close($conn);
         }
         else{
             throw new Exception($this->oConexion->error);

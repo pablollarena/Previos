@@ -6,12 +6,75 @@
  * Date: 06/01/2017
  * Time: 11:11
  */
-include_once ("AccesoDatos.php");
+include_once ("AccesoDatos2.php");
 class cat_clientes
 {
-    private $oAD = null;
+    private $oAD2 = null;
     private $nIdCliente=0;
     private $sNom1 = "";
+    private $sClave = "";
+    private $sNom2="";
+    private $sDir = "";
+    private $sPass="";
+    private $nGrp = 0;
+
+
+    public function getGrp()
+    {
+        return $this->nGrp;
+    }
+
+    public function setGrp($nGrp)
+    {
+        $this->nGrp = $nGrp;
+    }
+
+    public function getClave()
+    {
+        return $this->sClave;
+    }
+
+
+    public function setClave($sClave)
+    {
+        $this->sClave = $sClave;
+    }
+
+
+    public function getNom2()
+    {
+        return $this->sNom2;
+    }
+
+
+    public function setNom2($sNom2)
+    {
+        $this->sNom2 = $sNom2;
+    }
+
+
+    public function getDir()
+    {
+        return $this->sDir;
+    }
+
+
+    public function setDir($sDir)
+    {
+        $this->sDir = $sDir;
+    }
+
+
+    public function getPass()
+    {
+        return $this->sPass;
+    }
+
+
+    public function setPass($sPass)
+    {
+        $this->sPass = $sPass;
+    }
 
 
     public function getAD()
@@ -52,7 +115,7 @@ class cat_clientes
         $sQuery = "";
         $oCliente = null;
         if($oAD->Conecta2()){
-            $sQuery = "exec [1G_TRIMEX].[dbo].buscarTodosClientes;";
+            $sQuery = "exec [Previos].[dbo].buscarTodosClientes;";
             $rst = $oAD->ejecutaQuery($sQuery);
             $oAD->Desconecta();
         }
@@ -71,18 +134,16 @@ class cat_clientes
     }
 
     function buscarClientePorClave(){
-        $oAD = new AccesoDatos();
+        $oAD2 = new AccesoDatos2();
         $rst = null;
         $sQuery = "";
         $bRet = false;
-        if($this->getIdCliente()){
+        if($this->getClave() == ''){
             throw new Exception("cat_cliente->buscarClientePorClave: error, falta indicar la clave del cliente");
         }else{
-            if($oAD->Conecta()){
-                $sQuery = "exec [Prueba].[dbo].buscarClientesPorClave ".$this->getIdCliente().";";
-                $rst = $oAD->ejecutaQuery($sQuery);
-                $oAD->Desconecta();
-            }
+                $sQuery = "exec [Previos].[dbo].buscarClientesClave '".$this->getClave()."', '".$this->getPass()."';";
+                $rst = $oAD2->ejecutaQuery($sQuery);
+                $oAD2->Desconecta();
             if($rst){
                 $this->setIdCliente($rst[0][0]);
                 $this->setNom1($rst[0][1]);
@@ -97,7 +158,7 @@ class cat_clientes
         $nAfectados = 0;
         $sQuery = "";
         if($oAD->Conecta()){
-            $sQuery = "exec [Prueba].[dbo].insertarCliente ".$this->getNom1().";";
+            $sQuery = "exec [Previos].[dbo].insertarCliente ".$this->getNom1().";";
             $nAfectados = $oAD->ejecutaComando($sQuery);
             $oAD->Desconecta();
         }
@@ -112,7 +173,7 @@ class cat_clientes
         if($this->getIdCliente() == 0){
             throw  new  Exception("cat_clientes->eliminar():elemento vacio");
         }else if($oAD->Conecta()){
-            $sQuery =" exec [Prueba].[dbo].eliminarCliente ".$this->getIdCliente().";";
+            $sQuery =" exec [Previos].[dbo].eliminarCliente ".$this->getIdCliente().";";
             $nAfectados = $oAD->ejecutaComando($sQuery);
             $oAD->Desconecta();
         }
@@ -127,7 +188,7 @@ class cat_clientes
         if ($this->getIdCliente() == 0 and $this->getNom1() == ""){
             throw  new  Exception("cat_clientes->update():elemento vacio");
         }else if($oAD ->Conecta()){
-            $sQuery = "exec [Prueba].[dbo].updateCliente ".$this->getIdCliente().", '".$this->getNom1()."'';";
+            $sQuery = "exec [Previos].[dbo].updateCliente ".$this->getIdCliente().", '".$this->getNom1()."'';";
             $nAfectados = $oAD->ejecutaComando($sQuery);
             $oAD->Desconecta();
         }
