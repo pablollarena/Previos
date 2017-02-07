@@ -77,9 +77,6 @@ $nick = "";
 
                 <!-- menu profile quick info -->
                 <div class="profile">
-                    <div class="profile_pic">
-                        <img src="images/img.jpg" alt="..." class="img-circle profile_img">
-                    </div>
                     <div class="profile_info">
                         <span>Bienvenido</span>
                         <h2><?php echo $sNom;?></h2>
@@ -87,7 +84,7 @@ $nick = "";
                 </div>
                 <!-- /menu profile quick info -->
 
-                <br />
+                <br /><br /><br /><br /><br />
 
                 <!-- sidebar menu -->
                 <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
@@ -96,7 +93,7 @@ $nick = "";
                         <ul class="nav side-menu">
                             <li><a><i class="fa fa-home"></i> Página Principal <span class="fa fa-chevron-down"></span></a>
                                 <ul class="nav child_menu">
-                                    <li><a href="index.html">Inicio</a></li>
+                                    <li><a href="menuPrincipal.php">Inicio</a></li>
                                 </ul>
                             </li>
                             </ul>
@@ -142,7 +139,7 @@ $nick = "";
                     <ul class="nav navbar-nav navbar-right">
                         <li class="">
                             <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                                <img src="images/img.jpg" alt=""><?php echo $nick;?>
+                                <?php echo $nick;?>
                                 <span class=" fa fa-angle-down"></span>
                             </a>
                             <ul class="dropdown-menu dropdown-usermenu pull-right">

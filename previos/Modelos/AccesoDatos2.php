@@ -75,19 +75,23 @@ class AccesoDatos2
         return $arrRS;
     }
     function ejecutaComando($psCommand){
+        $serverName = "SERVER-RECO\Trimex";
+        $conexion = array("Database"=>"Previos","UID"=>"sa", "PWD"=>"sa2530", "CharacterSet"=>"UTF-8");
+        $conn = sqlsrv_connect($serverName, $conexion);
         $nAfectados=-1;
         if($psCommand==""){
             throw new Exception("AccesoDatos->ejecutaComando: falta indicar el comando");
         }
-        if($this->oConexion==null){
-            throw new Exception("AccesoDatos->ejecutaComando: Falta conectar a la base de datos");
-        }
         try{
-            $this->oConexion->sqlsrv_query($psCommand);
-            $nAfectados=$this->oConexion->affected_rows;
+            if(sqlsrv_query($conn, $psCommand)){
+                $nAfectados = 1;
+            }else{
+                $nAfectados = 2;
+            }
         }catch(Exception $ex){
             throw $ex;
         }
+        sqlsrv_close($conn);
         return $nAfectados;
     }
 }

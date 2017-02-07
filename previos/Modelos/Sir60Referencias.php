@@ -158,7 +158,7 @@ class Sir60Referencias
                     $oSir60->setIdReferencia($vRow[0]);
                     $oSir60->getCatCli()->setNom1($vRow[1]);
                     $oSir60->getSir132()->setDescrip($vRow[2]);
-                    $oSir60->getSir675()->setSeleccion($vRow[3]);
+                    $oSir60->getSir675()->setSeleccion(date_format($vRow[3],"Y-m-d"));
                     $oSir60->getSir311()->setCiudad($vRow[4]);
                     $vObj[$i] = $oSir60;
                     $i = $i + 1;

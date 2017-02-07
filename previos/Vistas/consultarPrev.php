@@ -17,7 +17,9 @@ $sNom = "";
 $nGrp = 0;
 $arrMenu = null;
 $arrRef = null;
+
 $nick = "";
+$dFecha = Date('Y-m-d');
 if(isset($_SESSION['sUser']) && !empty($_SESSION['sUser'])){
     $oPers = $_SESSION['sUser'];
     $sNom = $oPers->getNomCompleto();
@@ -52,7 +54,7 @@ if($sErr != ""){
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>DataTables | Gentellela</title>
+    <title>PREVIOS - Consultar Previos Asignados</title>
 
     <!-- Bootstrap -->
     <link href="../../vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -86,9 +88,6 @@ if($sErr != ""){
 
                 <!-- menu profile quick info -->
                 <div class="profile">
-                    <div class="profile_pic">
-                        <img src="images/img.jpg" alt="..." class="img-circle profile_img">
-                    </div>
                     <div class="profile_info">
                         <span>Bienvenido</span>
                         <h2><?php echo $sNom;?></h2>
@@ -96,7 +95,7 @@ if($sErr != ""){
                 </div>
                 <!-- /menu profile quick info -->
 
-                <br />
+                <br /><br /><br /><br /><br />
 
                 <!-- sidebar menu -->
                 <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
@@ -105,7 +104,7 @@ if($sErr != ""){
                         <ul class="nav side-menu">
                             <li><a><i class="fa fa-home"></i> Página Principal <span class="fa fa-chevron-down"></span></a>
                                 <ul class="nav child_menu">
-                                    <li><a href="index.html">Inicio</a></li>
+                                    <li><a href="menuPrincipal.php">Inicio</a></li>
                                 </ul>
                             </li>
                         </ul>
@@ -149,7 +148,7 @@ if($sErr != ""){
                     <ul class="nav navbar-nav navbar-right">
                         <li class="">
                             <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                                <img src="images/img.jpg" alt=""><?php echo $nick;?>
+                                <?php echo $nick;?>
                                 <span class=" fa fa-angle-down"></span>
                             </a>
                             <ul class="dropdown-menu dropdown-usermenu pull-right">
@@ -173,46 +172,58 @@ if($sErr != ""){
                 <div class="row">
                     <div class="col-md-12 col-sm-12 col-xs-12">
 
-                    <div class="col-md-12 col-sm-12 col-xs-12">
-                        <div class="x_panel">
-                            <div class="x_title">
-                                <h2>Referencias Asignadas <small></small></h2>
-                                <div class="clearfix"></div>
-                            </div>
-                            <div class="x_content">
-                                <table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
-                                    <thead>
-                                    <tr>
-                                        <th>REFERENCIA</th>
-                                        <th>CLIENTE</th>
-                                        <th>DESCRIPCIÓN DEL PREVIO</th>
-                                        <th>CIUDAD</th>
-                                        <th>FECHA SELECCION</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <?php
+                    <form id="frmPrevios" action="infoReferencia.php" method="post">
+                        <input type="hidden" name="txtRef" />
+                        <input type="hidden" name="txtCliente" />
+                        <input type="hidden" name="txtFecha" />
+                        <input type="hidden" name="txtRecinto" />
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <div class="x_panel">
+                                <div class="x_title">
+                                    <h2>Referencias Asignadas <small></small></h2>
+                                    <div class="clearfix"></div>
+                                </div>
+                                <div class="x_content">
+                                    <table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
+                                        <thead>
+                                        <tr>
+                                            <th>ACCIÓN</th>
+                                            <th>REFERENCIA</th>
+                                            <th>CLIENTE</th>
+                                            <th>DESCRIPCIÓN DEL PREVIO</th>
+                                            <th>DESTINO</th>
+                                            <th>FECHA SELECCION</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <?php
                                         if($arrRef != null){
                                             foreach ($arrRef as $vRow){
                                                 ?>
                                                 <tr>
+                                                    <td><input type="submit" value="Ver Información" class="btn btn-primary"
+                                                               onclick="txtRef.value='<?php echo $vRow->getIdReferencia();?>';
+                                                                        txtCliente.value='<?php echo $vRow->getCatCli()->getNom1();?>';
+                                                                        txtFecha.value='<?php echo $vRow->getSir675()->getSeleccion();?>';
+                                                                        txtRecinto.value='<?php echo $vRow->getSir311()->getCiudad(); ?>';" /> </td>
                                                     <td><?php echo $vRow->getIdReferencia();?></td>
                                                     <td><?php  echo  $vRow->getCatCli()->getNom1();?></td>
                                                     <td><?php  echo $vRow->getSir132()->getDescrip(); ?></td>
                                                     <td><?php echo $vRow->getSir311()->getCiudad(); ?></td>
-                                                    <td></td>
+                                                    <td><?php echo $vRow->getSir675()->getSeleccion();?></td>
                                                 </tr>
-                                    <?php
+                                                <?php
                                             }
                                         }
-                                    ?>
+                                        ?>
 
-                                    </tbody>
-                                </table>
+                                        </tbody>
+                                    </table>
 
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </form>
                 </div>
             </div>
         </div>

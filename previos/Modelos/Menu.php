@@ -57,8 +57,8 @@ class Menu
                     'subcategoria' => array(
                         array(
                             'id' => 'consultar1',
-                            'titulo' => 'Consultar Previos Asignados',
-                            'enlace' => '../Vistas/consultarPrev.php'
+                            'titulo' => 'Consultar Previos',
+                            'enlace' => '../Vistas/glosaBuscaReferencia.php'
                         )
                     ),
                     'icon' => 'fa fa-camera'
