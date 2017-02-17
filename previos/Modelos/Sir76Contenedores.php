@@ -157,18 +157,15 @@ class Sir76Contenedores
         $this->nPeso = $nPeso;
     }
 
-
     public function getReferencia60()
     {
         return $this->oReferencia60;
     }
 
-
     public function setReferencia60($oReferencia60)
     {
         $this->oReferencia60 = $oReferencia60;
     }
-
 
     function  buscarContenedoresPorRef(){
         $oAD = new AccesoDatos();
@@ -182,77 +179,150 @@ class Sir76Contenedores
         if($this->getReferencia60()->getReferencia() == "" ){
             throw new Exception("Sir76Contenedores->buscarContenedoresPorRef(): faltan datos");
         }else{
-            $sQuery = "exec [1G_TRIMEX].[dbo].ConsultarContenedorPorRef '".$this->getReferencia60()->getReferencia()."'; ";
-            $rst = $oAD->ejecutaQuery($sQuery);
-            $oAD->Desconecta();
-           if($rst){
-               foreach ($rst as $vRow){
-                   $oSir76 = new Sir76Contenedores();
-                   $oSir76->setSir74(new Sir74ConocimientosMaritimos());
-                   $oSir76->setSir107(new Sir107ContenedorSello());
-                   $oSir76->setSir09(new Sir09TiposContenedor());
-                   $oSir76->setNumero( $vRow[0]);
-                   $oSir76->getSir74()->setNumeroBL($vRow[1]);
-                   $oSir76->setPeso($vRow[2]);
-                   $oSir76->getSir107()->setSellos($vRow[3]);
-                   $oSir76->getSir09()->setDimension($vRow[4]);
-                   $oSir76->getSir09()->setIniciales($vRow[5]);
-                   $oSir76->setConten($this->buscarInfoContenedor($vRow[0], $this->getReferencia60()->getReferencia()));
-                   $oSir76->setDaño($this->buscarDañosConten($this->getReferencia60()->getReferencia(),$vRow[0]));
-                   $oSir76->setMercancia($this->buscarMercanciaConten($vRow[0], $this->getReferencia60()->getReferencia()));
-                   $oSir76->setPrevio($this->buscarInfoPrevio($vRow[0], $this->getReferencia60()->getReferencia()));
-                   $vObj[$i] = $oSir76;
-                   $i=$i+1;
-               }
-           }else{
-               $vObj = false;
-           }
+                $sQuery = "exec [1G_TRIMEX].[dbo].ConsultarContenedorPorRef '".$this->getReferencia60()->getReferencia()."'; ";
+                $rst = $oAD->ejecutaQuery($sQuery);
+                $oAD->Desconecta();
+                if($rst){
+                    foreach ($rst as $vRow){
+                        $oSir76 = new Sir76Contenedores();
+                        $oSir76->setSir74(new Sir74ConocimientosMaritimos());
+                        $oSir76->setSir107(new Sir107ContenedorSello());
+                        $oSir76->setSir09(new Sir09TiposContenedor());
+                        $oSir76->setNumero( $vRow[0]);
+                        $oSir76->getSir74()->setNumeroBL($vRow[1]);
+                        $oSir76->setPeso($vRow[2]);
+                        $oSir76->getSir107()->setSellos($vRow[3]);
+                        $oSir76->getSir09()->setDimension($vRow[4]);
+                        $oSir76->getSir09()->setIniciales($vRow[5]);
+                        $vObj[$i] = $oSir76;
+                        $i=$i+1;
+                    }
+                }
         }
         return $vObj;
     }
 
+    function  buscarContenedoresPorRef2(){
+        $oAD = new AccesoDatos();
+        $sQuery = "";
+        $rst = null;
+        $vObj = null;
+        $oCont = null;
+        $oDan = null;
+        $i=0;
+        $oSir76 = null;
+        $nTipo = $this->buscarTipoCarga();
+        if($this->getReferencia60()->getReferencia() == "" ){
+            throw new Exception("Sir76Contenedores->buscarContenedoresPorRef(): faltan datos");
+        }else{
+            if($nTipo == 1){
+                $sQuery = "exec [1G_TRIMEX].[dbo].ConsultarContenedorPorRef '".$this->getReferencia60()->getReferencia()."'; ";
+                $rst = $oAD->ejecutaQuery($sQuery);
+                $oAD->Desconecta();
+                if($rst){
+                    foreach ($rst as $vRow){
+                        $oSir76 = new Sir76Contenedores();
+                        $oSir76->setSir74(new Sir74ConocimientosMaritimos());
+                        $oSir76->setSir107(new Sir107ContenedorSello());
+                        $oSir76->setSir09(new Sir09TiposContenedor());
+                        $oSir76->setNumero( $vRow[0]);
+                        $oSir76->getSir74()->setNumeroBL($vRow[1]);
+                        $oSir76->setPeso($vRow[2]);
+                        $oSir76->getSir107()->setSellos($vRow[3]);
+                        $oSir76->getSir09()->setDimension($vRow[4]);
+                        $oSir76->getSir09()->setIniciales($vRow[5]);
+                        $oSir76->setConten($this->buscarInfoContenedor($vRow[0], $this->getReferencia60()->getReferencia(), $nTipo));
+                        $oSir76->setDaño($this->buscarDañosConten($this->getReferencia60()->getReferencia(),$vRow[0]));
+                        $oSir76->setMercancia($this->buscarMercanciaConten($vRow[0], $this->getReferencia60()->getReferencia(), $nTipo));
+                        $oSir76->setPrevio($this->buscarInfoPrevio($vRow[0], $this->getReferencia60()->getReferencia(),  $nTipo));
+                        $vObj[$i] = $oSir76;
+                        $i=$i+1;
+                    }
+                }
+            }else if($nTipo == 2){
+                $oSir76 = new Sir76Contenedores();
+                $oSir76->setConten($this->buscarInfoContenedor(0, $this->getReferencia60()->getReferencia(), $nTipo));
+                $oSir76->setMercancia($this->buscarMercanciaConten(0, $this->getReferencia60()->getReferencia(), $nTipo));
+                $oSir76->setPrevio($this->buscarInfoPrevio(0, $this->getReferencia60()->getReferencia(),  $nTipo));
+                $vObj[$i] = $oSir76;
+            }
+        }
+        return $vObj;
+    }
 
-    function buscarInfoContenedor($nNumCon, $sNumRef){
+    function buscarInfoContenedor($nNumCon, $sNumRef, $nTipo){
         $oAD2 = new AccesoDatos2();
         $oContenedor = null;
         $rst = null;
         $sQuery = "";
-        if($nNumCon == ""){
+        if($sNumRef == ""){
             throw new Exception("Contenedor->buscarInfoContenedor(): error, faltan datos");
         }else{
-            $sQuery = "exec [Previos].[dbo].buscarInfoConten '".$nNumCon."','".$sNumRef."';";
-            $rst = $oAD2->ejecutaQuery($sQuery);
-            $oAD2->Desconecta();
-            if($rst){
-                $oContenedor = new Contenedor();
-                $oContenedor->setNumeroContenedor($rst[0][1]);
-                $oContenedor->setIMO($rst[0][1]);
-                $oContenedor->setTamaño($rst[0][2]);
-                $oContenedor->setPeso($rst[0][3]);
-                $oContenedor->setTipo($rst [0][4]);
-                $oContenedor->setSelloOrigen($rst [0][5]);
-                $oContenedor->setSelloColocado($rst [0][6]);
-                $oContenedor->setPesoCarga($rst [0][7]);
-                $oContenedor->setCantidadBultos($rst [0][8]);
-                $oContenedor->setBultosDañados($rst[0][9]);
-                $oContenedor->setCantBultDañados($rst[0][10]);
-                $oContenedor->setPalletsMadera($rst [0][11]);
-                $oContenedor->setSacos($rst [0][12]);
-                $oContenedor->setHuacalesMadera($rst [0][13]);
-                $oContenedor->setPalletsPlastico($rst [0][14]);
-                $oContenedor->setSuperBolsas($rst [0][15]);
-                $oContenedor->setCajasMadera($rst[0][16]);
-                $oContenedor->setCartonada($rst [0][17]);
-                $oContenedor->setBidones($rst [0][18]);
-                $oContenedor->setRacksMetalicos($rst [0][19]);
-                $oContenedor->setCuñetes($rst [0][20]);
-                $oContenedor->setCont1000L($rst [0][21]);
-                $oContenedor->setGranel($rst [0][22]);
-                $oContenedor->setOtros($rst [0][23]);
-                $oContenedor->setAveriasOrigen($rst [0][24]);
-                $oContenedor->setAveriasRecinto($rst [0][25]);
-                $oContenedor->setFumigado($rst [0][26]);
-                //var_dump($oContenedor);
+            if($nTipo == 1){
+                $sQuery = "exec [Previos].[dbo].buscarInfoConten '".$nNumCon."','".$sNumRef."';";
+                $rst = $oAD2->ejecutaQuery($sQuery);
+                $oAD2->Desconecta();
+                if($rst){
+                    $oContenedor = new Contenedor();
+                    $oContenedor->setNumeroContenedor($rst[0][1]);
+                    $oContenedor->setIMO($rst[0][1]);
+                    $oContenedor->setTamaño($rst[0][2]);
+                    $oContenedor->setPeso($rst[0][3]);
+                    $oContenedor->setTipo($rst [0][4]);
+                    $oContenedor->setSelloOrigen($rst [0][5]);
+                    $oContenedor->setSelloColocado($rst [0][6]);
+                    $oContenedor->setPesoCarga($rst [0][7]);
+                    $oContenedor->setCantidadBultos($rst [0][8]);
+                    $oContenedor->setBultosDañados($rst[0][9]);
+                    $oContenedor->setCantBultDañados($rst[0][10]);
+                    $oContenedor->setPalletsMadera($rst [0][11]);
+                    $oContenedor->setSacos($rst [0][12]);
+                    $oContenedor->setHuacalesMadera($rst [0][13]);
+                    $oContenedor->setPalletsPlastico($rst [0][14]);
+                    $oContenedor->setSuperBolsas($rst [0][15]);
+                    $oContenedor->setCajasMadera($rst[0][16]);
+                    $oContenedor->setCartonada($rst [0][17]);
+                    $oContenedor->setBidones($rst [0][18]);
+                    $oContenedor->setRacksMetalicos($rst [0][19]);
+                    $oContenedor->setCuñetes($rst [0][20]);
+                    $oContenedor->setCont1000L($rst [0][21]);
+                    $oContenedor->setGranel($rst [0][22]);
+                    $oContenedor->setOtros($rst [0][23]);
+                    $oContenedor->setAveriasOrigen($rst [0][24]);
+                    $oContenedor->setAveriasRecinto($rst [0][25]);
+                    $oContenedor->setFumigado($rst [0][26]);
+                }
+            }else if($nTipo == 2){
+                $sQuery = "exec [Previos].[dbo].consultarCargaSuelta '".$sNumRef."';";
+                $rst = $oAD2->ejecutaQuery($sQuery);
+                $oAD2->Desconecta();
+                if($rst){
+                    $oContenedor = new Contenedor();
+                    $oContenedor->setSelloOrigen($rst [0][0]);
+                    $oContenedor->setSelloColocado($rst [0][1]);
+                    $oContenedor->setPeso($rst[0][2]);
+                    $oContenedor->setBL($rst [0][3]);
+                    $oContenedor->setIMO($rst[0][4]);
+                    $oContenedor->setCantidadBultos($rst [0][5]);
+                    $oContenedor->setBultosDañados($rst[0][6]);
+                    $oContenedor->setCantBultDañados($rst[0][7]);
+                    $oContenedor->setPalletsMadera($rst [0][8]);
+                    $oContenedor->setPalletsPlastico($rst [0][9]);
+                    $oContenedor->setCartonada($rst [0][10]);
+                    $oContenedor->setCuñetes($rst [0][11]);
+                    $oContenedor->setSacos($rst [0][12]);
+                    $oContenedor->setSuperBolsas($rst [0][13]);
+                    $oContenedor->setBidones($rst [0][14]);
+                    $oContenedor->setCont1000L($rst [0][15]);
+                    $oContenedor->setHuacalesMadera($rst [0][16]);
+                    $oContenedor->setCajasMadera($rst[0][17]);
+                    $oContenedor->setRacksMetalicos($rst [0][18]);
+                    $oContenedor->setGranel($rst [0][19]);
+                    $oContenedor->setOtros($rst [0][20]);
+                    $oContenedor->setAveriasOrigen($rst [0][21]);
+                    $oContenedor->setAveriasRecinto($rst [0][22]);
+                    $oContenedor->setFumigado($rst [0][23]);
+                }
             }
         }
         return $oContenedor;
@@ -263,7 +333,7 @@ class Sir76Contenedores
         $sQuery = "";
         $rst = null;
         $oDaños = null;
-        if($nContenedor == "" and $Referencia60 == "" ){
+        if($Referencia60 == "" ){
             throw new Exception("Danios->buscarDañosConten: error, faltan datos");
         }else{
             $sQuery = "exec [Previos].[dbo].buscarDañosConten '".$Referencia60."','".$nContenedor."';";
@@ -290,52 +360,81 @@ class Sir76Contenedores
         return $oDaños;
     }
 
-    function buscarMercanciaConten($nContenedor,$Referencia60){
+    function buscarMercanciaConten($nContenedor,$Referencia60, $nTipo){
         $oAD2 = new AccesoDatos2();
         $sQuery = "";
         $rst = null;
         $oMer = null;
-        if($nContenedor == "" or $Referencia60 == ""){
+        if($Referencia60 == ""){
             throw new Exception("Sir76Contenedores->buscarMercanciaConten(): error, faltan datos");
         }else{
-            $sQuery = "exec [Previos].[dbo].buscarMercanciaPorReferencia '".$Referencia60."','".$nContenedor."';";
-            $rst = $oAD2->ejecutaQuery($sQuery);
-            $oAD2->Desconecta();
-            if($rst){
-                $oMer = new Mercancia();
-                $oMer->setNumeroContenedor($rst[0][0]);
-                $oMer->setReferencia($rst[0][1]);
-                $oMer->setConformeFactura($rst[0][2]);
-                $oMer->setFaltante($rst[0][3]);
-                $oMer->setSobrante($rst[0][4]);
-                $oMer->setCantidad($rst[0][5]);
-                //var_dump($oMer);
+            if($nTipo == 1){
+                $sQuery = "exec [Previos].[dbo].buscarMercanciaPorReferencia '".$Referencia60."','".$nContenedor."';";
+                $rst = $oAD2->ejecutaQuery($sQuery);
+                $oAD2->Desconecta();
+                if($rst){
+                    $oMer = new Mercancia();
+                    $oMer->setNumeroContenedor($rst[0][0]);
+                    $oMer->setReferencia($rst[0][1]);
+                    $oMer->setConformeFactura($rst[0][2]);
+                    $oMer->setFaltante($rst[0][3]);
+                    $oMer->setSobrante($rst[0][4]);
+                    $oMer->setCantidad($rst[0][5]);
+                }
+            }else if($nTipo == 2){
+                $sQuery = "exec [Previos].[dbo].consultarMercanciaCS '".$Referencia60."';";
+                $rst = $oAD2->ejecutaQuery($sQuery);
+                $oAD2->Desconecta();
+                if($rst){
+                    $oMer = new Mercancia();
+                    $oMer->setReferencia($rst[0][0]);
+                    $oMer->setConformeFactura($rst[0][1]);
+                    $oMer->setFaltante($rst[0][2]);
+                    $oMer->setSobrante($rst[0][3]);
+                    $oMer->setCantidad($rst[0][4]);
+                }
             }
+
         }
         return $oMer;
     }
 
-    function buscarInfoPrevio($nContenedor,$Referencia60){
+    function buscarInfoPrevio($nContenedor,$Referencia60, $nTipo){
         $oAD2 = new AccesoDatos2();
         $sQuery = "";
         $rst =  null;
         $oPrevio = null;
-        if($nContenedor == "" or $Referencia60 == ""){
+        if($Referencia60 == ""){
             throw new Exception("Sir76Contenedores->buscarInfoPrevio(): error, faltan datos");
         }else{
-            $sQuery = "exec [Previos].[dbo].buscarPrevioPorReferencia '".$Referencia60."','".$nContenedor."';";
-            $rst = $oAD2->ejecutaQuery($sQuery);
-            $oAD2->Desconecta();
-            if($rst){
-                $oPrevio = new Previo();
-                $oPrevio->setNumeroContenedor($rst[0][0]);
-                $oPrevio->setReferencia($rst[0][1]);
-                $oPrevio->setDesYCon($rst[0][2]);
-                $oPrevio->setOcular($rst[0][3]);
-                $oPrevio->setEtiquetado($rst[0][4]);
-                $oPrevio->setSeparacion($rst[0][5]);
-                $oPrevio->setRevConAutoridad($rst[0][6]);
+            if($nTipo == 1){
+                $sQuery = "exec [Previos].[dbo].buscarPrevioPorReferencia '".$Referencia60."','".$nContenedor."';";
+                $rst = $oAD2->ejecutaQuery($sQuery);
+                $oAD2->Desconecta();
+                if($rst){
+                    $oPrevio = new Previo();
+                    $oPrevio->setNumeroContenedor($rst[0][0]);
+                    $oPrevio->setReferencia($rst[0][1]);
+                    $oPrevio->setDesYCon($rst[0][2]);
+                    $oPrevio->setOcular($rst[0][3]);
+                    $oPrevio->setEtiquetado($rst[0][4]);
+                    $oPrevio->setSeparacion($rst[0][5]);
+                    $oPrevio->setRevConAutoridad($rst[0][6]);
+                }
+            }else if($nTipo == 2){
+                $sQuery = "exec [Previos].[dbo].consultarPrevioCS '".$Referencia60."';";
+                $rst = $oAD2->ejecutaQuery($sQuery);
+                $oAD2->Desconecta();
+                if($rst){
+                    $oPrevio = new Previo();
+                    $oPrevio->setOcular($rst[0][0]);
+                    $oPrevio->setEtiquetado($rst[0][1]);
+                    $oPrevio->setSeparacion($rst[0][2]);
+                    $oPrevio->setRevConAutoridad($rst[0][3]);
+                    $oPrevio->setObsClasificador($rst[0][4]);
+                }
             }
+
         }
         return $oPrevio;
     }
@@ -398,9 +497,7 @@ class Sir76Contenedores
              ".$this->getPrevio()->getEtiquetado().",
              ".$this->getPrevio()->getSeparacion().",
              ".$this->getPrevio()->getRevConAutoridad().",'Sin Observaciones';";
-            //var_dump($sQuery);
             $nAfec = $oAD2->ejecutaComando($sQuery);
-            //var_dump($nAfec);
             $oAD2->Desconecta();
         }else if ($sOpe == 'CargaSuelta'){
             $sQuery = "exec [Previos].[dbo].insertarDatosCarga '".$this->getConten()->getNumeroContenedor()."',
@@ -462,6 +559,21 @@ class Sir76Contenedores
         return $nAfec;
     }
 
-
-
+    function  buscarTipoCarga (){
+        $oAD2 = new AccesoDatos2();
+        $sQuery = "";
+        $rst = null;
+        $TipoCarga = 0;
+        if($this->getReferencia60()->getReferencia() == ""){
+            throw new Exception("Sir76Contenedores->buscarTipoCarga(): error, faltan datos");
+        }else{
+            $sQuery = "Exec [Previos].[dbo].TipoOperacion '".$this->getReferencia60()->getReferencia()."';";
+            $rst  = $oAD2->ejecutaQuery($sQuery);
+            $oAD2->Desconecta();
+            if($rst){
+                $TipoCarga = $rst[0][0];
+            }
+        }
+        return $TipoCarga;
+    }
 }

@@ -446,6 +446,7 @@ class Contenedor
                 $oContenedor->setAveriasOrigen($rst [0][24]);
                 $oContenedor->setAveriasRecinto($rst [0][25]);
                 $oContenedor->setFumigado($rst [0][26]);
+
             }
         }
         return $oContenedor;

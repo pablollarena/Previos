@@ -81,23 +81,7 @@ if($sErr != ""){
     <link href="../../build/css/custom.min.css" rel="stylesheet">
 
 
-    <script>
-        $(function(){
-            $("#btnCarga").click(function () {
-                var url = "../Controladores/controlPrevios.php";
-                $.ajax({
-                    type: "POST",
-                    url : url,
-                    data : $("#cargaSuelta").serialize(),
-                    success: function(data)
-                    {
-                        $("#respuesta").html(data);
-                    }
-                });
-                return false;
-            });
-        });
-    </script>
+
     <!-- PNotify -->
     <link href="../../vendors/pnotify/dist/pnotify.css" rel="stylesheet">
     <link href="../../vendors/pnotify/dist/pnotify.buttons.css" rel="stylesheet">
@@ -210,43 +194,50 @@ if($sErr != ""){
                             <h2></h2>
                             <div class="clearfix"></div>
                         </div>
-                        <div class="row">
-                            <div class="x_content">
-                                <div class="" role="tabpanel" data-example-id="togglable-tabs">
-                                    <div class="form-group">
-                                        <label class="control-label col-md-1 col-sm-1 col-xs-1" for="txtNombre">Cliente</span>
-                                        </label>
-                                        <div class="col-md-5 col-sm-6 col-xs-12">
-                                            <input type="text" id="txtNombre" name="txtNombre" required="required" class="form-control col-md-7 col-xs-12"
-                                                   value="<?php echo $sCliente; ?>" disabled>
+                        <form id="frmDatos" action="../Vistas/consultarItems.php" method="post">
+                            <input type="hidden" value="<?php echo $sRef;?>" name="txtValRef">
+                            <div class="row">
+                                <div class="x_content">
+                                    <div class="" role="tabpanel" data-example-id="togglable-tabs">
+                                        <div class="form-group">
+                                            <label class="control-label col-md-1 col-sm-1 col-xs-1" for="txtNombre">Cliente</span>
+                                            </label>
+                                            <div class="col-md-5 col-sm-6 col-xs-12">
+                                                <input type="text" id="txtNombre" name="txtNombre" required="required" class="form-control col-md-7 col-xs-12"
+                                                       value="<?php echo $sCliente; ?>" disabled>
+                                            </div>
+                                            <label class="control-label col-md-1 col-sm-1 col-xs-3" for="txtNombre">Fecha</span>
+                                            </label>
+                                            <div class="col-md-2 col-sm-6 col-xs-12">
+                                                <input type="text" id="txtNombre" name="txtNombre" required="required" class="form-control col-md-7 col-xs-12"
+                                                       value="<?php echo $dFecha; ?>" disabled>
+                                            </div>
                                         </div>
-                                        <label class="control-label col-md-1 col-sm-1 col-xs-3" for="txtNombre">Fecha</span>
-                                        </label>
-                                        <div class="col-md-2 col-sm-6 col-xs-12">
-                                            <input type="text" id="txtNombre" name="txtNombre" required="required" class="form-control col-md-7 col-xs-12"
-                                                   value="<?php echo $dFecha; ?>" disabled>
+                                        <br/><br/><br/>
+                                        <div class="form-group">
+                                            <label class="control-label col-md-1 col-sm-1 col-xs-1" for="txtNombre">Referencia</span>
+                                            </label>
+                                            <div class="col-md-2 col-sm-6 col-xs-12">
+                                                <input type="text" id="txtNombre" name="txtNombre" required="required" class="form-control col-md-7 col-xs-12"
+                                                       value="<?php echo $sRef;?>" disabled>
+                                            </div>
+                                            <label class="control-label col-md-1 col-sm-1 col-xs-3" for="txtNombre">Recinto</span>
+                                            </label>
+                                            <div class="col-md-5 col-sm-6 col-xs-12">
+                                                <input type="text" id="txtNombre" name="txtNombre" required="required" class="form-control col-md-7 col-xs-12"
+                                                       value="<?php echo $sRecinto;?>" disabled>
+                                            </div>
+                                            <div class="col-md-2 col-sm-6 col-xs-12">
+                                                <input type="submit" id="txtNombre" name="txtNombre" class="btn btn-success btn-lg"
+                                                       value="Ver Items">
+                                            </div>
                                         </div>
 
                                     </div>
-                                    <br/><br/><br/>
-                                    <div class="form-group">
-                                        <label class="control-label col-md-1 col-sm-1 col-xs-1" for="txtNombre">Referencia</span>
-                                        </label>
-                                        <div class="col-md-2 col-sm-6 col-xs-12">
-                                            <input type="text" id="txtNombre" name="txtNombre" required="required" class="form-control col-md-7 col-xs-12"
-                                                   value="<?php echo $sRef;?>" disabled>
-                                        </div>
-                                        <label class="control-label col-md-1 col-sm-1 col-xs-3" for="txtNombre">Recinto</span>
-                                        </label>
-                                        <div class="col-md-5 col-sm-6 col-xs-12">
-                                            <input type="text" id="txtNombre" name="txtNombre" required="required" class="form-control col-md-7 col-xs-12"
-                                                   value="<?php echo $sRecinto;?>" disabled>
-                                        </div>
-                                    </div>
+
                                 </div>
-
                             </div>
-                        </div>
+                        </form>
 
                     </div>
                 </div>
@@ -263,7 +254,6 @@ if($sErr != ""){
                                         if($arrConte != null){
                                             foreach ($arrConte as $vRow){
                                                 ?>
-
                                                     <div class="x_content">
                                                         <form name="frmContent<?php echo $nCon;?>" id="frmContent<?php echo $nCon;?>">
                                                             <input type="hidden" name="txtRef" value="<?php echo $sRef;?>"/>
@@ -291,7 +281,7 @@ if($sErr != ""){
                                                                             </div>
                                                                             <label class="control-label col-md-1 col-sm-4 col-xs-12">IMO</label>
                                                                             <div class="col-md-3 col-sm-9 col-xs-12">
-                                                                                <select class="form-control" name="imo">
+                                                                                <select class="form-control required" name="imo">
                                                                                     <option value="">Seleccione</option>
                                                                                     <option value="1">SI</option>
                                                                                     <option value="0">NO</option>
@@ -494,18 +484,18 @@ if($sErr != ""){
                                                                                 </td>
                                                                                 <td colspan="3" rowspan="1">
                                                                                     <div class="form-group">
-                                                                                        <label class="control-label col-md-2 col-sm-3 col-xs-12">Bultos Dañados</label>
-                                                                                        <div class="col-md-4 col-sm-6 col-xs-12">
-                                                                                            <p>
-                                                                                                SI:
-                                                                                                <input type="radio" class="flat" name="bDañados" id="bDañados" value="1" checked="" required /> NO:
-                                                                                                <input type="radio" class="flat" name="bDañados" id="bDañados" value="0" />
-                                                                                            </p>
+                                                                                        <label class="control-label col-md-2 col-sm-4 col-xs-12">Bultos dañados</label>
+                                                                                        <div class="col-md-4 col-sm-9 col-xs-12">
+                                                                                            <select class="form-control" name="bDañados" id="bDañados<?php echo $nCon;?>">
+                                                                                                <option value="">Seleccione</option>
+                                                                                                <option value="1">SI</option>
+                                                                                                <option value="0">NO</option>
+                                                                                            </select>
                                                                                         </div>
                                                                                         <label class="control-label col-md-2 col-sm-3 col-xs-12" for="txtCantiDañados">Cantidad</span>
                                                                                         </label>
                                                                                         <div class="col-md-4 col-sm-6 col-xs-12">
-                                                                                            <input type="text" id="txtCantiDañados" name="txtCantiDañados" required="required" class="form-control col-md-7 col-xs-12"
+                                                                                            <input type="text" id="txtCantiDañados<?php echo $nCon;?>" name="txtCantiDañados" required="required" class="form-control col-md-7 col-xs-12"
                                                                                             >
                                                                                         </div>
                                                                                     </div>
@@ -668,7 +658,7 @@ if($sErr != ""){
                                                                                     <div class="form-group">
                                                                                         <label class="control-label col-md-4 col-sm-4 col-xs-12">Mercancía</label>
                                                                                         <div class="col-md-7 col-sm-9 col-xs-12">
-                                                                                            <select class="form-control" name="mercancia" id="mercancia">
+                                                                                            <select class="form-control" name="mercancia" id="mercancia<?php echo $nCon;?>">
                                                                                                 <option value="1">Conforme a Factura</option>
                                                                                                 <option value="2">Faltante</option>
                                                                                                 <option value="3">Sobrante</option>
@@ -680,7 +670,7 @@ if($sErr != ""){
                                                                                         <label class="control-label col-md-4 col-sm-2 col-xs-3" for="txtCanMer1">Cantidad</span>
                                                                                         </label>
                                                                                         <div class="col-md-7 col-sm-6 col-xs-12">
-                                                                                            <input type="text" id="txtCanMer1" name="txtCanMer1"  required="required" class="form-control col-md-7 col-xs-12" />
+                                                                                            <input type="text" id="txtCanMer1<?php echo $nCon;?>" name="txtCanMer1<?php echo $nCon;?>"  required="required" class="form-control col-md-7 col-xs-12" />
                                                                                         </div>
                                                                                     </div>
                                                                                 </td>
@@ -743,6 +733,62 @@ if($sErr != ""){
                                                                                 });
                                                                             });
                                                                         </script>
+                                                                        <!-- Validación de formularios -->
+                                                                        <script type="text/javascript" src="http://code.jquery.com/jquery-1.8.3.js"></script>
+
+                                                                        <script type="text/javascript">
+                                                                               function validarFormulario(){
+                                                                                   JQuery.validator.messages.required = 'Campo requerido';
+                                                                                   $("#btn_enviar<?php echo $nCon;?>").click(function(){
+                                                                                        var valida = $("#frmContent<?php echo $nCon;?>").valid();
+                                                                                       if(valida){
+                                                                                           alert('El formulario es correcto');
+                                                                                       }
+                                                                                   });
+                                                                               }
+                                                                        </script>
+                                                                        <!-- Validación de formularios -->
+                                                                        <!-- Validar select's seleccionados -->
+                                                                        <script>
+                                                                            $(document).ready(function () {
+                                                                                $("#txtCanMer1<?php echo $nCon;?>").attr({
+                                                                                    disabled : true
+                                                                                });
+                                                                                $("#mercancia<?php echo $nCon;?>").change(function () {
+                                                                                    if($("#mercancia<?php echo $nCon;?>").val() == '2' || $("#mercancia<?php echo $nCon;?>").val() == '3'){
+                                                                                        $("#txtCanMer1<?php echo $nCon;?>").attr({
+                                                                                            disabled : false
+                                                                                        });
+                                                                                    }else if($("#mercancia<?php echo $nCon;?>").val() == '1'){
+                                                                                        $("#txtCanMer1<?php echo $nCon;?>").attr({
+                                                                                            disabled : true
+                                                                                        });
+                                                                                    }
+                                                                                });
+                                                                            })
+                                                                        </script>
+                                                                        <!-- Validar select's de mercancia seleccionados -->
+                                                                        <!-- Validar select's de bultos dañados seleccionados -->
+                                                                        <script>
+                                                                            $(document).ready(function () {
+                                                                                $("#txtCantiDañados<?php echo $nCon;?>").attr({
+                                                                                    disabled : true
+                                                                                });
+                                                                                $("#bDañados<?php echo $nCon;?>").change(function () {
+                                                                                    if($("#bDañados<?php echo $nCon;?>").val() == '1'){
+                                                                                        $("#txtCantiDañados<?php echo $nCon;?>").attr({
+                                                                                            disabled : false
+                                                                                        });
+                                                                                    }else if($("#bDañados<?php echo $nCon;?>").val() == '0'){
+                                                                                        $("#txtCantiDañados<?php echo $nCon;?>").attr({
+                                                                                            disabled : true
+                                                                                        });
+                                                                                    }
+                                                                                });
+                                                                            })
+                                                                        </script>
+                                                                        <!-- Validar radios seleccionados -->
+
                                                                         <div align="center">
                                                                             <input type="button" value="Guardar" class="btn btn-round btn-primary" id="btn_enviar<?php echo $nCon;?>" />
                                                                         </div>
@@ -862,52 +908,12 @@ if($sErr != ""){
                                                                     <div class="col-md-2 col-sm-9 col-xs-12">
                                                                         <div class="checkbox">
                                                                             <label>
-                                                                                <input type="checkbox" class="flat" name="bultosPresen[]" id="bultosPresen1" value="1"> Pallets de Madera
+                                                                                <input type="checkbox" class="flat" name="bultosPresen[]" id="bultosPresen1" value="PalletsMadera"> Pallets de Madera
                                                                             </label>
                                                                         </div>
                                                                         <div class="checkbox">
                                                                             <label>
-                                                                                <input type="checkbox" class="flat" name="bultosPresen[]" id="bultosPresen2" value="1"> Pallets de Plástico
-                                                                            </label>
-                                                                        </div>
-
-
-                                                                    </div>
-                                                                    <div class="col-md-2 col-sm-9 col-xs-12">
-                                                                        <div class="checkbox">
-                                                                            <label>
-                                                                                <input type="checkbox" class="flat" name="bultosPresen[]" id="bultosPresen2" value="1"> Cartonada
-                                                                            </label>
-                                                                        </div>
-                                                                        <div class="checkbox">
-                                                                            <label>
-                                                                                <input type="checkbox" class="flat" name="bultosPresen[]" id="bultosPresen3" value="1"> Cuñetes
-                                                                            </label>
-                                                                        </div>
-
-                                                                    </div>
-                                                                    <div class="col-md-2 col-sm-9 col-xs-12">
-                                                                        <div class="checkbox">
-                                                                            <label>
-                                                                                <input type="checkbox" class="flat" name="bultosPresen[]" id="bultosPresen4" value="1"> Sacos
-                                                                            </label>
-                                                                        </div>
-                                                                        <div class="checkbox">
-                                                                            <label>
-                                                                                <input type="checkbox" class="flat" name="bultosPresen[]" id="bultosPresen5" value="1"> Superbolsas
-                                                                            </label>
-                                                                        </div>
-
-                                                                    </div>
-                                                                    <div class="col-md-2 col-sm-9 col-xs-12">
-                                                                        <div class="checkbox">
-                                                                            <label>
-                                                                                <input type="checkbox" class="flat" name="bultosPresen[]" id="bultosPresen6" value="1"> Bidones
-                                                                            </label>
-                                                                        </div>
-                                                                        <div class="checkbox">
-                                                                            <label>
-                                                                                <input type="checkbox" class="flat" name="bultosPresen[]" id="bultosPresen7" value="1"> Cont.1000L
+                                                                                <input type="checkbox" class="flat" name="bultosPresen[]" id="bultosPresen2" value="PalletsPlastico"> Pallets de Plástico
                                                                             </label>
                                                                         </div>
 
@@ -916,12 +922,38 @@ if($sErr != ""){
                                                                     <div class="col-md-2 col-sm-9 col-xs-12">
                                                                         <div class="checkbox">
                                                                             <label>
-                                                                                <input type="checkbox" class="flat" name="bultosPresen[]" id="bultosPresen8" value="1"> Huacales de Madera
+                                                                                <input type="checkbox" class="flat" name="bultosPresen[]" id="bultosPresen2" value="Cartonada"> Cartonada
                                                                             </label>
                                                                         </div>
                                                                         <div class="checkbox">
                                                                             <label>
-                                                                                <input type="checkbox" class="flat" name="bultosPresen[]" id="bultosPresen9" value="1"> Cajas de Madera
+                                                                                <input type="checkbox" class="flat" name="bultosPresen[]" id="bultosPresen3" value="Cuñetes"> Cuñetes
+                                                                            </label>
+                                                                        </div>
+
+                                                                    </div>
+                                                                    <div class="col-md-2 col-sm-9 col-xs-12">
+                                                                        <div class="checkbox">
+                                                                            <label>
+                                                                                <input type="checkbox" class="flat" name="bultosPresen[]" id="bultosPresen4" value="Sacos"> Sacos
+                                                                            </label>
+                                                                        </div>
+                                                                        <div class="checkbox">
+                                                                            <label>
+                                                                                <input type="checkbox" class="flat" name="bultosPresen[]" id="bultosPresen5" value="SuperBolsas"> Superbolsas
+                                                                            </label>
+                                                                        </div>
+
+                                                                    </div>
+                                                                    <div class="col-md-2 col-sm-9 col-xs-12">
+                                                                        <div class="checkbox">
+                                                                            <label>
+                                                                                <input type="checkbox" class="flat" name="bultosPresen[]" id="bultosPresen6" value="Bidones"> Bidones
+                                                                            </label>
+                                                                        </div>
+                                                                        <div class="checkbox">
+                                                                            <label>
+                                                                                <input type="checkbox" class="flat" name="bultosPresen[]" id="bultosPresen7" value="Cont1000L"> Cont.1000L
                                                                             </label>
                                                                         </div>
 
@@ -930,12 +962,26 @@ if($sErr != ""){
                                                                     <div class="col-md-2 col-sm-9 col-xs-12">
                                                                         <div class="checkbox">
                                                                             <label>
-                                                                                <input type="checkbox" class="flat" name="bultosPresen[]" id="bultosPresen10" value="1"> Racks Metalicos
+                                                                                <input type="checkbox" class="flat" name="bultosPresen[]" id="bultosPresen8" value="HuacalesMadera"> Huacales de Madera
                                                                             </label>
                                                                         </div>
                                                                         <div class="checkbox">
                                                                             <label>
-                                                                                <input type="checkbox" class="flat" name="bultosPresen[]" id="bultosPresen11" value="1"> Granel
+                                                                                <input type="checkbox" class="flat" name="bultosPresen[]" id="bultosPresen9" value="CajasMadera"> Cajas de Madera
+                                                                            </label>
+                                                                        </div>
+
+
+                                                                    </div>
+                                                                    <div class="col-md-2 col-sm-9 col-xs-12">
+                                                                        <div class="checkbox">
+                                                                            <label>
+                                                                                <input type="checkbox" class="flat" name="bultosPresen[]" id="bultosPresen10" value="RacksMetalicos"> Racks Metalicos
+                                                                            </label>
+                                                                        </div>
+                                                                        <div class="checkbox">
+                                                                            <label>
+                                                                                <input type="checkbox" class="flat" name="bultosPresen[]" id="bultosPresen11" value="Granel"> Granel
                                                                             </label>
                                                                         </div>
 
@@ -1017,7 +1063,7 @@ if($sErr != ""){
                                                                     <label class="control-label col-md-4 col-sm-2 col-xs-3" for="txtCanMer1">Cantidad</span>
                                                                     </label>
                                                                     <div class="col-md-7 col-sm-6 col-xs-12">
-                                                                        <input type="text" id="txtCanMer" name="txtCanMer" required="required" class="form-control col-md-7 col-xs-12" />
+                                                                        <input type="text" id="txtCanMer1" name="txtCanMer1" required="required" class="form-control col-md-7 col-xs-12" />
                                                                     </div>
                                                                 </div>
                                                             </td>
@@ -1027,24 +1073,24 @@ if($sErr != ""){
                                                                     <div class="col-md-4 col-sm-9 col-xs-12">
                                                                         <div class="checkbox">
                                                                             <label>
-                                                                                <input type="checkbox" class="flat" name="Previos[]" id="bultosPresen2" value="1"> Separacion
+                                                                                <input type="checkbox" class="flat" name="Previos[]" id="bultosPresen2" value="Separacion"> Separacion
                                                                             </label>
                                                                         </div>
                                                                         <div class="checkbox">
                                                                             <label>
-                                                                                <input type="checkbox" class="flat" name="Previos[]" id="bultosPresen3" value="1"> Ocular
+                                                                                <input type="checkbox" class="flat" name="Previos[]" id="bultosPresen3" value="Ocular"> Ocular
                                                                             </label>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-4 col-sm-9 col-xs-12">
                                                                         <div class="checkbox">
                                                                             <label>
-                                                                                <input type="checkbox" class="flat" name="Previos[]" id="bultosPresen4" value="1"> Revisión C/Autoridad
+                                                                                <input type="checkbox" class="flat" name="Previos[]" id="bultosPresen4" value="RevisionC/Autoridad"> Revisión C/Autoridad
                                                                             </label>
                                                                         </div>
                                                                         <div class="checkbox">
                                                                             <label>
-                                                                                <input type="checkbox" class="flat" name="Previos[]" id="bultosPresen5" value="1"> Etiquetado
+                                                                                <input type="checkbox" class="flat" name="Previos[]" id="bultosPresen5" value="Etiquetado"> Etiquetado
                                                                             </label>
                                                                         </div>
                                                                     </div>
@@ -1053,6 +1099,24 @@ if($sErr != ""){
                                                         </tr>
                                                         </tbody>
                                                     </table>
+                                                    <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+                                                    <script>
+                                                        $(function(){
+                                                            $("#btnCarga").click(function () {
+                                                                var url = "../Controladores/controlPrevios.php";
+                                                                $.ajax({
+                                                                    type: "POST",
+                                                                    url : url,
+                                                                    data : $("#cargaSuelta").serialize(),
+                                                                    success: function(data)
+                                                                    {
+                                                                        $("#respuesta").html(data);
+                                                                    }
+                                                                });
+                                                                return false;
+                                                            });
+                                                        });
+                                                    </script>
                                                     <div align="center">
                                                         <input type="button" id="btnCarga"  value="Guardar" class="btn btn-round btn-primary"  />
                                                     </div>
@@ -1192,14 +1256,6 @@ if($sErr != ""){
         });
     </script>
     <!-- /Datatables -->
-        <script language="JavaScript" type="text/javascript">
-            $(document).ready(function() {
-                $("#txtCanMer1").attr(
-                    disabled : true
-                );
-
-            });
-        </script>
         <!-- Custom Notification -->
         <script>
             $(document).ready(function() {

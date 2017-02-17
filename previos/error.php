@@ -1,4 +1,5 @@
 <?php
+$dFecha = new DateTime();
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -42,8 +43,8 @@
                     <br />
 
                     <div>
-                        <h1><i class="fa fa-user-md"></i> uro-ginecologia</h1>
-                        <p>©2016 Todos los derechos reservados</p>
+                        <h1><i class="fa fa-truck"></i>TRIMODAL DE MEXICO S.C</h1>
+                        <p><?php echo $dFecha->format('Y')?> Todos los derechos reservados</p>
                     </div>
                 </div>
             </section>

@@ -23,7 +23,18 @@ class Previo
     private $oContenedor = null;
     private $oMercancia = null;
     private $oSir76 = null;
+    private $sObsClasificador = "";
 
+
+    public function getObsClasificador()
+    {
+        return $this->sObsClasificador;
+    }
+
+    public function setObsClasificador($sObsClasificador)
+    {
+        $this->sObsClasificador = $sObsClasificador;
+    }
 
     public function getSir76()
     {

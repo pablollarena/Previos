@@ -132,7 +132,6 @@ if(isset($_SESSION['sUser']) && !empty($_SESSION['sUser'])){
             $oContendor->getConten()->setCajasMadera($z10 == 1 ? 1 : 0 );
             $oContendor->getConten()->setRacksMetalicos($z11 == 1 ? 1 : 0);
             $oContendor->getConten()->setGranel($z12 == 1 ? 1 : 0);
-            //var_dump($oContendor->getConten());
             $oContendor->getConten()->setOtros($_POST['txtOtrosPresen']);
             if ($_POST['averias'] == 1) {
                 $oContendor->getConten()->setAveriasOrigen(1);
@@ -181,7 +180,6 @@ if(isset($_SESSION['sUser']) && !empty($_SESSION['sUser'])){
             $oContendor->getPrevio()->setOcular($x3 == 1 ? 1 : 0);
             $oContendor->getPrevio()->setRevConautoridad($x4 == 1 ? 1 : 0);
             $oContendor->getPrevio()->setEtiquetado($x5 == 1 ? 1 : 0);
-
         }
 
         try{
@@ -234,6 +232,7 @@ if(isset($_SESSION['sUser']) && !empty($_SESSION['sUser'])){
             $oContendor->getConten()->setNumeroContenedor($_POST['txtNumConten']);
             $oContendor->getConten()->setTamaño($_POST['tamaño']);
             $oContendor->getConten()->setTipo($_POST['tipo']);
+            $oContendor->getConten()->setSelloOrigen($_POST['txtSellos']);
             $oContendor->getConten()->setSelloColocado($_POST['txtSelloColocado']);
             $oContendor->getConten()->setPeso($_POST['Peso']);
             $oContendor->getConten()->setIMO($_POST['imo']);
@@ -321,17 +320,17 @@ if(isset($_SESSION['sUser']) && !empty($_SESSION['sUser'])){
             }else if( $_POST['mercancia' == 3])
             {
                 $oContendor->getMercancia()->setSobrante(1);
-                $oContendor->getMercancia()->setCantidad($_POST['txtCanMer']);
+                $oContendor->getMercancia()->setCantidad($_POST['txtCanMer1']);
                 $oContendor->getMercancia()->setConformeFactura(0);
                 $oContendor->getMercancia()->setFaltante(0);
             }
+
             $x1 = 0; $x2= 0; $x3 = 0; $x4 = 0; $x5 = 0;
             for ($i = 0 ; $i < count($previos);$i++){
                 if ($previos[$i] == 'DesYCon'){
                     $x1 = 1;
                 }elseif ($previos[$i] == 'Separacion'){
                     $x2= 1;
-
                 }elseif ($previos[$i] == 'Ocular'){
                     $x3 = 1;
                 }elseif ($previos[$i] == 'RevisionC/Autoridad'){
@@ -381,6 +380,8 @@ if(isset($_SESSION['sUser']) && !empty($_SESSION['sUser'])){
                               });
       });
     </script> ";
+
+
             }
 
         }catch (Exception $e){

@@ -49,9 +49,9 @@
                     <div>
                         <input type="password" class="form-control" id="txtPass" name="txtPass" required/>
                     </div>
-
+                    <div class="clearfix"></div>
                     <div align="center">
-                        <input type="submit" class="btn btn-default" value="Ingresar" />
+                        <input type="submit" class="btn btn-primary" value="Ingresar" />
                     </div>
 
                 </form>
