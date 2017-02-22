@@ -80,7 +80,7 @@ if(isset($_POST['txtRef']) && !empty($_POST['txtRef'])){
                                                                             <th>Tamaño (Actual: <?php echo $vRow->getConten()->getTamaño();?>')</small></th>
                                                                             <th>Tipo (Actual: <?php echo $vRow->getConten()->getTipo();?>)</th>
                                                                             <th>Sello Colocado (Actual: <?php echo $vRow->getConten()->getSelloColocado();?>)</th>
-                                                                            <th>Peso de Carga S/Contenerizar</th>
+                                                                            <th>Peso de Carga S/Contenerizar (Actual: <?php echo $vRow->getConten()->getPeso();?>)</th>
                                                                         </tr>
                                                                         </thead>
                                                                         <tbody>

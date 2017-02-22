@@ -59,6 +59,11 @@ class Menu
                             'id' => 'consultar1',
                             'titulo' => 'Consultar Previos',
                             'enlace' => '../Vistas/glosaBuscaReferencia.php'
+                        ),
+                        array(
+                            'id' => 'consultar1',
+                            'titulo' => 'Observaciones',
+                            'enlace' => '../Vistas/controlObs.php'
                         )
                     ),
                     'icon' => 'fa fa-camera'

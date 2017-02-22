@@ -271,4 +271,26 @@ class ReportePrevio
 
     }
 
+    function validarItem ($sRef,$nItem,$nFactura){
+        $oAD2 = new AccesoDatos2();
+        $sQuery = "";
+        $rst = null;
+        $bRet = false;
+
+        if($sRef == "" and $nItem == "" and $nFactura == ""){
+            throw new Exception("ReportePrevio->validadItem(): error en los datos");
+
+        }else{
+            $sQuery = "exec validaPartidas '".$sRef."',".$nItem.",'".$nFactura."'; ";
+            $rst = $oAD2->ejecutaQuery($sQuery);
+            $oAD2->Desconecta();
+
+            if (count($rst) == 1){
+                $bRet = true;
+            }
+        }
+        return $bRet;
+
+    }
+
 }

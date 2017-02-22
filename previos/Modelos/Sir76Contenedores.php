@@ -217,6 +217,7 @@ class Sir76Contenedores
         }else{
             if($nTipo == 1){
                 $sQuery = "exec [1G_TRIMEX].[dbo].ConsultarContenedorPorRef '".$this->getReferencia60()->getReferencia()."'; ";
+
                 $rst = $oAD->ejecutaQuery($sQuery);
                 $oAD->Desconecta();
                 if($rst){
@@ -576,4 +577,41 @@ class Sir76Contenedores
         }
         return $TipoCarga;
     }
+
+    function validaContenedor($sRef, $sCont){
+        $oAD2 = new AccesoDatos2();
+        $sQuery ="";
+        $rst = null;
+        $bRet = false;
+        if($sRef == "" AND $sCont == ""){
+            throw new Exception("Sir76Contenedores->validaContenedor(): error, faltan datos");
+        }else{
+            $sQuery = "EXEC [Previos].[dbo].validarContenedor '".$sRef."','".$sCont."';";
+            $rst = $oAD2->ejecutaQuery($sQuery);
+            $oAD2->Desconecta();
+            if(count($rst) == 1){
+                $bRet = true;
+            }
+        }
+        return $bRet;
+    }
+
+    function validaCarga($sRef){
+        $oAD2 = new AccesoDatos2();
+        $sQuery ="";
+        $rst = null;
+        $bRet = false;
+        if($sRef == ""){
+            throw new Exception("Sir76Contenedores->validaCarga(): error, faltan datos");
+        }else{
+            $sQuery = "EXEC [Previos].[dbo].varlidarCarga '".$sRef."';";
+            $rst = $oAD2->ejecutaQuery($sQuery);
+            $oAD2->Desconecta();
+            if(count($rst) == 1){
+                $bRet = true;
+            }
+        }
+        return $bRet;
+    }
+
 }

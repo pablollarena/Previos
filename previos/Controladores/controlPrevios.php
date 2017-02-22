@@ -86,11 +86,14 @@ if(isset($_SESSION['sUser']) && !empty($_SESSION['sUser'])){
             $oContendor->getDaño()->setSeguros($v10 == 1 ? 1 : 0);
             $oContendor->getDaño()->setAbrazaderas($v11 == 1 ? 1 : 0);
             $oContendor->getDaño()->setLonasBarras($v12 == 1 ? 1 : 0);
-
-            $oContendor->getDaño()->setOtros($_POST['txtOtros']);
+            $oContendor->getDaño()->setOtros($_POST['txtOtros'] == "" ? 'No se registraron otros daños' : $_POST['txtOtros']);
             $oContendor->getConten()->setCantidadBultos($_POST['txtCantiBultos']);
             $oContendor->getConten()->setBultosDañados($_POST['bDañados']);
-            $oContendor->getConten()->setCantBultDañados(!empty($_POST['txtCantiDañados']) ? $_POST['txtCantiDañados']  : 0);
+            if($_POST['bDañados'] == 1){
+                $oContendor->getConten()->setCantBultDañados($_POST['txtCantiDañados']);
+            }else if($_POST['bDañados'] == 0){
+                $oContendor->getConten()->setCantBultDañados(0);
+            }
 
             $z1 = 0; $z2 =0; $z3 = 0; $z4 = 0; $z5 = 0; $z6 = 0; $z7 = 0; $z8 = 0; $z9 = 0; $z10 = 0; $z11 = 0; $z12 = 0;
             for ($j = 0; $j < count($bultos) ; $j++){
@@ -132,7 +135,7 @@ if(isset($_SESSION['sUser']) && !empty($_SESSION['sUser'])){
             $oContendor->getConten()->setCajasMadera($z10 == 1 ? 1 : 0 );
             $oContendor->getConten()->setRacksMetalicos($z11 == 1 ? 1 : 0);
             $oContendor->getConten()->setGranel($z12 == 1 ? 1 : 0);
-            $oContendor->getConten()->setOtros($_POST['txtOtrosPresen']);
+            $oContendor->getConten()->setOtros($_POST['txtOtrosPresen'] == "" ? 'No se registraron otras presentaciones' : $_POST['txtOtrosPresen']);
             if ($_POST['averias'] == 1) {
                 $oContendor->getConten()->setAveriasOrigen(1);
                 $oContendor->getConten()->setAveriasRecinto(0);
@@ -165,7 +168,6 @@ if(isset($_SESSION['sUser']) && !empty($_SESSION['sUser'])){
                   $x1 = 1;
                }elseif ($previos[$i] == 'Separacion'){
                    $x2= 1;
-
                }elseif ($previos[$i] == 'Ocular'){
                    $x3 = 1;
                }elseif ($previos[$i] == 'RevisionC/Autoridad'){
@@ -214,7 +216,8 @@ if(isset($_SESSION['sUser']) && !empty($_SESSION['sUser'])){
     </script> ";
             }
         }catch (Exception $e){
-
+            error_log($e->getFile() . " " . $e->getLine() . " " . $e->getMessage(),0);
+            $sErr2 = "Error en base de datos, comunicarse con el administrador";
         }
     }else if( isset($_POST['txtSelloColocado']) && !empty($_POST['txtSelloColocado']) &&
                   isset($_POST['txtCantiBultos']) && !empty($_POST['txtCantiBultos']) &&
@@ -237,24 +240,14 @@ if(isset($_SESSION['sUser']) && !empty($_SESSION['sUser'])){
             $oContendor->getConten()->setPeso($_POST['Peso']);
             $oContendor->getConten()->setIMO($_POST['imo']);
 
-
-            $oContendor->getDaño()->setOrigen($v1 == 1 ? 1 : 0);
-            $oContendor->getDaño()->setRecinto($v2 == 0 ? 0 : 1 );
-            $oContendor->getDaño()->setFrente($v3 == 0 ? 0 : 1);
-            $oContendor->getDaño()->setPanelIzq($v4 == 0 ? 0: 1 );
-            $oContendor->getDaño()->setPiso($v5 == 0 ? 0 : 1);
-            $oContendor->getDaño()->setTecho($v6 == 0 ? 0 : 1);
-            $oContendor->getDaño()->setPanelDer($v7 == 0 ? 0 : 1);
-            $oContendor->getDaño()->setPuertas($v8 == 0 ? 0 : 1);
-            $oContendor->getDaño()->setBarrasPuerta($v9 == 0 ? 0 : 1);
-            $oContendor->getDaño()->setSeguros($v10 == 0 ? 0 : 1);
-            $oContendor->getDaño()->setAbrazaderas($v11 == 0 ? 0 : 1);
-            $oContendor->getDaño()->setLonasBarras($v12 == 0 ? 0 : 1);
-
-            $oContendor->getDaño()->setOtros($_POST['txtOtros']);
             $oContendor->getConten()->setCantidadBultos($_POST['txtCantiBultos']);
             $oContendor->getConten()->setBultosDañados($_POST['bDañados']);
-            $oContendor->getConten()->setCantBultDañados(!empty($_POST['txtCantiDañados']) ? $_POST['txtCantiDañados']  : 0);
+            $oContendor->getConten()->setBultosDañados($_POST['bDañados']);
+            if($_POST['bDañados'] == 1){
+                $oContendor->getConten()->setCantBultDañados($_POST['txtCantiDañados']);
+            }else if($_POST['bDañados'] == 0){
+                $oContendor->getConten()->setCantBultDañados(0);
+            }
 
             $z1 = 0; $z2 =0; $z3 = 0; $z4 = 0; $z5 = 0; $z6 = 0; $z7 = 0; $z8 = 0; $z9 = 0; $z10 = 0; $z11 = 0; $z12 = 0;
             for ($i = 0; $i < count($bultos) ; $i++){
@@ -297,7 +290,7 @@ if(isset($_SESSION['sUser']) && !empty($_SESSION['sUser'])){
             $oContendor->getConten()->setRacksMetalicos($z11 == 1 ? 1 : 0);
             $oContendor->getConten()->setGranel($z12 == 1 ? 1 : 0);
 
-            $oContendor->getConten()->setOtros($_POST['txtOtrosPresen']);
+            $oContendor->getConten()->setOtros($_POST['txtOtrosPresen'] == "" ? 'No se registraron otras presentaciones' : $_POST['txtOtrosPresen']);
             if ($_POST['averias'] == 1) {
                 $oContendor->getConten()->setAveriasOrigen(1);
                 $oContendor->getConten()->setAveriasRecinto(0);
@@ -352,6 +345,7 @@ if(isset($_SESSION['sUser']) && !empty($_SESSION['sUser'])){
 
         try{
             if($oContendor->insertarCargaContenerizada($_POST['operacion']) == 1){
+                var_dump($oContendor);
                 echo " <script src='../../vendors/pnotify/dist/pnotify.js'></script> ";
                 echo "<script src='../../vendors/pnotify/dist/pnotify.buttons.js' ></script> ";
                 echo "<script src='../../vendors/pnotify/dist/pnotify.nonblock.js' ></script> ";
@@ -385,7 +379,8 @@ if(isset($_SESSION['sUser']) && !empty($_SESSION['sUser'])){
             }
 
         }catch (Exception $e){
-
+            error_log($e->getFile() . " " . $e->getLine() . " " . $e->getMessage(),0);
+            $sErr2 = "Error en base de datos, comunicarse con el administrador";
         }
     }
 
@@ -394,6 +389,6 @@ if(isset($_SESSION['sUser']) && !empty($_SESSION['sUser'])){
 }
 
 if($sErr != ""){
-    //header("Location: ../error.php?sError=".$sErr);
+    header("Location: ../error.php?sError=".$sErr);
 }
 ?>

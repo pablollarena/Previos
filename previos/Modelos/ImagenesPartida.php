@@ -15,7 +15,32 @@ class ImagenesPartida
     private $oSir60 = null;
     private $sNombreArchivo = "";
     private $sRutaArchivo = "";
+    private $sFactura = "";
+    private $nItem = 0;
 
+
+    public function getFactura()
+    {
+        return $this->sFactura;
+    }
+
+
+    public function setFactura($sFactura)
+    {
+        $this->sFactura = $sFactura;
+    }
+
+
+    public function getItem()
+    {
+        return $this->nItem;
+    }
+
+
+    public function setItem($nItem)
+    {
+        $this->nItem = $nItem;
+    }
 
     public function getAD2()
     {
@@ -76,8 +101,10 @@ class ImagenesPartida
             throw new Exception("ImagenesPartida->insertarImagenes : error faltan datos");
         }else{
             $sQuery = "exec [Previos].[dbo].insertarImagenes '".$nRef."',
+                                                             '".$this->getFactura()."',
+                                                             ".$this->getItem().",
                                                              '".$this->getNombreArchivo()."',
-                                                             '".$this->getRutaArchivo()."' ;";
+                                                             '".$this->getRutaArchivo()."';";
             $nAfec = $oAD2->ejecutaComando($sQuery);
         }
       return $nAfec;
@@ -95,7 +122,7 @@ class ImagenesPartida
         if ($this->getSir60()->getReferencia() == ""){
             throw new Exception("ImagenesPartida->buscarImagenes() : error faltan datos");
         }else{
-            $sQuery = "exec [Previos].[dbo].buscarImagenes '".$this->getSir60()->getReferencia()."'; ";
+            $sQuery = "exec [Previos].[dbo].buscarImagenes '".$this->getSir60()->getReferencia()."','".$this->getFactura()."',".$this->getItem()."; ";
             $rst = $oAD2->ejecutaQuery($sQuery);
             $oAD2->Desconecta();
             if($rst){

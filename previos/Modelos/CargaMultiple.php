@@ -9,7 +9,7 @@
 include_once ("ImagenesPartida.php");
 class CargaMultiple
 {
-    function cargarArchivos($imagenes = array(), $sReferencia){
+    function cargarArchivos($imagenes = array(), $sReferencia, $sFactura, $nItem){
         //Declaramos una bandera que retornará true en caso de que los archivos sean guardados correctamente
         //de lo contrario devolverá false
         $nRet = 0;
@@ -18,7 +18,7 @@ class CargaMultiple
         $sCad3 = substr($sReferencia, 10, 4);
         $sRef = $sCad1."-".$sCad2."-".$sCad3;
         //Creación del directorio con el nombre de la referencia
-        $sUrl = "../Imagenes/".$sRef;
+        $sUrl = "../Imagenes/".$sRef."/".$sFactura."/".$nItem;
         if(!is_dir($sUrl)){
             mkdir($sUrl,0777,true);
         }
@@ -55,6 +55,8 @@ class CargaMultiple
                     $oImagen = new ImagenesPartida();
                     $oImagen->setSir60(new Sir60Referencias());
                     $oImagen->getSir60()->setReferencia($sReferencia);
+                    $oImagen->setFactura($sFactura);
+                    $oImagen->setItem($nItem);
                     $oImagen->setNombreArchivo($_FILES['FileImg']['name'][$j]);
                     $oImagen->setRutaArchivo($sUrl);
 

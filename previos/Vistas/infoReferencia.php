@@ -8,10 +8,13 @@
 include_once ("../Modelos/Menu.php");
 include_once ("../Modelos/Persona.php");
 include_once ("../Modelos/Sir76Contenedores.php");
+require_once ("../Modelos/Observaciones.php");
 session_start();
 $oMenu = new Menu();
 $oPers = new Persona();
 $oContededor= new Sir76Contenedores();
+$oObservacion = new Observaciones();
+$arrObservacion = null;
 $sErr ="";
 $sNom = "";
 $nGrp = 0;
@@ -23,6 +26,7 @@ $sRef = "";
 $sCliente = "";
 $dFecha = null;
 $sRecinto = "";
+$bBandera = false;
 if(isset($_SESSION['sUser']) && !empty($_SESSION['sUser'])){
     $oPers = $_SESSION['sUser'];
     $sNom = $oPers->getNomCompleto();
@@ -31,9 +35,20 @@ if(isset($_SESSION['sUser']) && !empty($_SESSION['sUser'])){
     $sCliente = $_POST['txtCliente'];
     $dFecha = $_POST['txtFecha'];
     $sRecinto = $_POST['txtRecinto'];
-    $oContededor->setReferencia60(new Sir60Referencias());
-    $oContededor->getReferencia60()->setReferencia($sRef);
-    $arrConte = $oContededor->buscarContenedoresPorRef();
+    $oObservacion->setSir60(new Sir60Referencias());
+    $oObservacion->getSir60()->setReferencia($_POST['txtRef']);
+
+    if($oObservacion->validaReferencia() == true){
+        $bBandera = true;
+        $arrObservacion = $oObservacion->buscarTodosObser();
+        $oContededor->setReferencia60(new Sir60Referencias());
+        $oContededor->getReferencia60()->setReferencia($sRef);
+        $arrConte = $oContededor->buscarContenedoresPorRef();
+    }else{
+        $arrConte = null;
+        $arrObservacion = null;
+    }
+
     $nCon = 0;
     if($oPers->getReferen() == 1){
         $arrMenu = $oMenu->generarMenu($oPers->getGrp()->getIdGrp());
@@ -192,6 +207,10 @@ if($sErr != ""){
                     <div class="x_panel">
                         <div class="x_title">
                             <h2></h2>
+                            <ul class="nav navbar-right panel_toolbox">
+                                <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                                </li>
+                            </ul>
                             <div class="clearfix"></div>
                         </div>
                         <form id="frmDatos" action="../Vistas/consultarItems.php" method="post">
@@ -244,16 +263,80 @@ if($sErr != ""){
                 <div class="col-md-12 col-sm-6 col-xs-12">
                     <div class="x_panel">
                         <div class="x_title">
+                            <h2>Observaciones de la Referencia</h2>
+                            <ul class="nav navbar-right panel_toolbox">
+                                <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                                </li>
+                            </ul>
+                            <div class="clearfix"></div>
+                        </div>
+                        <form id="frmDatos" action="../Vistas/consultarItems.php" method="post">
+                            <input type="hidden" value="<?php echo $sRef;?>" name="txtValRef">
+                            <div class="row">
+                                <div class="x_content">
+                                    <table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
+                                        <thead>
+                                        <tr>
+                                            <th>Observación</th>
+                                            <th>Realizada por:</th>
+                                            <th>Fecha de registro</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <?php
+                                        if($arrObservacion != null){
+                                            foreach ($arrObservacion as $item) {
+                                                ?>
+                                                <tr>
+                                                    <td width="60%"><?php echo $item->getObservacion();?></td>
+                                                    <td width="20%"><?php echo $item->getUsuario();?></td>
+                                                    <td width="20%"><?php echo $item->getFecha();?></td>
+                                                </tr>
+                                                <?php
+                                            }
+                                        }else{
+                                            ?>
+                                            <tr>
+                                                <td rowspan="2" colspan="3">No se han registrado observaciones para esta referencia</td>
+
+                                            </tr>
+                                            <?php
+                                        }
+                                        ?>
+
+                                        </tbody>
+                                    </table>
+
+
+                                </div>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+                <div class="col-md-12 col-sm-6 col-xs-12">
+                    <div class="x_panel">
+                        <div class="x_title">
                             <h2>Información de la Carga</h2>
+                            <ul class="nav navbar-right panel_toolbox">
+                                <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                                </li>
+                            </ul>
                             <div class="clearfix"></div>
                         </div>
                         <div class="row">
                             <div class="x_content">
-                                <div class="accordion" id="accordion" role="tablist" aria-multiselectable="true">
-                                    <?php
-                                        if($arrConte != null){
-                                            foreach ($arrConte as $vRow){
-                                                ?>
+                                <?php
+                                    if($bBandera == true){
+                                        ?>
+                                        <div class="accordion" id="accordion" role="tablist" aria-multiselectable="true">
+                                            <?php
+                                            $bHab = false;
+                                            if($arrConte != null){
+                                                foreach ($arrConte as $vRow){
+                                                    $bHab = $oContededor->validaContenedor($sRef, $vRow->getNumero());
+
+                                                    ?>
                                                     <div class="x_content">
                                                         <form name="frmContent<?php echo $nCon;?>" id="frmContent<?php echo $nCon;?>">
                                                             <input type="hidden" name="txtRef" value="<?php echo $sRef;?>"/>
@@ -320,7 +403,7 @@ if($sErr != ""){
                                                                                         <div class="col-md-7 col-sm-9 col-xs-12">
                                                                                             <select class="form-control" name="tipo">
                                                                                                 <option value="">Seleccione</option>
-                                                                                                <option value="D1">DC</option>
+                                                                                                <option value="DC">DC</option>
                                                                                                 <option value="HC">HC</option>
                                                                                                 <option value="OT">OT</option>
                                                                                                 <option value="FR">FR</option>
@@ -670,7 +753,7 @@ if($sErr != ""){
                                                                                         <label class="control-label col-md-4 col-sm-2 col-xs-3" for="txtCanMer1">Cantidad</span>
                                                                                         </label>
                                                                                         <div class="col-md-7 col-sm-6 col-xs-12">
-                                                                                            <input type="text" id="txtCanMer1<?php echo $nCon;?>" name="txtCanMer1<?php echo $nCon;?>"  required="required" class="form-control col-md-7 col-xs-12" />
+                                                                                            <input type="text" id="txtCanMer1<?php echo $nCon;?>" name="txtCanMer1"  class="form-control col-md-7 col-xs-12" />
                                                                                         </div>
                                                                                     </div>
                                                                                 </td>
@@ -737,15 +820,15 @@ if($sErr != ""){
                                                                         <script type="text/javascript" src="http://code.jquery.com/jquery-1.8.3.js"></script>
 
                                                                         <script type="text/javascript">
-                                                                               function validarFormulario(){
-                                                                                   JQuery.validator.messages.required = 'Campo requerido';
-                                                                                   $("#btn_enviar<?php echo $nCon;?>").click(function(){
-                                                                                        var valida = $("#frmContent<?php echo $nCon;?>").valid();
-                                                                                       if(valida){
-                                                                                           alert('El formulario es correcto');
-                                                                                       }
-                                                                                   });
-                                                                               }
+                                                                            function validarFormulario(){
+                                                                                JQuery.validator.messages.required = 'Campo requerido';
+                                                                                $("#btn_enviar<?php echo $nCon;?>").click(function(){
+                                                                                    var valida = $("#frmContent<?php echo $nCon;?>").valid();
+                                                                                    if(valida){
+                                                                                        alert('El formulario es correcto');
+                                                                                    }
+                                                                                });
+                                                                            }
                                                                         </script>
                                                                         <!-- Validación de formularios -->
                                                                         <!-- Validar select's seleccionados -->
@@ -783,6 +866,10 @@ if($sErr != ""){
                                                                                         $("#txtCantiDañados<?php echo $nCon;?>").attr({
                                                                                             disabled : true
                                                                                         });
+                                                                                    }else{
+                                                                                        $("#txtCantiDañados<?php echo $nCon;?>").attr({
+                                                                                            disabled : true
+                                                                                        });
                                                                                     }
                                                                                 });
                                                                             })
@@ -790,7 +877,14 @@ if($sErr != ""){
                                                                         <!-- Validar radios seleccionados -->
 
                                                                         <div align="center">
-                                                                            <input type="button" value="Guardar" class="btn btn-round btn-primary" id="btn_enviar<?php echo $nCon;?>" />
+                                                                            <?php
+                                                                            if($bHab == false){
+                                                                                ?>
+                                                                                <input type="button" value="Guardar" class="btn btn-round btn-primary" id="btn_enviar<?php echo $nCon;?>" />
+                                                                                <?php
+                                                                            }
+                                                                            ?>
+
                                                                         </div>
                                                                         <div id="respuesta"></div>
                                                                     </div>
@@ -798,340 +892,402 @@ if($sErr != ""){
                                                             </div>
                                                         </form>
                                                     </div>
-                                                <?php
-                                                $nCon = $nCon + 1;
-                                            }
-                                        }else{
-                                            ?>
-                                        <div class="x_content">
-                                            <form id="cargaSuelta">
-                                                <input type="hidden" name="txtRef" value="<?php echo $sRef;?>"/>
-                                                <input type="hidden" name="operacion" value="CargaSuelta" />
-                                                <div class="panel-body">
-                                                    <div class="form-group">
-                                                        <label class="control-label col-md-1 col-sm-1 col-xs-3" >Sello de Origen</span>
-                                                        </label>
-                                                        <div class="col-md-3 col-sm-6 col-xs-12">
-                                                            <input type="text" id="txtSellos" name="txtSellos" required="required" class="form-control col-md-7 col-xs-12" />
-                                                        </div>
-                                                        <label class="control-label col-md-1 col-sm-1 col-xs-3" >No. BL</span>
-                                                        </label>
-                                                        <div class="col-md-3 col-sm-6 col-xs-12">
-                                                            <input type="text" id="txtBL" name="txtBL" required="required" class="form-control col-md-7 col-xs-12" />
-                                                        </div>
-                                                        <label class="control-label col-md-1 col-sm-4 col-xs-12">IMO</label>
-                                                        <div class="col-md-3 col-sm-9 col-xs-12">
-                                                            <select class="form-control" name="imo">
-                                                                <option value="">Seleccione</option>
-                                                                <option value="1">SI</option>
-                                                                <option value="0">NO</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <br/><br/>
-                                                    <div class="form-group">
-                                                        <label class="control-label col-md-1 col-sm-2 col-xs-3" for="txtNombre">Sello Colocado</span>
-                                                        </label>
-                                                        <div class="col-md-3 col-sm-6 col-xs-12">
-                                                            <input type="text" id="txtSelloColocado" name="txtSelloColocado" required="required" class="form-control col-md-7 col-xs-12"
-                                                            >
-                                                        </div>
-                                                        <label class="control-label col-md-1 col-sm-2 col-xs-3" for="txtNombre">Peso</span>
-                                                        </label>
-                                                        <div class="col-md-3 col-sm-6 col-xs-12">
-                                                            <input type="text" id="Peso" name="Peso" required="required" class="form-control col-md-7 col-xs-12"
-                                                            >
-                                                        </div>
-                                                    </div>
-                                                    <br/>
-                                                    <br/>
-                                                    <br/>
-                                                    <table class="table table-striped table-bordered dt-responsive nowrap">
-                                                        <thead>
-                                                        <tr>
-                                                            <td colspan="4" rowspan="1">
-                                                                <h5 align="center"> Bultos</h5>
-                                                            </td>
-
-                                                        </tr>
-                                                        </thead>
-
-                                                        <tr>
-                                                            <th colspan="1">Cantidad de Bultos</th>
-                                                            <th colspan="3">Bultos Dañados y Cuantos</th>
-
-                                                        </tr>
-
-
-                                                        <tr>
-                                                            <td colspan="1" rowspan="1">
-                                                                <div class="form-group">
-                                                                    <label class="control-label col-md-3 col-sm-2 col-xs-3" for="txtCantiBultos">Cantidad</span>
-                                                                    </label>
-                                                                    <div class="col-md-7 col-sm-6 col-xs-12">
-                                                                        <input type="text" id="txtCantiBultos" name="txtCantiBultos" required="required" class="form-control col-md-7 col-xs-12"
-                                                                        >
-                                                                    </div>
-
+                                                    <?php
+                                                    $nCon = $nCon + 1;
+                                                }
+                                            }else{
+                                                $cHab = false;
+                                                $cHab = $oContededor->validaCarga($sRef);
+                                                ?>
+                                                <div class="x_content">
+                                                    <form id="cargaSuelta">
+                                                        <input type="hidden" name="txtRef" value="<?php echo $sRef;?>"/>
+                                                        <input type="hidden" name="operacion" value="CargaSuelta" />
+                                                        <div class="panel-body">
+                                                            <div class="form-group">
+                                                                <label class="control-label col-md-1 col-sm-1 col-xs-3" >Sello de Origen</span>
+                                                                </label>
+                                                                <div class="col-md-3 col-sm-6 col-xs-12">
+                                                                    <input type="text" id="txtSellos" name="txtSellos" required="required" class="form-control col-md-7 col-xs-12" />
                                                                 </div>
-                                                            </td>
-                                                            <td colspan="3" rowspan="1">
-                                                                <div class="form-group">
-                                                                    <label class="control-label col-md-2 col-sm-3 col-xs-12">Bultos Dañados</label>
-                                                                    <div class="col-md-4 col-sm-6 col-xs-12">
-                                                                        <p>
-                                                                            SI:
-                                                                            <input type="radio" class="flat" name="bDañados" id="bDañados" value="1" checked="" required /> NO:
-                                                                            <input type="radio" class="flat" name="bDañados" id="bDañados" value="0" />
-                                                                        </p>
-                                                                    </div>
-                                                                    <label class="control-label col-md-2 col-sm-3 col-xs-12" for="txtCantiDañados">Cantidad</span>
-                                                                    </label>
-                                                                    <div class="col-md-4 col-sm-6 col-xs-12">
-                                                                        <input type="text" id="txtCantiDañados" name="txtCantiDañados" required="required" class="form-control col-md-7 col-xs-12"
-                                                                        >
-                                                                    </div>
+                                                                <label class="control-label col-md-1 col-sm-1 col-xs-3" >No. BL</span>
+                                                                </label>
+                                                                <div class="col-md-3 col-sm-6 col-xs-12">
+                                                                    <input type="text" id="txtBL" name="txtBL" required="required" class="form-control col-md-7 col-xs-12" />
                                                                 </div>
-
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td colspan="4" rowspan="1">
-                                                                <div class="form-group">
-                                                                    <label class="control-label col-md-3 col-sm-2 col-xs-3" for="txtNombre">Presentación de los Bultos</span>
-                                                                    </label>
-
+                                                                <label class="control-label col-md-1 col-sm-4 col-xs-12">IMO</label>
+                                                                <div class="col-md-3 col-sm-9 col-xs-12">
+                                                                    <select class="form-control" name="imo">
+                                                                        <option value="">Seleccione</option>
+                                                                        <option value="1">SI</option>
+                                                                        <option value="0">NO</option>
+                                                                    </select>
                                                                 </div>
-                                                                <br/><br/>
-                                                                <div class="form-group">
-
-                                                                    <div class="col-md-2 col-sm-9 col-xs-12">
-                                                                        <div class="checkbox">
-                                                                            <label>
-                                                                                <input type="checkbox" class="flat" name="bultosPresen[]" id="bultosPresen1" value="PalletsMadera"> Pallets de Madera
-                                                                            </label>
-                                                                        </div>
-                                                                        <div class="checkbox">
-                                                                            <label>
-                                                                                <input type="checkbox" class="flat" name="bultosPresen[]" id="bultosPresen2" value="PalletsPlastico"> Pallets de Plástico
-                                                                            </label>
-                                                                        </div>
-
-
-                                                                    </div>
-                                                                    <div class="col-md-2 col-sm-9 col-xs-12">
-                                                                        <div class="checkbox">
-                                                                            <label>
-                                                                                <input type="checkbox" class="flat" name="bultosPresen[]" id="bultosPresen2" value="Cartonada"> Cartonada
-                                                                            </label>
-                                                                        </div>
-                                                                        <div class="checkbox">
-                                                                            <label>
-                                                                                <input type="checkbox" class="flat" name="bultosPresen[]" id="bultosPresen3" value="Cuñetes"> Cuñetes
-                                                                            </label>
-                                                                        </div>
-
-                                                                    </div>
-                                                                    <div class="col-md-2 col-sm-9 col-xs-12">
-                                                                        <div class="checkbox">
-                                                                            <label>
-                                                                                <input type="checkbox" class="flat" name="bultosPresen[]" id="bultosPresen4" value="Sacos"> Sacos
-                                                                            </label>
-                                                                        </div>
-                                                                        <div class="checkbox">
-                                                                            <label>
-                                                                                <input type="checkbox" class="flat" name="bultosPresen[]" id="bultosPresen5" value="SuperBolsas"> Superbolsas
-                                                                            </label>
-                                                                        </div>
-
-                                                                    </div>
-                                                                    <div class="col-md-2 col-sm-9 col-xs-12">
-                                                                        <div class="checkbox">
-                                                                            <label>
-                                                                                <input type="checkbox" class="flat" name="bultosPresen[]" id="bultosPresen6" value="Bidones"> Bidones
-                                                                            </label>
-                                                                        </div>
-                                                                        <div class="checkbox">
-                                                                            <label>
-                                                                                <input type="checkbox" class="flat" name="bultosPresen[]" id="bultosPresen7" value="Cont1000L"> Cont.1000L
-                                                                            </label>
-                                                                        </div>
-
-
-                                                                    </div>
-                                                                    <div class="col-md-2 col-sm-9 col-xs-12">
-                                                                        <div class="checkbox">
-                                                                            <label>
-                                                                                <input type="checkbox" class="flat" name="bultosPresen[]" id="bultosPresen8" value="HuacalesMadera"> Huacales de Madera
-                                                                            </label>
-                                                                        </div>
-                                                                        <div class="checkbox">
-                                                                            <label>
-                                                                                <input type="checkbox" class="flat" name="bultosPresen[]" id="bultosPresen9" value="CajasMadera"> Cajas de Madera
-                                                                            </label>
-                                                                        </div>
-
-
-                                                                    </div>
-                                                                    <div class="col-md-2 col-sm-9 col-xs-12">
-                                                                        <div class="checkbox">
-                                                                            <label>
-                                                                                <input type="checkbox" class="flat" name="bultosPresen[]" id="bultosPresen10" value="RacksMetalicos"> Racks Metalicos
-                                                                            </label>
-                                                                        </div>
-                                                                        <div class="checkbox">
-                                                                            <label>
-                                                                                <input type="checkbox" class="flat" name="bultosPresen[]" id="bultosPresen11" value="Granel"> Granel
-                                                                            </label>
-                                                                        </div>
-
-
-                                                                    </div>
+                                                            </div>
+                                                            <br/><br/>
+                                                            <div class="form-group">
+                                                                <label class="control-label col-md-1 col-sm-2 col-xs-3" for="txtNombre">Sello Colocado</span>
+                                                                </label>
+                                                                <div class="col-md-3 col-sm-6 col-xs-12">
+                                                                    <input type="text" id="txtSelloColocado" name="txtSelloColocado" required="required" class="form-control col-md-7 col-xs-12"
+                                                                    >
                                                                 </div>
-                                                                <div class="form-group">
-                                                                    <div class="col-md-12 col-sm-9 col-xs-12">
-                                                                        <textarea class="resizable_textarea form-control" placeholder="Otros (Especifique)" name="txtOtrosPresen" id="txtOtrosPresen"></textarea>
-                                                                    </div>
+                                                                <label class="control-label col-md-1 col-sm-2 col-xs-3" for="txtNombre">Peso</span>
+                                                                </label>
+                                                                <div class="col-md-3 col-sm-6 col-xs-12">
+                                                                    <input type="text" id="Peso" name="Peso" required="required" class="form-control col-md-7 col-xs-12"
+                                                                    >
                                                                 </div>
+                                                            </div>
+                                                            <br/>
+                                                            <br/>
+                                                            <br/>
+                                                            <table class="table table-striped table-bordered dt-responsive nowrap">
+                                                                <thead>
+                                                                <tr>
+                                                                    <td colspan="4" rowspan="1">
+                                                                        <h5 align="center"> Bultos</h5>
+                                                                    </td>
 
-                                                            </td>
+                                                                </tr>
+                                                                </thead>
 
-                                                        </tr>
-                                                        <tr>
-                                                            <thead>
-                                                            <tr>
-                                                                <th colspan="2">Averias</th>
-                                                                <th colspan="2">Fumigado</th>
+                                                                <tr>
+                                                                    <th colspan="1">Cantidad de Bultos</th>
+                                                                    <th colspan="3">Bultos Dañados y Cuantos</th>
 
-                                                            </tr>
-                                                            </thead>
-                                                        </tr>
-                                                        <tr>
+                                                                </tr>
 
-                                                            <td colspan="2" rowspan="1">
-                                                                <div class="form-group">
-                                                                    <div class="col-md-4 col-sm-3 col-xs-12">
-                                                                        <p>
-                                                                            Origen:
-                                                                            <input type="radio" class="flat" name="averias" id="averias" value="1"/> <br/>
-                                                                            Recinto:
-                                                                            <input type="radio" class="flat" name="averias" id="averias" value="0"/>
-                                                                        </p>
-                                                                    </div>
 
-                                                                </div>
-
-                                                            </td>
-                                                            <td colspan="2" rowspan="1">
-                                                                <div class="form-group">
-                                                                    <label class="control-label col-md-3 col-sm-4 col-xs-12">FUMIGADO</label>
-                                                                    <div class="col-md-3 col-sm-9 col-xs-12">
-                                                                        <select class="form-control" name="fumigado">
-                                                                            <option value="">Seleccione</option>
-                                                                            <option value="si">SI</option>
-                                                                            <option value="no">NO</option>
-                                                                        </select>
-                                                                    </div>
-
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <thead>
-                                                            <tr>
-                                                                <th colspan="2">Mercancia</th>
-                                                                <th colspan="2">Previo</th>
-
-                                                            </tr>
-                                                            </thead>
-                                                        </tr>
-                                                        <tr>
-
-                                                            <td colspan="2" rowspan="1">
-                                                                <div class="form-group">
-                                                                    <label class="control-label col-md-4 col-sm-4 col-xs-12">Mercancía</label>
-                                                                    <div class="col-md-7 col-sm-9 col-xs-12">
-                                                                        <select class="form-control" name="mercancia" id="mercancia">
-                                                                            <option value="1">Conforme a Factura</option>
-                                                                            <option value="2">Faltante</option>
-                                                                            <option value="3">Sobrante</option>
-                                                                        </select>
-                                                                    </div>
-                                                                </div>
-                                                                <br/><br/>
-                                                                <div class="form-group">
-                                                                    <label class="control-label col-md-4 col-sm-2 col-xs-3" for="txtCanMer1">Cantidad</span>
-                                                                    </label>
-                                                                    <div class="col-md-7 col-sm-6 col-xs-12">
-                                                                        <input type="text" id="txtCanMer1" name="txtCanMer1" required="required" class="form-control col-md-7 col-xs-12" />
-                                                                    </div>
-                                                                </div>
-                                                            </td>
-                                                            <td colspan="2" rowspan="1">
-                                                                <div class="form-group">
-
-                                                                    <div class="col-md-4 col-sm-9 col-xs-12">
-                                                                        <div class="checkbox">
-                                                                            <label>
-                                                                                <input type="checkbox" class="flat" name="Previos[]" id="bultosPresen2" value="Separacion"> Separacion
+                                                                <tr>
+                                                                    <td colspan="1" rowspan="1">
+                                                                        <div class="form-group">
+                                                                            <label class="control-label col-md-3 col-sm-2 col-xs-3" for="txtCantiBultos">Cantidad</span>
                                                                             </label>
+                                                                            <div class="col-md-7 col-sm-6 col-xs-12">
+                                                                                <input type="text" id="txtCantiBultos" name="txtCantiBultos" required="required" class="form-control col-md-7 col-xs-12"
+                                                                                >
+                                                                            </div>
+
                                                                         </div>
-                                                                        <div class="checkbox">
-                                                                            <label>
-                                                                                <input type="checkbox" class="flat" name="Previos[]" id="bultosPresen3" value="Ocular"> Ocular
+                                                                    </td>
+                                                                    <td colspan="3" rowspan="1">
+                                                                        <div class="form-group">
+                                                                            <label class="control-label col-md-2 col-sm-4 col-xs-12">Bultos dañados</label>
+                                                                            <div class="col-md-4 col-sm-9 col-xs-12">
+                                                                                <select class="form-control" name="bDañados" id="bDañados">
+                                                                                    <option value="">Seleccione</option>
+                                                                                    <option value="1">SI</option>
+                                                                                    <option value="0">NO</option>
+                                                                                </select>
+                                                                            </div>
+                                                                            <label class="control-label col-md-2 col-sm-3 col-xs-12" for="txtCantiDañados">Cantidad</span>
                                                                             </label>
+                                                                            <div class="col-md-4 col-sm-6 col-xs-12">
+                                                                                <input type="text" id="txtCantiDañados" name="txtCantiDañados" required="required" class="form-control col-md-7 col-xs-12"
+                                                                                >
+                                                                            </div>
                                                                         </div>
-                                                                    </div>
-                                                                    <div class="col-md-4 col-sm-9 col-xs-12">
-                                                                        <div class="checkbox">
-                                                                            <label>
-                                                                                <input type="checkbox" class="flat" name="Previos[]" id="bultosPresen4" value="RevisionC/Autoridad"> Revisión C/Autoridad
+
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td colspan="4" rowspan="1">
+                                                                        <div class="form-group">
+                                                                            <label class="control-label col-md-3 col-sm-2 col-xs-3" for="txtNombre">Presentación de los Bultos</span>
                                                                             </label>
+
                                                                         </div>
-                                                                        <div class="checkbox">
-                                                                            <label>
-                                                                                <input type="checkbox" class="flat" name="Previos[]" id="bultosPresen5" value="Etiquetado"> Etiquetado
+                                                                        <br/><br/>
+                                                                        <div class="form-group">
+
+                                                                            <div class="col-md-2 col-sm-9 col-xs-12">
+                                                                                <div class="checkbox">
+                                                                                    <label>
+                                                                                        <input type="checkbox" class="flat" name="bultosPresen[]" id="bultosPresen1" value="PalletsMadera"> Pallets de Madera
+                                                                                    </label>
+                                                                                </div>
+                                                                                <div class="checkbox">
+                                                                                    <label>
+                                                                                        <input type="checkbox" class="flat" name="bultosPresen[]" id="bultosPresen2" value="PalletsPlastico"> Pallets de Plástico
+                                                                                    </label>
+                                                                                </div>
+
+
+                                                                            </div>
+                                                                            <div class="col-md-2 col-sm-9 col-xs-12">
+                                                                                <div class="checkbox">
+                                                                                    <label>
+                                                                                        <input type="checkbox" class="flat" name="bultosPresen[]" id="bultosPresen2" value="Cartonada"> Cartonada
+                                                                                    </label>
+                                                                                </div>
+                                                                                <div class="checkbox">
+                                                                                    <label>
+                                                                                        <input type="checkbox" class="flat" name="bultosPresen[]" id="bultosPresen3" value="Cuñetes"> Cuñetes
+                                                                                    </label>
+                                                                                </div>
+
+                                                                            </div>
+                                                                            <div class="col-md-2 col-sm-9 col-xs-12">
+                                                                                <div class="checkbox">
+                                                                                    <label>
+                                                                                        <input type="checkbox" class="flat" name="bultosPresen[]" id="bultosPresen4" value="Sacos"> Sacos
+                                                                                    </label>
+                                                                                </div>
+                                                                                <div class="checkbox">
+                                                                                    <label>
+                                                                                        <input type="checkbox" class="flat" name="bultosPresen[]" id="bultosPresen5" value="SuperBolsas"> Superbolsas
+                                                                                    </label>
+                                                                                </div>
+
+                                                                            </div>
+                                                                            <div class="col-md-2 col-sm-9 col-xs-12">
+                                                                                <div class="checkbox">
+                                                                                    <label>
+                                                                                        <input type="checkbox" class="flat" name="bultosPresen[]" id="bultosPresen6" value="Bidones"> Bidones
+                                                                                    </label>
+                                                                                </div>
+                                                                                <div class="checkbox">
+                                                                                    <label>
+                                                                                        <input type="checkbox" class="flat" name="bultosPresen[]" id="bultosPresen7" value="Cont1000L"> Cont.1000L
+                                                                                    </label>
+                                                                                </div>
+
+
+                                                                            </div>
+                                                                            <div class="col-md-2 col-sm-9 col-xs-12">
+                                                                                <div class="checkbox">
+                                                                                    <label>
+                                                                                        <input type="checkbox" class="flat" name="bultosPresen[]" id="bultosPresen8" value="HuacalesMadera"> Huacales de Madera
+                                                                                    </label>
+                                                                                </div>
+                                                                                <div class="checkbox">
+                                                                                    <label>
+                                                                                        <input type="checkbox" class="flat" name="bultosPresen[]" id="bultosPresen9" value="CajasMadera"> Cajas de Madera
+                                                                                    </label>
+                                                                                </div>
+
+
+                                                                            </div>
+                                                                            <div class="col-md-2 col-sm-9 col-xs-12">
+                                                                                <div class="checkbox">
+                                                                                    <label>
+                                                                                        <input type="checkbox" class="flat" name="bultosPresen[]" id="bultosPresen10" value="RacksMetalicos"> Racks Metalicos
+                                                                                    </label>
+                                                                                </div>
+                                                                                <div class="checkbox">
+                                                                                    <label>
+                                                                                        <input type="checkbox" class="flat" name="bultosPresen[]" id="bultosPresen11" value="Granel"> Granel
+                                                                                    </label>
+                                                                                </div>
+
+
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group">
+                                                                            <div class="col-md-12 col-sm-9 col-xs-12">
+                                                                                <textarea class="resizable_textarea form-control" placeholder="Otros (Especifique)" name="txtOtrosPresen" id="txtOtrosPresen"></textarea>
+                                                                            </div>
+                                                                        </div>
+
+                                                                    </td>
+
+                                                                </tr>
+                                                                <tr>
+                                                                    <thead>
+                                                                    <tr>
+                                                                        <th colspan="2">Averias</th>
+                                                                        <th colspan="2">Fumigado</th>
+
+                                                                    </tr>
+                                                                    </thead>
+                                                                </tr>
+                                                                <tr>
+
+                                                                    <td colspan="2" rowspan="1">
+                                                                        <div class="form-group">
+                                                                            <div class="col-md-4 col-sm-3 col-xs-12">
+                                                                                <p>
+                                                                                    Origen:
+                                                                                    <input type="radio" class="flat" name="averias" id="averias" value="1"/> <br/>
+                                                                                    Recinto:
+                                                                                    <input type="radio" class="flat" name="averias" id="averias" value="0"/>
+                                                                                </p>
+                                                                            </div>
+
+                                                                        </div>
+
+                                                                    </td>
+                                                                    <td colspan="2" rowspan="1">
+                                                                        <div class="form-group">
+                                                                            <label class="control-label col-md-3 col-sm-4 col-xs-12">FUMIGADO</label>
+                                                                            <div class="col-md-3 col-sm-9 col-xs-12">
+                                                                                <select class="form-control" name="fumigado">
+                                                                                    <option value="">Seleccione</option>
+                                                                                    <option value="si">SI</option>
+                                                                                    <option value="no">NO</option>
+                                                                                </select>
+                                                                            </div>
+
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <thead>
+                                                                    <tr>
+                                                                        <th colspan="2">Mercancia</th>
+                                                                        <th colspan="2">Previo</th>
+
+                                                                    </tr>
+                                                                    </thead>
+                                                                </tr>
+                                                                <tr>
+
+                                                                    <td colspan="2" rowspan="1">
+                                                                        <div class="form-group">
+                                                                            <label class="control-label col-md-4 col-sm-4 col-xs-12">Mercancía</label>
+                                                                            <div class="col-md-7 col-sm-9 col-xs-12">
+                                                                                <select class="form-control" name="mercancia" id="mercancia">
+                                                                                    <option value="1">Conforme a Factura</option>
+                                                                                    <option value="2">Faltante</option>
+                                                                                    <option value="3">Sobrante</option>
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+                                                                        <br/><br/>
+                                                                        <div class="form-group">
+                                                                            <label class="control-label col-md-4 col-sm-2 col-xs-3" for="txtCanMer1">Cantidad</span>
                                                                             </label>
+                                                                            <div class="col-md-7 col-sm-6 col-xs-12">
+                                                                                <input type="text" id="txtCanMer1" name="txtCanMer1" required="required" class="form-control col-md-7 col-xs-12" />
+                                                                            </div>
                                                                         </div>
-                                                                    </div>
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                        </tbody>
-                                                    </table>
-                                                    <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
-                                                    <script>
-                                                        $(function(){
-                                                            $("#btnCarga").click(function () {
-                                                                var url = "../Controladores/controlPrevios.php";
-                                                                $.ajax({
-                                                                    type: "POST",
-                                                                    url : url,
-                                                                    data : $("#cargaSuelta").serialize(),
-                                                                    success: function(data)
-                                                                    {
-                                                                        $("#respuesta").html(data);
-                                                                    }
+                                                                    </td>
+                                                                    <td colspan="2" rowspan="1">
+                                                                        <div class="form-group">
+
+                                                                            <div class="col-md-4 col-sm-9 col-xs-12">
+                                                                                <div class="checkbox">
+                                                                                    <label>
+                                                                                        <input type="checkbox" class="flat" name="Previos[]" id="bultosPresen2" value="Separacion"> Separacion
+                                                                                    </label>
+                                                                                </div>
+                                                                                <div class="checkbox">
+                                                                                    <label>
+                                                                                        <input type="checkbox" class="flat" name="Previos[]" id="bultosPresen3" value="Ocular"> Ocular
+                                                                                    </label>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-md-4 col-sm-9 col-xs-12">
+                                                                                <div class="checkbox">
+                                                                                    <label>
+                                                                                        <input type="checkbox" class="flat" name="Previos[]" id="bultosPresen4" value="RevisionC/Autoridad"> Revisión C/Autoridad
+                                                                                    </label>
+                                                                                </div>
+                                                                                <div class="checkbox">
+                                                                                    <label>
+                                                                                        <input type="checkbox" class="flat" name="Previos[]" id="bultosPresen5" value="Etiquetado"> Etiquetado
+                                                                                    </label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                                </tbody>
+                                                            </table>
+                                                            <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+                                                            <script>
+                                                                $(function(){
+                                                                    $("#btnCarga").click(function () {
+                                                                        var url = "../Controladores/controlPrevios.php";
+                                                                        $.ajax({
+                                                                            type: "POST",
+                                                                            url : url,
+                                                                            data : $("#cargaSuelta").serialize(),
+                                                                            success: function(data)
+                                                                            {
+                                                                                $("#respuesta").html(data);
+                                                                            }
+                                                                        });
+                                                                        return false;
+                                                                    });
                                                                 });
-                                                                return false;
-                                                            });
-                                                        });
-                                                    </script>
-                                                    <div align="center">
-                                                        <input type="button" id="btnCarga"  value="Guardar" class="btn btn-round btn-primary"  />
-                                                    </div>
-                                                    <div id="respuesta"></div>
+                                                            </script>
+                                                            <!-- Validar select's seleccionados -->
+                                                            <script>
+                                                                $(document).ready(function () {
+                                                                    $("#txtCanMer1").attr({
+                                                                        disabled : true
+                                                                    });
+                                                                    $("#mercancia").change(function () {
+                                                                        if($("#mercancia").val() == '2' || $("#mercancia").val() == '3'){
+                                                                            $("#txtCanMer1").attr({
+                                                                                disabled : false
+                                                                            });
+                                                                        }else if($("#mercancia").val() == '1'){
+                                                                            $("#txtCanMer1").attr({
+                                                                                disabled : true
+                                                                            });
+                                                                        }
+                                                                    });
+                                                                })
+                                                            </script>
+                                                            <!-- Validar select's de mercancia seleccionados -->
+                                                            <!-- Validar select's de bultos dañados seleccionados -->
+                                                            <script>
+                                                                $(document).ready(function () {
+                                                                    $("#txtCantiDañados").attr({
+                                                                        disabled : true
+                                                                    });
+                                                                    $("#bDañados").change(function () {
+                                                                        if($("#bDañados").val() == '1'){
+                                                                            $("#txtCantiDañados").attr({
+                                                                                disabled : false
+                                                                            });
+                                                                        }else if($("#bDañados").val() == '0'){
+                                                                            $("#txtCantiDañados").attr({
+                                                                                disabled : true
+                                                                            });
+                                                                        }else{
+                                                                            $("#txtCantiDañados").attr({
+                                                                                disabled : true
+                                                                            });
+                                                                        }
+                                                                    });
+                                                                })
+                                                            </script>
+                                                            <!-- Validar radios seleccionados -->
+                                                            <div align="center">
+                                                                <?php
+                                                                if($cHab == false){
+
+                                                                    ?>
+                                                                    <input type="button" id="btnCarga"  value="Guardar" class="btn btn-round btn-primary"  />
+                                                                    <?php
+                                                                }
+
+                                                                ?>
+                                                            </div>
+                                                            <div id="respuesta"></div>
+                                                        </div>
+                                                    </form>
                                                 </div>
-                                            </form>
+
+
+
+                                                <?php
+                                            }
+                                            ?>
+
                                         </div>
+                                <?php
+                                    }else{
+                                        ?>
+                                        <h1>NO SE HAN REGISTRADO OBSERVACIONES</h1>
+                                <?php
+                                    }
+                                ?>
 
-
-
-                                    <?php
-                                        }
-                                    ?>
-
-                                </div>
 
                             </div>
                         </div>

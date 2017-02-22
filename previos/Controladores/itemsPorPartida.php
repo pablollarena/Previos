@@ -92,7 +92,8 @@ if (isset($_SESSION['sUser']) && !empty($_SESSION['sUser'])){
 
 
          }catch(Exception $e){
-
+             error_log($e->getFile() . " " . $e->getLine() . " " . $e->getMessage(),0);
+             $sErr2 = "Error en base de datos, comunicarse con el administrador";
          }
 
 

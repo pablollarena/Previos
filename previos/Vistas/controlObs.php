@@ -8,31 +8,18 @@
 
 include_once ("../Modelos/Menu.php");
 include_once ("../Modelos/Persona.php");
-include_once("../Modelos/Sir52Facturas.php");
-include_once ("../Modelos/ReportePrevio.php");
-
 session_start();
 $oMenu = new Menu();
 $oPers = new Persona();
-$oFactura = new Facturas();
-$arrFacturas = null;
-$oReporte = null;
-$arrItem = null;
 $sErr ="";
 $sNom = "";
 $nGrp = 0;
 $arrMenu = null;
 $nick = "";
-$nRef = "";
 if(isset($_SESSION['sUser']) && !empty($_SESSION['sUser'])){
     $oPers = $_SESSION['sUser'];
     $sNom = $oPers->getNomCompleto();
     $nick = $oPers->getUsuario();
-    $nRef = $_POST['txtValRef'];
-    $oFactura->setSir60(new Sir60Referencias());
-    $oFactura->getSir60()->setReferencia($nRef);
-    $arrFacturas = $oFactura->buscarItemFactura();
-
     if($oPers->getReferen() == 1){
         $arrMenu = $oMenu->generarMenu($oPers->getGrp()->getIdGrp());
     }else if($oPers->getReferen() == 2 or $oPers->getReferen() == 3){
@@ -66,16 +53,31 @@ if($sErr != ""){
     <link href="../../vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link href="../../vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
-    <!-- NProgress -->
-    <link href="../../vendors/nprogress/nprogress.css" rel="stylesheet">
-    <!-- bootstrap-progressbar -->
-    <link href="../../vendors/bootstrap-progressbar/css/bootstrap-progressbar-3.3.4.min.css" rel="stylesheet">
     <!-- bootstrap-daterangepicker -->
     <link href="../../vendors/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
     <!-- iCheck -->
     <!--<script src="../../vendors/iCheck/icheck.min.js"></script>
     <!-- Custom Theme Style -->
     <link href="../../build/css/custom.min.css" rel="stylesheet">
+
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+    <script>
+        $(function(){
+            $("#btnRef").click(function () {
+                var url = "../Controladores/panelObservaciones.php";
+                $.ajax({
+                    type: "POST",
+                    url : url,
+                    data : $("#frmRef").serialize(),
+                    success: function(data)
+                    {
+                        $("#infoRef").html(data);
+                    }
+                });
+                return false;
+            });
+        });
+    </script>
 </head>
 
 <body class="nav-md">
@@ -170,55 +172,33 @@ if($sErr != ""){
         <!-- page content -->
         <div class="right_col" role="main">
             <div class="">
-                <div class="col-md-12 col-sm-6 col-xs-12">
-                    <div class="x_panel">
-                        <div class="x_title">
-                            <h2>ITEMS </h2>
+                <div class="row">
+                    <div class="col-md-12 col-sm-6 col-xs-12">
+                        <div class="x_panel">
+                            <div class="x_title">
+                                <h2><i class="fa fa-bars"></i> Referencias</h2>
 
-                            <div class="clearfix"></div>
-                        </div>
-                        <div class="x_content">
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="x_content">
 
-                            <form method="post" action="itemsPorPartida.php">
-                                <input type="hidden" name="txtRef" value="<?php echo $nRef;?>">
-                                <input type="hidden" name="txtFac">
-                                <table class="table table-bordered">
-                                    <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Número de Factura</th>
-                                        <th>Acción</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <?php
-                                    $i = 0;
-                                    if($arrFacturas != null) {
-                                        foreach ($arrFacturas as $vFact) {
-                                            ?>
-                                            <tr>
-                                                <th scope="row"><?php echo $i + 1; ?></th>
-                                                <td><?php echo $vFact->getNumero(); ?></td>
-                                                <td><input type="submit" value="Ver Partidas"
-                                                           class="btn btn-round btn-primary"
-                                                           onclick="txtFac.value='<?php echo $vFact->getNumero(); ?>';">
-                                                </td>
-                                            </tr>
-                                            <?php
-                                            $i++;
-                                        }
-                                    }else{
-                                        ?>
-                                        <td colspan="3">No se encontraron facturas</td>
-                                    <?php
-                                    }
-                                    ?>
+                                <form id="frmRef">
+                                    <div class="form-group">
+                                        <div class="col-sm-6 col-xs-12">
+                                            <label class="col-sm-4 col-xs-12 control-label">Número de Referencia</label>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" name="txtRef">
+                                                <span class="input-group-btn">
+                                                    <input type="submit" id="btnRef" class="btn btn-primary" value="Buscar" />
+                                                </span>
+                                            </div>
+                                        </div>
 
-
-                                    </tbody>
-                                </table>
-                            </form>
-
+                                    </div>
+                                </form>
+                                <div id="infoRef">
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -296,3 +276,4 @@ if($sErr != ""){
     <!-- /gauge.js -->
 </body>
 </html>
+
