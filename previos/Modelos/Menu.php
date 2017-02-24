@@ -104,6 +104,11 @@ class Menu
                             'id' => 'consultar1',
                             'titulo' => 'Consultar Previos Asignados',
                             'enlace' => '../Vistas/consultarPrev.php'
+                        ),
+                        array(
+                            'id' => 'consultar2',
+                            'titulo' => 'Modificar InfoReferencia',
+                            'enlace' => '../Vistas/buscarRefMod.php'
                         )
                     ),
                     'icon' => 'fa fa-camera'

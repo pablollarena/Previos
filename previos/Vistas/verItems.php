@@ -206,7 +206,7 @@ if($sErr != ""){
                                                 foreach ($arrItem as $vRow){
                                                     ?>
                                                     <div class="x_content">
-                                                        <form id="frmPrevio<?php echo $nCont;?>">
+                                                        <form id="frmPrevio<?php echo $nCont;?>" action="Galeria.php" method="post">
                                                             <input type="hidden" name="txtRef1" value="<?php echo $nRef;?>">
                                                             <input type="hidden" name="txtFac1" value="<?php echo $nFactura;?>">
                                                             <input type="hidden" name="txtItem" value="<?php echo $vRow->getSir52()->getItem();?>">
@@ -304,6 +304,17 @@ if($sErr != ""){
                                                                                         <label class="control-label col-md-2 col-sm-3 col-xs-12">Observaciones</label>
                                                                                         <div class="col-md-10 col-sm-9 col-xs-12">
                                                                                             <input class="form-control" name="txtObservaciones" id="txtObservaciones" value="<?php  echo $vRow->getObservaciones(); ?>" disabled />
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </td>
+
+
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td colspan="3" rowspan="1">
+                                                                                    <div class="form-group">
+                                                                                        <div class="col-md-10 col-sm-9 col-xs-12" align="center">
+                                                                                            <input type="submit" value="Ver Galeria por partida" class="btn btn-round btn-primary">
                                                                                         </div>
                                                                                     </div>
                                                                                 </td>

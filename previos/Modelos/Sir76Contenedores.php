@@ -261,6 +261,7 @@ class Sir76Contenedores
         }else{
             if($nTipo == 1){
                 $sQuery = "exec [Previos].[dbo].buscarInfoConten '".$nNumCon."','".$sNumRef."';";
+
                 $rst = $oAD2->ejecutaQuery($sQuery);
                 $oAD2->Desconecta();
                 if($rst){
@@ -292,6 +293,7 @@ class Sir76Contenedores
                     $oContenedor->setAveriasOrigen($rst [0][24]);
                     $oContenedor->setAveriasRecinto($rst [0][25]);
                     $oContenedor->setFumigado($rst [0][26]);
+                    $oContenedor->setRecintoPrevio($rst [0][27]);
                 }
             }else if($nTipo == 2){
                 $sQuery = "exec [Previos].[dbo].consultarCargaSuelta '".$sNumRef."';";
@@ -323,6 +325,7 @@ class Sir76Contenedores
                     $oContenedor->setAveriasOrigen($rst [0][21]);
                     $oContenedor->setAveriasRecinto($rst [0][22]);
                     $oContenedor->setFumigado($rst [0][23]);
+                    $oContenedor->setRecintoPrevio($rst[0][24]);
                 }
             }
         }
@@ -497,7 +500,8 @@ class Sir76Contenedores
              ".$this->getPrevio()->getOcular().",
              ".$this->getPrevio()->getEtiquetado().",
              ".$this->getPrevio()->getSeparacion().",
-             ".$this->getPrevio()->getRevConAutoridad().",'Sin Observaciones';";
+             ".$this->getPrevio()->getRevConAutoridad().",'Sin Observaciones',
+             '".$this->getConten()->getRecintoPrevio()."';";
             $nAfec = $oAD2->ejecutaComando($sQuery);
             $oAD2->Desconecta();
         }else if ($sOpe == 'CargaSuelta'){
@@ -553,7 +557,8 @@ class Sir76Contenedores
              ".$this->getPrevio()->getOcular().",
              ".$this->getPrevio()->getEtiquetado().",
              ".$this->getPrevio()->getSeparacion().",
-             ".$this->getPrevio()->getRevConAutoridad().",'Sin Observaciones';";
+             ".$this->getPrevio()->getRevConAutoridad().",'Sin Observaciones',
+             '".$this->getConten()->getRecintoPrevio()."';";
             $nAfec = $oAD2->ejecutaComando($sQuery);
             $oAD2->Desconecta();
         }
@@ -612,6 +617,135 @@ class Sir76Contenedores
             }
         }
         return $bRet;
+    }
+
+    function actualizarInfoReferencia ($tipoOperacion){
+        $oAD2 = new AccesoDatos2();
+        $sQuery = "";
+        $nAfec = 0;
+        if ($tipoOperacion == 1){
+            if ($this->getReferencia60()->getRerefencia() == "" and $this->getNumero() == ""){
+                throw new Exception("Sir76Contenedores->actualizarInfoReferencia(): error, faltan datos");
+            }else{
+                $sQuery = "EXEC [Previos].dbo.actualizarDatosCarga '".$this->getNumero()."',
+                ".$this->getConten()->getIMO().",
+                ".$this->getConten()->getTamaño().",
+                ".$this->getConten()->getPeso().",
+                '".$this->getConten()->getTipo()."',
+                '".$this->getConten()->getSelloOrigen()."',
+                '".$this->getConten()->getSelloColocado()."',
+                ".$this->getConten()->getPesoCarga().",
+                ".$this->getConten()->getCantidadBultos().",
+                ".$this->getConten()->getBultosDañados().",
+                ".$this->getConten()->getCantBulDañados.",
+                ".$this->getConten()->getPalletsMadera().",
+                ".$this->getConten()->getSacos().",
+                ".$this->getConten()->getHuacalesMadera().",
+                ".$this->getConten()->getPalletsPlastico().",
+                ".$this->getConten()->getSuperBolsas().",
+                ".$this->getConten()->getCajasMadera().",
+                ".$this->getConten()->getCartonada().",
+                ".$this->getConten()->getBidones().",
+                ".$this->getConten()->getRacksMetalicos().",
+                ".$this->getConten()->getCuñetes().",
+                ".$this->getConten()->getCont1000L().",
+                ".$this->getConten()->getGranel().",
+                ".$this->getConten()->getOtros().",
+                ".$this->getConten()->getAveriasOrigen().",
+                ".$this->getConten()->getAveriasRecinto().",
+                ".$this->getConten()->getFumigado().",
+                '".$this->getReferencia60()->getReferencia()."',
+                1,
+                ".$this->getConten()->getRecintoPrevio().",
+                ".$this->getDaño()->getOrigen().",
+                ".$this->getDaño()->getRecinto().",
+                ".$this->getDaño()->getFrente().",
+                ".$this->getDaño()->getPanelIzq().",
+                ".$this->getDaño()->getPiso().",
+                ".$this->getDaño()->getTecho().",
+                ".$this->getDaño()->getPanelDer().",
+                ".$this->getDaño()->getPuertas().",
+                ".$this->getDaño()->getBarrasPuerta().",
+                ".$this->getDaño()->getSeguros().",
+                ".$this->getDaño()->getAbrazaderas().",
+                ".$this->getDaño()->getLonasBarras().",
+                '".$this->getDaño()->getOtros()."',
+                ".$this->getMercancia()->getConformeFactura().",
+                ".$this->getMercancia()->getFaltante().",
+                ".$this->getMercancia()->getSobrante().",
+                ".$this->getMercancia()->getCantidad().",
+                ".$this->getPrevio()->getDesYCon().",
+                ".$this->getPrevio()->getOcular().",
+                ".$this->getPrevio()->getEtiquetado().",
+                ".$this->getPrevio()->getSeparacion().",
+                ".$this->getPrevio()->getRevConAutoridad().",
+                '".$this->getConten()->getBL()."';";
+                $nAfec = $oAD2->ejecutaComando($sQuery);
+                $oAD2->Desconecta();
+            }
+        }else if($tipoOperacion == 2){
+            if($this->getReferencia60()->getReferencia() == ""){
+                throw new Exception("Sir76Contenedores->actualizarInfoReferencia(): error, faltan datos");
+            }else{
+                $sQuery = "EXEC [Previos].dbo.actualizarDatosCarga 'Sin Contenedor',
+                ".$this->getConten()->getIMO().",
+                ".$this->getConten()->getTamaño().",
+                ".$this->getConten()->getPeso().",
+                '".$this->getConten()->getTipo()."',
+                '".$this->getConten()->getSelloOrigen()."',
+                '".$this->getConten()->getSelloColocado()."',
+                ".$this->getConten()->getPesoCarga().",
+                ".$this->getConten()->getCantidadBultos().",
+                ".$this->getConten()->getBultosDañados().",
+                ".$this->getConten()->getCantBulDañados.",
+                ".$this->getConten()->getPalletsMadera().",
+                ".$this->getConten()->getSacos().",
+                ".$this->getConten()->getHuacalesMadera().",
+                ".$this->getConten()->getPalletsPlastico().",
+                ".$this->getConten()->getSuperBolsas().",
+                ".$this->getConten()->getCajasMadera().",
+                ".$this->getConten()->getCartonada().",
+                ".$this->getConten()->getBidones().",
+                ".$this->getConten()->getRacksMetalicos().",
+                ".$this->getConten()->getCuñetes().",
+                ".$this->getConten()->getCont1000L().",
+                ".$this->getConten()->getGranel().",
+                ".$this->getConten()->getOtros().",
+                ".$this->getConten()->getAveriasOrigen().",
+                ".$this->getConten()->getAveriasRecinto().",
+                ".$this->getConten()->getFumigado().",
+                '".$this->getReferencia60()->getReferencia()."',
+                2,
+                ".$this->getConten()->getRecintoPrevio().",
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                'Sin otros daños',
+                ".$this->getMercancia()->getConformeFactura().",
+                ".$this->getMercancia()->getFaltante().",
+                ".$this->getMercancia()->getSobrante().",
+                ".$this->getMercancia()->getCantidad().",
+                ".$this->getPrevio()->getDesYCon().",
+                ".$this->getPrevio()->getOcular().",
+                ".$this->getPrevio()->getEtiquetado().",
+                ".$this->getPrevio()->getSeparacion().",
+                ".$this->getPrevio()->getRevConAutoridad().",
+                '".$this->getConten()->getBL()."';";
+                $nAfec = $oAD2->ejecutaComando($sQuery);
+                $oAD2->Desconecta();
+            }
+
+        }
+        return $nAfec;
     }
 
 }

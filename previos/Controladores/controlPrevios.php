@@ -182,6 +182,7 @@ if(isset($_SESSION['sUser']) && !empty($_SESSION['sUser'])){
             $oContendor->getPrevio()->setOcular($x3 == 1 ? 1 : 0);
             $oContendor->getPrevio()->setRevConautoridad($x4 == 1 ? 1 : 0);
             $oContendor->getPrevio()->setEtiquetado($x5 == 1 ? 1 : 0);
+            $oContendor->getConten()->setRecintoPrevio($_POST['RecintoPrevio']);
         }
 
         try{
@@ -339,13 +340,13 @@ if(isset($_SESSION['sUser']) && !empty($_SESSION['sUser'])){
             $oContendor->getPrevio()->setRevConautoridad($x4 == 1 ? 1 : 0);
             $oContendor->getPrevio()->setEtiquetado($x5 == 1 ? 1 : 0);
             $oContendor->getConten()->setBL($_POST['txtBL']);
+            $oContendor->getConten()->setRecintoPrevio($_POST['RecintoPrevio']);
 
 
 
 
         try{
             if($oContendor->insertarCargaContenerizada($_POST['operacion']) == 1){
-                var_dump($oContendor);
                 echo " <script src='../../vendors/pnotify/dist/pnotify.js'></script> ";
                 echo "<script src='../../vendors/pnotify/dist/pnotify.buttons.js' ></script> ";
                 echo "<script src='../../vendors/pnotify/dist/pnotify.nonblock.js' ></script> ";

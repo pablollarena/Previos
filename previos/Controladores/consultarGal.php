@@ -51,7 +51,7 @@ if($sErr != ""){
     <div class="x_title">
         <ul class="nav navbar-right panel_toolbox">
             <li>
-                <input type="submit" value="Ver Galeria del Previo" class="btn btn-round btn-primary">
+
             </li>
         </ul>
         <div class="clearfix"></div>

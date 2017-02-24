@@ -41,6 +41,19 @@ class Contenedor
     private $sSello = "";
     private $sBL = "";
     private $nPeso2 = 0;
+    private $RecintoPrevio = "";
+
+
+    public function getRecintoPrevio()
+    {
+        return $this->RecintoPrevio;
+    }
+
+
+    public function setRecintoPrevio($RecintoPrevio)
+    {
+        $this->RecintoPrevio = $RecintoPrevio;
+    }
 
 
     public function getPeso2()
@@ -446,6 +459,7 @@ class Contenedor
                 $oContenedor->setAveriasOrigen($rst [0][24]);
                 $oContenedor->setAveriasRecinto($rst [0][25]);
                 $oContenedor->setFumigado($rst [0][26]);
+                $oContenedor->setRecintoPrevio($rst [0][27]);
 
             }
         }

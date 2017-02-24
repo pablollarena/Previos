@@ -371,6 +371,14 @@ if($sErr != ""){
                                                                                 </select>
                                                                             </div>
                                                                         </div>
+                                                                        <br/><br/>
+                                                                        <div class="form-group">
+                                                                            <label class="control-label col-md-1 col-sm-1 col-xs-3" >Recinto</span>
+                                                                            </label>
+                                                                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                                                                <input type="text" id="RecintoPrevio" name="RecintoPrevio" required="required" class="form-control col-md-7 col-xs-12">
+                                                                            </div>
+                                                                        </div>
                                                                         <br/>
                                                                         <br/>
                                                                         <br/>
@@ -938,6 +946,13 @@ if($sErr != ""){
                                                                     <input type="text" id="Peso" name="Peso" required="required" class="form-control col-md-7 col-xs-12"
                                                                     >
                                                                 </div>
+                                                                <label class="control-label col-md-1 col-sm-2 col-xs-3" for="txtNombre">Recinto</span>
+                                                                </label>
+                                                                <div class="col-md-3 col-sm-6 col-xs-12">
+                                                                    <input type="text" id="RecintoPrevio" name="RecintoPrevio" required="required" class="form-control col-md-7 col-xs-12"
+                                                                    >
+                                                                </div>
+
                                                             </div>
                                                             <br/>
                                                             <br/>

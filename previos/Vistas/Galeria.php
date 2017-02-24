@@ -20,17 +20,22 @@ $nGrp = 0;
 $arrMenu = null;
 $nick = "";
 
+
 if(isset($_SESSION['sUser']) && !empty($_SESSION['sUser'])){
     $oPers = $_SESSION['sUser'];
     $sNom = $oPers->getNomCompleto();
     $nick = $oPers->getUsuario();
-    $sRef = $_POST['txtRefe'];
+    $sRef = $_POST['txtRef1'];
+    $nFact = $_POST['txtFac1'];
+    $nItem = $_POST['txtItem'];
     $sCad1 = substr($sRef,0,3);
     $sCad2 = substr($sRef,4,5);
     $sCad3 = substr($sRef, 10, 4);
     $sRef = $sCad1."-".$sCad2."-".$sCad3;
     $oImg->setSir60(new Sir60Referencias());
     $oImg->getSir60()->setReferencia($sRef);
+    $oImg->setFactura($nFact);
+    $oImg->setItem($nItem);
     $arrImg = $oImg->buscarImagenes();
     if($oPers->getReferen() == 1){
         $arrMenu = $oMenu->generarMenu($oPers->getGrp()->getIdGrp());
