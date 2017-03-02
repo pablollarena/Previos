@@ -183,7 +183,7 @@ class Contenedor
     }
 
 
-    public function getNPesoCarga()
+    public function getPesoCarga()
     {
         return $this->nPesoCarga;
     }

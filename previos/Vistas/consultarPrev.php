@@ -5,6 +5,8 @@
  * Date: 18/01/2017
  * Time: 04:42 PM
  */
+ini_set("session.cookie_lifetime","7200");
+ini_set("session.gc_maxlifetime","7200");
 include_once ("../Modelos/Menu.php");
 include_once ("../Modelos/Persona.php");
 include_once ("../Modelos/Sir60Referencias.php");

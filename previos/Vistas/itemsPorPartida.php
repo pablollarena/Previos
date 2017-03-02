@@ -5,7 +5,8 @@
  * Date: 12/01/2017
  * Time: 11:29
  */
-
+ini_set("session.cookie_lifetime","7200");
+ini_set("session.gc_maxlifetime","7200");
 include_once ("../Modelos/Menu.php");
 include_once ("../Modelos/Persona.php");
 include_once("../Modelos/Sir52Facturas.php");
@@ -432,26 +433,7 @@ if($sErr != ""){
 
                                                                     </div>
                                                                 </div>
-                                                                <div>
-                                                                <?php
-                                                                    if($nMsj == 1){
 
-                                                                        echo " <script src='../../vendors/pnotify/dist/pnotify.js'></script> ";
-                                                                        echo "<script src='../../vendors/pnotify/dist/pnotify.buttons.js' ></script> ";
-                                                                        echo "<script src='../../vendors/pnotify/dist/pnotify.nonblock.js' ></script> ";
-                                                                        echo " <script>
-                                                                            $(document).ready(function() {
-                                                                                new PNotify({
-                                                                                    title: 'Éxito',
-                                                                                    text: 'Información guardada correctamente',
-                                                                                    type: 'success',
-                                                                                    styling: 'bootstrap3'
-                                                                                });
-                                                                            });
-                                                                        </script> ";
-                                                                    }
-                                                                ?>
-                                                                </div>
                                                             </form>
                                                         </div>
                                                     </div>
@@ -469,6 +451,26 @@ if($sErr != ""){
 
                                         </div>
                                         <!-- end of accordion -->
+                                        <div>
+                                            <?php
+                                            if($nMsj == 1){
+
+                                                echo " <script src='../../vendors/pnotify/dist/pnotify.js'></script> ";
+                                                echo "<script src='../../vendors/pnotify/dist/pnotify.buttons.js' ></script> ";
+                                                echo "<script src='../../vendors/pnotify/dist/pnotify.nonblock.js' ></script> ";
+                                                echo " <script>
+                                                                            $(document).ready(function() {
+                                                                                new PNotify({
+                                                                                    title: 'Éxito',
+                                                                                    text: 'Información guardada correctamente',
+                                                                                    type: 'success',
+                                                                                    styling: 'bootstrap3'
+                                                                                });
+                                                                            });
+                                                                        </script> ";
+                                            }
+                                            ?>
+                                        </div>
 
 
                                     </div>

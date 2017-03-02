@@ -220,7 +220,6 @@ class ReportePrevio
              '".$this->getObservaciones()."';";
 
             $nAfec = $oAD->ejecutaComando($sQuery);
-            var_dump($nAfec);
             $oAD->Desconecta();
 
         }

@@ -5,6 +5,8 @@
  * Date: 25/01/2017
  * Time: 05:21 PM
  */
+ini_set("session.cookie_lifetime","7200");
+ini_set("session.gc_maxlifetime","7200");
 include_once ("../Modelos/Sir76Contenedores.php");
 include_once ("../Modelos/Sir60Referencias.php");
 $oConten = new Sir76Contenedores();

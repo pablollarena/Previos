@@ -5,6 +5,8 @@
  * Date: 25/01/2017
  * Time: 05:21 PM
  */
+ini_set("session.cookie_lifetime","7200");
+ini_set("session.gc_maxlifetime","7200");
 include_once ("../Modelos/Sir76Contenedores.php");
 include_once ("../Modelos/Sir60Referencias.php");
 $oConten = new Sir76Contenedores();
@@ -13,6 +15,7 @@ if(isset($_POST['txtRef']) && !empty($_POST['txtRef'])){
     $oConten->setReferencia60(new Sir60Referencias());
     $oConten->getReferencia60()->setReferencia($_POST['txtRef']);
     $arrConte = $oConten->buscarContenedoresPorRef2();
+    $sRef = $_POST['txtRef'];
 
 }
 ?>
@@ -23,6 +26,10 @@ if(isset($_POST['txtRef']) && !empty($_POST['txtRef'])){
     <script src="../../vendors/iCheck/icheck.min.js"></script>
     <!-- Custom Theme Style -->
     <link href="../../build/css/custom.min.css" rel="stylesheet">
+    <!-- PNotify -->
+    <link href="../../vendors/pnotify/dist/pnotify.css" rel="stylesheet">
+    <link href="../../vendors/pnotify/dist/pnotify.buttons.css" rel="stylesheet">
+    <link href="../../vendors/pnotify/dist/pnotify.nonblock.css" rel="stylesheet">
 </head>
 <div class="x_content">
     <div class="main_container">
@@ -62,10 +69,10 @@ if(isset($_POST['txtRef']) && !empty($_POST['txtRef'])){
                                                                     <input type="text" id="txtPeso" name="txtPeso" required="required" class="form-control col-md-7 col-xs-12"
                                                                            value="<?php echo $vRow->getPeso(); ?>" disabled>
                                                                 </div>
-                                                                <label class="control-label col-md-1 col-sm-1 col-xs-3" >Sellos</span>
+                                                                <label class="control-label col-md-1 col-sm-1 col-xs-3" >Sello de Origen</span>
                                                                 </label>
                                                                 <div class="col-md-3 col-sm-6 col-xs-12">
-                                                                    <input type="text" id="txtSellos" name="txtSellos" required="required" class="form-control col-md-7 col-xs-12"
+                                                                    <input type="text" id="txtValorSello" name="txtValorSello" required="required" class="form-control col-md-7 col-xs-12"
                                                                            value="<?php echo $vRow->getSir107()->getSellos(); ?>" disabled>
                                                                 </div>
                                                                 <label class="control-label col-md-1 col-sm-4 col-xs-12">IMO</label>
@@ -94,7 +101,7 @@ if(isset($_POST['txtRef']) && !empty($_POST['txtRef'])){
                                                                     <th>Tamaño (Actual: <?php echo $vRow->getConten()->getTamaño();?>')</small></th>
                                                                     <th>Tipo (Actual: <?php echo $vRow->getConten()->getTipo();?>)</th>
                                                                     <th>Sello Colocado (Actual: <?php echo $vRow->getConten()->getSelloColocado();?>)</th>
-                                                                    <th>Peso de Carga S/Contenerizar (Actual: <?php echo $vRow->getConten()->getPeso();?>)</th>
+                                                                    <th>Peso de Carga S/Contenerizar (Actual: <?php echo $vRow->getConten()->getPesoCarga();?>)</th>
                                                                 </tr>
                                                                 </thead>
                                                                 <tbody>
@@ -129,7 +136,7 @@ if(isset($_POST['txtRef']) && !empty($_POST['txtRef'])){
                                                                     </td>
                                                                     <td>
                                                                         <div class="form-group">
-                                                                            <label class="control-label col-md-3 col-sm-2 col-xs-3" for="txtSelloColocado">Sellos</span>
+                                                                            <label class="control-label col-md-3 col-sm-2 col-xs-3" for="txtSelloColocado">Sello Colocado</span>
                                                                             </label>
                                                                             <div class="col-md-7 col-sm-6 col-xs-12">
                                                                                 <input type="text" id="txtSelloColocado" name="txtSelloColocado" required="required" class="form-control col-md-7 col-xs-12"
@@ -143,8 +150,8 @@ if(isset($_POST['txtRef']) && !empty($_POST['txtRef'])){
                                                                             <label class="control-label col-md-3 col-sm-2 col-xs-3">Peso</span>
                                                                             </label>
                                                                             <div class="col-md-7 col-sm-6 col-xs-12">
-                                                                                <input type="text" id="txtPeso1" name="txtPeso1" required="required" class="form-control col-md-7 col-xs-12"
-                                                                                value="<?php echo $vRow->getConten()->getPeso();?>">
+                                                                                <input type="text" id="txtPesoCarga" name="txtPesoCarga" required="required" class="form-control col-md-7 col-xs-12"
+                                                                                value="<?php echo $vRow->getConten()->getPesoCarga();?>">
                                                                             </div>
 
                                                                         </div>
@@ -272,8 +279,21 @@ if(isset($_POST['txtRef']) && !empty($_POST['txtRef'])){
                                                                 <thead>
                                                                 <tr>
                                                                     <th colspan="1">Cantidad de Bultos (Actual: <?php echo $vRow->getConten()->getCantidadBultos();?>)</th>
-                                                                    <th colspan="3">Bultos Dañados y Cuantos</th>
-
+                                                                    <?php
+                                                                    if($vRow->getConten()->getBultosDañados() == 1){
+                                                                        ?>
+                                                                        <input type="hidden" name="txtCantBultDañados" value="<?php echo  $vRow->getConten()->getCantBultDañados();?>">
+                                                                        <input type="hidden" name="txtBultDañados" value="1" >
+                                                                        <th colspan="3">Bultos Dañados (SI), Cuantos : <?php echo  $vRow->getConten()->getCantBultDañados();?></th>
+                                                                        <?php
+                                                                    }else if($vRow->getConten()->getBultosDañados() == 0){
+                                                                        ?>
+                                                                        <input type="hidden" name="txtCantBultDañados1" value="0">
+                                                                        <input type="hidden" name="txtBultDañados1" value="0" >
+                                                                        <th colspan="3">Bultos Dañados (NO)</th>
+                                                                        <?php
+                                                                    }
+                                                                    ?>
                                                                 </tr>
                                                                 </thead>
                                                                 </tr>
@@ -291,14 +311,13 @@ if(isset($_POST['txtRef']) && !empty($_POST['txtRef'])){
                                                                     </td>
                                                                     <td colspan="3" rowspan="1">
                                                                         <div class="form-group">
-                                                                            <label class="control-label col-md-2 col-sm-3 col-xs-12">Bultos Dañados</label>
-                                                                            <div class="col-md-4 col-sm-6 col-xs-12">
-                                                                                <p>
-                                                                                    SI:
-                                                                                    <?php $bDañado = $vRow->getConten()->getBultosDañados();?>
-                                                                                    <input type="radio" class="flat" name="bDañados" id="bDañados" value="1"  <?php echo($bDañado == 1 ? 'Checked="Checked"' : '');?>  /> NO:
-                                                                                    <input type="radio" class="flat" name="bDañados" id="bDañados" value="0"  <?php echo($bDañado == 0 ? 'Checked="Checked"' : '');?> />
-                                                                                </p>
+                                                                            <label class="control-label col-md-2 col-sm-4 col-xs-12">Bultos dañados</label>
+                                                                            <div class="col-md-4 col-sm-9 col-xs-12">
+                                                                                <select class="form-control" name="bDañados" id="bDañados<?php echo $nCon;?>">
+                                                                                    <option value="">Seleccione</option>
+                                                                                    <option value="1">SI</option>
+                                                                                    <option value="0">NO</option>
+                                                                                </select>
                                                                             </div>
                                                                             <label class="control-label col-md-2 col-sm-3 col-xs-12" for="txtCantiDañados">Cantidad</span>
                                                                             </label>
@@ -427,7 +446,19 @@ if(isset($_POST['txtRef']) && !empty($_POST['txtRef'])){
                                                                 <tr>
                                                                     <thead>
                                                                     <tr>
-                                                                        <th colspan="2">Averias</th>
+                                                                        <?php
+                                                                        if($vRow->getConten()->getAveriasOrigen() == 1){
+                                                                           ?>
+                                                                            <input type="hidden" name="AveriaOrigen" value="1" >
+                                                                            <th colspan="2">Averias en el Origen</th>
+                                                                        <?php
+                                                                        }else{
+                                                                            ?>
+                                                                            <input type="hidden" name="AveriaRecinto" value="0">
+                                                                            <th colspan="2">Averias en el Recinto</th>
+                                                                           <?php
+                                                                        }
+                                                                        ?>
                                                                         <th colspan="2">Fumigado (Estado actual: <?php echo $vRow->getConten()->getFumigado();?>)</th>
 
                                                                     </tr>
@@ -437,15 +468,13 @@ if(isset($_POST['txtRef']) && !empty($_POST['txtRef'])){
 
                                                                     <td colspan="2" rowspan="1">
                                                                         <div class="form-group">
+                                                                            <label class="control-label col-md-3 col-sm-4 col-xs-12">Averias</label>
                                                                             <div class="col-md-4 col-sm-3 col-xs-12">
-                                                                                <p>
-                                                                                    Origen:
-                                                                                    <?php $nAveriasOrigen = $vRow->getConten()->getAveriasOrigen(); ?>
-                                                                                    <?php $nAveriasRecinto = $vRow->getConten()->getAveriasRecinto(); ?>
-                                                                                    <input type="radio" class="flat" name="averias" id="averias" value="1" <?php echo($nAveriasOrigen == 1 ? 'Checked="Checked"' : '');?> /> <br/>
-                                                                                    Recinto:
-                                                                                    <input type="radio" class="flat" name="averias" id="averias" value="0" <?php echo($nAveriasRecinto == 1 ? 'Checked="Checked"' : '');?> />
-                                                                                </p>
+                                                                                <select class="form-control" name="averias" >
+                                                                                    <option value="">Seleccione</option>
+                                                                                    <option value="1">Origen</option>
+                                                                                    <option value="0">Recinto</option>
+                                                                                </select>
                                                                             </div>
 
                                                                         </div>
@@ -476,11 +505,15 @@ if(isset($_POST['txtRef']) && !empty($_POST['txtRef'])){
                                                                             <?php
                                                                         }else if($vRow->getMercancia()->getFaltante() != 0){
                                                                             ?>
+                                                                            <input type="hidden" name="txtFaltante" value="1">
+                                                                            <input type="hidden" name="txtCantidad1" value="<?php  echo ($vRow->getMercancia()->getCantidad());?>" >
                                                                             <th colspan="2">Mercancia (Estado actual: <?php echo($vRow->getMercancia()->getFaltante() == 1 ? 'Faltante' : ''); ?>, Cantidad: <?php echo $vRow->getMercancia()->getCantidad(); ?>) </th>
                                                                             <?php
                                                                         }else if($vRow->getMercancia()->getSobrante() != 0){
                                                                             ?>
-                                                                            <th colspan="2">Mercancia (Estado actual: <?php echo($vRow->getMercancia()->getSobrante() == 1 ? 'Faltante' : ''); ?>, Cantidad: <?php echo $vRow->getMercancia()->getCantidad(); ?>) </th>
+                                                                            <input type="hidden" name="txtSobrante" value="1">
+                                                                            <input type="hidden" name="txtCantidad2" value="<?php  echo ($vRow->getMercancia()->getCantidad());?>" >
+                                                                            <th colspan="2">Mercancia (Estado actual: <?php echo($vRow->getMercancia()->getSobrante() == 1 ? 'Sobrante' : ''); ?>, Cantidad: <?php echo $vRow->getMercancia()->getCantidad(); ?>) </th>
                                                                             <?php
                                                                         }
                                                                         ?>
@@ -571,6 +604,30 @@ if(isset($_POST['txtRef']) && !empty($_POST['txtRef'])){
                                                                     });
                                                                 });
                                                             </script>
+                                                            <!-- Validar select's de bultos dañados seleccionados -->
+                                                            <script>
+                                                                $(document).ready(function () {
+                                                                    $("#txtCantiDañados<?php echo $nCon;?>").attr({
+                                                                        disabled : true
+                                                                    });
+                                                                    $("#bDañados<?php echo $nCon;?>").change(function () {
+                                                                        if($("#bDañados<?php echo $nCon;?>").val() == '1'){
+                                                                            $("#txtCantiDañados<?php echo $nCon;?>").attr({
+                                                                                disabled : false
+                                                                            });
+                                                                        }else if($("#bDañados<?php echo $nCon;?>").val() == '0'){
+                                                                            $("#txtCantiDañados<?php echo $nCon;?>").attr({
+                                                                                disabled : true
+                                                                            });
+                                                                        }else{
+                                                                            $("#txtCantiDañados<?php echo $nCon;?>").attr({
+                                                                                disabled : true
+                                                                            });
+                                                                        }
+                                                                    });
+                                                                })
+                                                            </script>
+                                                            <!-- Validar radios seleccionados -->
                                                             <!-- Validar select's seleccionados -->
                                                             <script>
                                                                 $(document).ready(function () {
@@ -608,22 +665,27 @@ if(isset($_POST['txtRef']) && !empty($_POST['txtRef'])){
                                             <form id="cargaSuelta">
                                                 <input type="hidden" name="txtRef" value="<?php echo $sRef;?>"/>
                                                 <input type="hidden" name="operacion" value="CargaSuelta" />
+                                                <input type="hidden" name="txtFumigado" value="<?php echo $vRow->getConten()->getFumigado();?>">
                                                 <div class="panel-body">
                                                     <div class="form-group">
                                                         <label class="control-label col-md-1 col-sm-1 col-xs-3" >Sello de Origen</span>
                                                         </label>
                                                         <div class="col-md-3 col-sm-6 col-xs-12">
                                                             <input type="text" id="txtSellos" name="txtSellos" required="required" class="form-control col-md-7 col-xs-12"
-                                                                   value="<?php echo $vRow->getConten()->getSelloOrigen(); ?>"/>
+                                                                   value="<?php echo $vRow->getConten()->getSelloOrigen(); ?>" disabled/>
                                                         </div>
-                                                        <label class="control-label col-md-1 col-sm-1 col-xs-3" >No. BL</span>
+                                                        <label class="control-label col-md-1 col-sm-1 col-xs-3" >Peso</span>
                                                         </label>
                                                         <div class="col-md-3 col-sm-6 col-xs-12">
                                                             <input type="text" id="txtBL" name="txtBL" required="required" value="<?php echo $vRow->getConten()->getBL(); ?> " class="form-control col-md-7 col-xs-12" />
                                                         </div>
-                                                        <label class="control-label col-md-1 col-sm-4 col-xs-12">IMO</label>
-                                                        <div class="col-md-3 col-sm-9 col-xs-12">
-                                                            <input type="text" id="txtIMO" name="txtIMO" required="required" value="<?php echo ($vRow->getConten()->getIMO() == 1 ? 'SI' : 'NO'  ); ?> " class="form-control col-md-7 col-xs-12" />
+                                                        <label class="control-label col-md-1 col-sm-4 col-xs-12">IMO: <?php echo ($vRow->getConten()->getIMO() == 1 ? 'SI' : 'NO');?> </label>
+                                                        <div class="col-md-3 col-sm-3 col-xs-12">
+                                                            <select class="form-control" name="txtIMO" >
+                                                                <option value="">Seleccione</option>
+                                                                <option value="1">SI</option>
+                                                                <option value="0">NO</option>
+                                                            </select>
                                                         </div>
                                                     </div>
                                                     <br/><br/>
@@ -634,7 +696,7 @@ if(isset($_POST['txtRef']) && !empty($_POST['txtRef'])){
                                                             <input type="text" id="txtSelloColocado" name="txtSelloColocado" required="required" class="form-control col-md-7 col-xs-12"
                                                                    value="<?php  echo $vRow->getConten()->getSelloColocado();?>"  >
                                                         </div>
-                                                        <label class="control-label col-md-1 col-sm-2 col-xs-3" for="txtNombre">Peso</span>
+                                                        <label class="control-label col-md-1 col-sm-2 col-xs-3" for="txtNombre">No. BL</span>
                                                         </label>
                                                         <div class="col-md-3 col-sm-6 col-xs-12">
                                                             <input type="text" id="Peso" name="Peso" required="required" class="form-control col-md-7 col-xs-12"
@@ -653,11 +715,26 @@ if(isset($_POST['txtRef']) && !empty($_POST['txtRef'])){
 
                                                         </tr>
                                                         </thead>
-
-                                                        <tr>
-                                                            <th colspan="1">Cantidad de Bultos</th>
-                                                            <th colspan="3">Bultos Dañados y Cuantos</th>
-
+                                                            <thead>
+                                                            <tr>
+                                                                <th colspan="1">Cantidad de Bultos (Actual: <?php echo $vRow->getConten()->getCantidadBultos();?>)</th>
+                                                                <?php
+                                                                if($vRow->getConten()->getBultosDañados() == 1){
+                                                                    ?>
+                                                                    <input type="hidden" name="txtCantBultDañados" value="<?php echo  $vRow->getConten()->getCantBultDañados();?>">
+                                                                    <input type="hidden" name="txtBultDañados" value="1" >
+                                                                    <th colspan="3">Bultos Dañados (SI), Cuantos : <?php echo  $vRow->getConten()->getCantBultDañados();?></th>
+                                                                    <?php
+                                                                }else if($vRow->getConten()->getBultosDañados() == 0){
+                                                                    ?>
+                                                                    <input type="hidden" name="txtCantBultDañados1" value="0">
+                                                                    <input type="hidden" name="txtBultDañados1" value="0" >
+                                                                    <th colspan="3">Bultos Dañados (NO)</th>
+                                                                    <?php
+                                                                }
+                                                                ?>
+                                                            </tr>
+                                                            </thead>
                                                         </tr>
                                                         <tr>
                                                             <td colspan="1" rowspan="1">
@@ -665,30 +742,30 @@ if(isset($_POST['txtRef']) && !empty($_POST['txtRef'])){
                                                                     <label class="control-label col-md-3 col-sm-2 col-xs-3" for="txtCantiBultos">Cantidad</span>
                                                                     </label>
                                                                     <div class="col-md-7 col-sm-6 col-xs-12">
-                                                                        <input type="text" id="txtCantiBultos" name="txtCantiBultos" required="required" class="form-control col-md-7 col-xs-12"
-                                                                               value="<?php echo $vRow->getConten()->getCantidadBultos();?>" >
+                                                                        <input type="text" id="txtCantiBultos" name="txtCantiBultos" class="form-control col-md-7 col-xs-12"
+                                                                               value=" <?php echo $vRow->getConten()->getCantidadBultos();?>" >
                                                                     </div>
 
                                                                 </div>
                                                             </td>
                                                             <td colspan="3" rowspan="1">
                                                                 <div class="form-group">
-                                                                    <label class="control-label col-md-2 col-sm-3 col-xs-12">Bultos Dañados</label>
-                                                                    <div class="col-md-4 col-sm-6 col-xs-12">
-                                                                        <p>
-                                                                            <?php $bDañados = $vRow->getConten()->getBultosDañados(); ?>
-                                                                            SI:
-                                                                            <input type="radio" class="flat" name="bDañados" id="bDañados" value="1"  <?php echo ($bDañado == 1 ? 'Checked="Checked"' : ''); ?> /> NO:
-                                                                            <input type="radio" class="flat" name="bDañados" id="bDañados" value="0" <?php echo ($bDañado == 0 ? 'Checked="Checked"' : ''); ?> />
-                                                                        </p>
+                                                                    <label class="control-label col-md-2 col-sm-4 col-xs-12">Bultos dañados</label>
+                                                                    <div class="col-md-4 col-sm-9 col-xs-12">
+                                                                        <select class="form-control" name="bDañados" id="bDañados<?php echo $nCon;?>">
+                                                                            <option value="">Seleccione</option>
+                                                                            <option value="1">SI</option>
+                                                                            <option value="0">NO</option>
+                                                                        </select>
                                                                     </div>
                                                                     <label class="control-label col-md-2 col-sm-3 col-xs-12" for="txtCantiDañados">Cantidad</span>
                                                                     </label>
                                                                     <div class="col-md-4 col-sm-6 col-xs-12">
-                                                                        <input type="text" id="txtCantiDañados" name="txtCantiDañados" required="required" class="form-control col-md-7 col-xs-12"
-                                                                               value="<?php echo  $vRow->getConten()->getCantBultDañados();?>" >
+                                                                        <input type="text" id="txtCantiDañados" name="txtCantiDañados" class="form-control col-md-7 col-xs-12"
+                                                                               value="<?php echo $vRow->getConten()->getCantBultDañados();?>">
                                                                     </div>
                                                                 </div>
+
                                                             </td>
                                                         </tr>
                                                         <tr>
@@ -704,58 +781,14 @@ if(isset($_POST['txtRef']) && !empty($_POST['txtRef'])){
                                                                     <div class="col-md-2 col-sm-9 col-xs-12">
                                                                         <div class="checkbox">
                                                                             <label>
-                                                                                <?php $pMadera = $vRow->getConten()->getPalletsMadera(); ?>
-                                                                                <input type="checkbox" class="flat" name="bultosPresen[]" id="bultosPresen1" value="PalletsMadera" <?php echo ($pMadera == 1 ? 'Checked="Checked"' : ''); ?> > Pallets de Madera
+                                                                                <?php $nPalletsMadera = $vRow->getConten()->getPalletsMadera(); ?>
+                                                                                <input type="checkbox" class="flat" name="bultosPresen[]" id="PalletsMadera" value="PalletsMadera" <?php echo ($nPalletsMadera == 1 ? 'Checked="Checked"' : '');?> > Pallets de Madera
                                                                             </label>
                                                                         </div>
                                                                         <div class="checkbox">
                                                                             <label>
-                                                                                <?php $pPlastico = $vRow->getConten()->getPalletsPlastico(); ?>
-                                                                                <input type="checkbox" class="flat" name="bultosPresen[]" id="bultosPresen2" value="PalletsPlastico"  <?php echo ($pPlastico == 1 ? 'Checked="Checked"' : ''); ?>  > Pallets de Plástico
-                                                                            </label>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-md-2 col-sm-9 col-xs-12">
-                                                                        <div class="checkbox">
-                                                                            <label>
-                                                                                <?php $Cartonada = $vRow->getConten()->getCartonada(); ?>
-                                                                                <input type="checkbox" class="flat" name="bultosPresen[]" id="bultosPresen2" value="Cartonada" <?php echo ($Cartonada == 1 ? 'Checked="Checked"' : '' ); ?> > Cartonada
-                                                                            </label>
-                                                                        </div>
-                                                                        <div class="checkbox">
-                                                                            <label>
-                                                                                <?php $cuñetas = $vRow->getConten()->getCuñetes(); ?>
-                                                                                <input type="checkbox" class="flat" name="bultosPresen[]" id="bultosPresen3" value="Cuñetes" <?php echo ($cuñetas == 1 ? 'Checked="Checked"' : '' ); ?>  > Cuñetes
-                                                                            </label>
-                                                                        </div>
-
-                                                                    </div>
-                                                                    <div class="col-md-2 col-sm-9 col-xs-12">
-                                                                        <div class="checkbox">
-                                                                            <label>
-                                                                                <?php $saco = $vRow->getConten()->getSacos(); ?>
-                                                                                <input type="checkbox" class="flat" name="bultosPresen[]" id="bultosPresen4" value="Sacos" <?php echo ($saco == 1 ? 'Checked="Checked"' : '' ); ?>  > Sacos
-                                                                            </label>
-                                                                        </div>
-                                                                        <div class="checkbox">
-                                                                            <label>
-                                                                                <?php $bolsas = $vRow->getConten()->getSuperBolsas(); ?>
-                                                                                <input type="checkbox" class="flat" name="bultosPresen[]" id="bultosPresen5" value="SuperBolsas" <?php echo ($bolsas == 1 ? 'Checked="Checked"' : '' ); ?>  > Superbolsas
-                                                                            </label>
-                                                                        </div>
-
-                                                                    </div>
-                                                                    <div class="col-md-2 col-sm-9 col-xs-12">
-                                                                        <div class="checkbox">
-                                                                            <label>
-                                                                                <?php $bidones = $vRow->getConten()->getBidones(); ?>
-                                                                                <input type="checkbox" class="flat" name="bultosPresen[]" id="bultosPresen6" value="Bidones" <?php echo ($bidones == 1 ? 'Checked="Checked"' : '' ); ?>  > Bidones
-                                                                            </label>
-                                                                        </div>
-                                                                        <div class="checkbox">
-                                                                            <label>
-                                                                                <?php $Cont1000L = $vRow->getConten()->getCont1000L(); ?>
-                                                                                <input type="checkbox" class="flat" name="bultosPresen[]" id="bultosPresen7" value="Cont1000L"  <?php echo ($Cont1000L == 1 ? 'Checked="Checked"' : '' ); ?>  > Cont.1000L
+                                                                                <?php $nPalletsPlastico = $vRow->getConten()->getPalletsPlastico(); ?>
+                                                                                <input type="checkbox" class="flat" name="bultosPresen[]" id="PalletsPlastico" value="PalletsPlastico" <?php echo ($nPalletsPlastico == 1 ? 'Checked="Checked"' : '');?> > Pallets de Plástico
                                                                             </label>
                                                                         </div>
 
@@ -764,14 +797,44 @@ if(isset($_POST['txtRef']) && !empty($_POST['txtRef'])){
                                                                     <div class="col-md-2 col-sm-9 col-xs-12">
                                                                         <div class="checkbox">
                                                                             <label>
-                                                                                <?php $huacales = $vRow->getConten()->getHuacalesMadera(); ?>
-                                                                                <input type="checkbox" class="flat" name="bultosPresen[]" id="bultosPresen8" value="HuacalesMadera" <?php echo ($huacales == 1 ? 'Checked="Checked"' : '' ); ?>  > Huacales de Madera
+                                                                                <?php $nCartonada = $vRow->getConten()->getCartonada(); ?>
+                                                                                <input type="checkbox" class="flat" name="bultosPresen[]" id="Cartonada" value="Cartonada" <?php echo ($nCartonada == 1 ? 'Checked="Checked"' : '');?>  > Cartonada
                                                                             </label>
                                                                         </div>
                                                                         <div class="checkbox">
                                                                             <label>
-                                                                                <?php $cajas = $vRow->getConten()->getCajasMadera(); ?>
-                                                                                <input type="checkbox" class="flat" name="bultosPresen[]" id="bultosPresen9" value="CajasMadera" <?php echo ($cajas == 1 ? 'Checked="Checked"' : '' ); ?>  > Cajas de Madera
+                                                                                <?php $nCuñetes = $vRow->getConten()->getCuñetes(); ?>
+                                                                                <input type="checkbox" class="flat" name="bultosPresen[]" id="Cuñetes" value="Cuñetes"   <?php echo ($nCuñetes == 1 ? 'Checked="Checked"' : '');?> > Cuñetes
+                                                                            </label>
+                                                                        </div>
+
+                                                                    </div>
+                                                                    <div class="col-md-2 col-sm-9 col-xs-12">
+                                                                        <div class="checkbox">
+                                                                            <label>
+                                                                                <?php $nSacos = $vRow->getConten()->getSacos(); ?>
+                                                                                <input type="checkbox" class="flat" name="bultosPresen[]" id="Sacos" value="Sacos"  <?php echo ($nSacos == 1 ? 'Checked="Checked"' : '');?> > Sacos
+                                                                            </label>
+                                                                        </div>
+                                                                        <div class="checkbox">
+                                                                            <label>
+                                                                                <?php $nSuperBolsas = $vRow->getConten()->getSuperBolsas(); ?>
+                                                                                <input type="checkbox" class="flat" name="bultosPresen[]" id="SuperBolsas" value="SuperBolsas"  <?php echo ($nSuperBolsas == 1 ? 'Checked="Checked"' : '');?> > Superbolsas
+                                                                            </label>
+                                                                        </div>
+
+                                                                    </div>
+                                                                    <div class="col-md-2 col-sm-9 col-xs-12">
+                                                                        <div class="checkbox">
+                                                                            <label>
+                                                                                <?php $nBidones = $vRow->getConten()->getBidones(); ?>
+                                                                                <input type="checkbox" class="flat" name="bultosPresen[]" id="Bidones" value="Bidones" <?php echo ($nBidones == 1 ? 'Checked="Checked"' : '');?> > Bidones
+                                                                            </label>
+                                                                        </div>
+                                                                        <div class="checkbox">
+                                                                            <label>
+                                                                                <?php $nCont1000L = $vRow->getConten()->getCont1000L(); ?>
+                                                                                <input type="checkbox" class="flat" name="bultosPresen[]" id="Cont1000L" value="Cont1000L"   <?php echo ($nCont1000L == 1 ? 'Checked="Checked"' : '');?>  > Cont.1000L
                                                                             </label>
                                                                         </div>
 
@@ -780,14 +843,30 @@ if(isset($_POST['txtRef']) && !empty($_POST['txtRef'])){
                                                                     <div class="col-md-2 col-sm-9 col-xs-12">
                                                                         <div class="checkbox">
                                                                             <label>
-                                                                                <?php $Racks = $vRow->getConten()->getRacksMetalicos(); ?>
-                                                                                <input type="checkbox" class="flat" name="bultosPresen[]" id="bultosPresen10" value="RacksMetalicos" <?php echo ($Racks == 1 ? 'Checked="Checked"' : '' ); ?>  > Racks Metalicos
+                                                                                <?php $nHuacales = $vRow->getConten()->getHuacalesMadera(); ?>
+                                                                                <input type="checkbox" class="flat" name="bultosPresen[]" id="HuacalesMadera" value="HuacalesMadera"  <?php echo ($nHuacales == 1 ? 'Checked="Checked"' : '');?>  > Huacales de Madera
                                                                             </label>
                                                                         </div>
                                                                         <div class="checkbox">
                                                                             <label>
-                                                                                <?php $granel = $vRow->getConten()->getGranel(); ?>
-                                                                                <input type="checkbox" class="flat" name="bultosPresen[]" id="bultosPresen11" value="Granel" <?php echo ($granel == 1 ? 'Checked="Checked"' : '' ); ?> > Granel
+                                                                                <?php $nCajasMedera = $vRow->getConten()->getCajasMadera(); ?>
+                                                                                <input type="checkbox" class="flat" name="bultosPresen[]" id="CajasMadera" value="CajasMadera" <?php echo ($nCajasMedera == 1 ? 'Checked="Checked"' : '');?>  > Cajas de Madera
+                                                                            </label>
+                                                                        </div>
+
+
+                                                                    </div>
+                                                                    <div class="col-md-2 col-sm-9 col-xs-12">
+                                                                        <div class="checkbox">
+                                                                            <label>
+                                                                                <?php $nRacks = $vRow->getConten()->getRacksMetalicos(); ?>
+                                                                                <input type="checkbox" class="flat" name="bultosPresen[]" id="RacksMetalicos" value="RacksMetalicos"  <?php echo ($nRacks == 1 ? 'Checked="Checked"' : '');?>  > Racks Metalicos
+                                                                            </label>
+                                                                        </div>
+                                                                        <div class="checkbox">
+                                                                            <label>
+                                                                                <?php $nGranel = $vRow->getConten()->getGranel(); ?>
+                                                                                <input type="checkbox" class="flat" name="bultosPresen[]" id="Granel" value="Granel" <?php echo ($nGranel == 1 ? 'Checked="Checked"' : '');?>  > Granel
                                                                             </label>
                                                                         </div>
 
@@ -796,7 +875,7 @@ if(isset($_POST['txtRef']) && !empty($_POST['txtRef'])){
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <div class="col-md-12 col-sm-9 col-xs-12">
-                                                                        <input class="resizable_textarea form-control" placeholder="Otros (Especifique)" name="txtOtrosPresen" id="txtOtrosPresen" value="<?php echo $vRow->getConten()->getOtros(); ?> " />
+                                                                        <input class="resizable_textarea form-control" placeholder="Otros (Especifique)" name="txtOtrosPresen" id="txtOtrosPresen"  value="<?php echo $vRow->getConten()->getOtros();?> " />
                                                                     </div>
                                                                 </div>
 
@@ -806,144 +885,137 @@ if(isset($_POST['txtRef']) && !empty($_POST['txtRef'])){
                                                         <tr>
                                                             <thead>
                                                             <tr>
-                                                                <th colspan="2">Averias</th>
-                                                                <th colspan="2">Fumigado</th>
-
-                                                            </tr>
-                                                            </thead>
-                                                        </tr>
-                                                        <tr>
-
-                                                            <td colspan="2" rowspan="1">
-                                                                <div class="form-group">
-                                                                    <div class="col-md-4 col-sm-3 col-xs-12">
-                                                                        <p>
-                                                                            <?php $averiasOrigen = $vRow->getConten()->getAveriasOrigen(); ?>
-                                                                            <?php $averiasRecinto = $vRow->getConten()->getAveriasRecinto(); ?>
-                                                                            Origen:
-                                                                            <input type="radio" class="flat" name="averias" id="averias" value="1" <?php echo ($averiasOrigen == 1 ? 'Checked="Checked"' : '' ); ?>  />
-                                                                            <br/>
-                                                                            Recinto:
-                                                                            <input type="radio" class="flat" name="averias" id="averias" value="0" <?php echo ($averiasRecinto == 1 ? 'Checked="Checked"' : '' ); ?>  />
-                                                                        </p>
-                                                                    </div>
-
-                                                                </div>
-
-                                                            </td>
-                                                            <td colspan="2" rowspan="1">
-                                                                <div class="form-group">
-                                                                    <label class="control-label col-md-3 col-sm-4 col-xs-12">FUMIGADO</label>
-                                                                    <div class="col-md-3 col-sm-9 col-xs-12">
-                                                                        <input type="text" class="form-control col-md-7 col-xs-12"  name="txtFumigado" id="txtFumigado" value=" <?php echo ($vRow->getConten()->getFumigado() == 1 ? 'SI' : 'NO') ;?>">
-                                                                    </div>
-
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <thead>
-                                                            <tr>
-                                                                <th colspan="2">Mercancia</th>
-                                                                <th colspan="2">Previo</th>
-
-                                                            </tr>
-                                                            </thead>
-                                                        </tr>
-                                                        <tr>
-
-                                                            <td colspan="2" rowspan="1">
                                                                 <?php
-                                                                if($vRow->getMercancia()->getConformeFactura() == 1){
+                                                                if($vRow->getConten()->getAveriasOrigen() == 1){
                                                                     ?>
-                                                                    <div class="form-group">
-                                                                        <label class="control-label col-md-4 col-sm-2 col-xs-3" for="txtConFact">Conforme a factura</span>
-                                                                        </label>
-                                                                        <div class="col-md-7 col-sm-6 col-xs-12">
-                                                                            <input type="text" id="txtConFact" name="txtConFact"  required="required" class="form-control col-md-7 col-xs-12"
-                                                                                   value="<?php echo($vRow->getMercancia()->getConformeFactura() == 1 ? 'SI' : ''); ?>" disabled/>
-                                                                        </div>
-                                                                    </div>
-                                                                    <?php
-                                                                }else if($vRow->getMercancia()->getFaltante() == 1){
-                                                                    ?>
-                                                                    <div class="form-group">
-                                                                        <label class="control-label col-md-4 col-sm-2 col-xs-3" for="txtConFact">Faltante</span>
-                                                                        </label>
-                                                                        <div class="col-md-7 col-sm-6 col-xs-12">
-                                                                            <input type="text" id="txtConFact" name="txtConFact"  required="required" class="form-control col-md-7 col-xs-12"
-                                                                                   value="<?php echo($vRow->getMercancia()->getFaltante() == 1 ? 'SI' : ''); ?>" disabled/>
-                                                                        </div>
-                                                                    </div>
-                                                                    <br/><br/>
-                                                                    <div class="form-group">
-                                                                        <label class="control-label col-md-4 col-sm-2 col-xs-3" for="txtConFact">Cantidad Faltante</span>
-                                                                        </label>
-                                                                        <div class="col-md-7 col-sm-6 col-xs-12">
-                                                                            <input type="text" id="txtConFact" name="txtConFact"  required="required" class="form-control col-md-7 col-xs-12"
-                                                                                   value="<?php echo $vRow->getMercancia()->getCantidad(); ?>" disabled/>
-                                                                        </div>
-                                                                    </div>
-                                                                    <?php
-                                                                }else if($vRow->getMercancia()->getSobrante() == 1){
-                                                                    ?>
-                                                                    <div class="form-group">
-                                                                        <label class="control-label col-md-4 col-sm-2 col-xs-3" for="txtConFact1">Sobrante</span>
-                                                                        </label>
-                                                                        <div class="col-md-7 col-sm-6 col-xs-12">
-                                                                            <input type="text" id="txtConFact1" name="txtConFact1"  required="required" class="form-control col-md-7 col-xs-12"
-                                                                                   value="<?php echo($vRow->getMercancia()->getSobrante() == 1 ? 'SI' : ''); ?>" disabled/>
-                                                                        </div>
-                                                                    </div>
-                                                                    <br/><br/>
-                                                                    <div class="form-group">
-                                                                        <label class="control-label col-md-4 col-sm-2 col-xs-3" for="txtConFact1">Cantidad Sobrante</span>
-                                                                        </label>
-                                                                        <div class="col-md-7 col-sm-6 col-xs-12">
-                                                                            <input type="text" id="txtConFact1" name="txtConFact1"  required="required" class="form-control col-md-7 col-xs-12"
-                                                                                   value="<?php echo $vRow->getMercancia()->getCantidad(); ?>" disabled/>
-                                                                        </div>
-                                                                    </div>
+                                                                    <input type="hidden" name="AveriaOrigen" value="1" >
+                                                                    <th colspan="2">Averias en el Origen</th>
                                                                     <?php
                                                                 }else{
                                                                     ?>
-                                                                    <div class="form-group">
-                                                                        <label class="control-label col-md-4 col-sm-2 col-xs-3" for="txtConFact1">No se registró información</span>
-                                                                        </label>
-
-                                                                    </div>
+                                                                    <input type="hidden" name="AveriaRecinto" value="0">
+                                                                    <th colspan="2">Averias en el Recinto</th>
                                                                     <?php
                                                                 }
                                                                 ?>
+                                                                <th colspan="2">Fumigado (Estado actual: <?php echo $vRow->getConten()->getFumigado();?>)</th>
+
+                                                            </tr>
+                                                            </thead>
+                                                        </tr>
+                                                        <tr>
+
+                                                            <td colspan="2" rowspan="1">
+                                                                <div class="form-group">
+                                                                    <label class="control-label col-md-3 col-sm-4 col-xs-12">Averias</label>
+                                                                    <div class="col-md-4 col-sm-3 col-xs-12">
+                                                                        <select class="form-control" name="averias" >
+                                                                            <option value="">Seleccione</option>
+                                                                            <option value="1">Origen</option>
+                                                                            <option value="0">Recinto</option>
+                                                                        </select>
+                                                                    </div>
+
+                                                                </div>
+
                                                             </td>
                                                             <td colspan="2" rowspan="1">
                                                                 <div class="form-group">
+                                                                    <label class="control-label col-md-3 col-sm-4 col-xs-12">Fumigado</label>
+                                                                    <div class="col-md-7 col-sm-9 col-xs-12">
+                                                                        <select class="form-control" name="fumigado" >
+                                                                            <option value="">Seleccione</option>
+                                                                            <option value="SI">SI</option>
+                                                                            <option value="NO">NO</option>
+                                                                        </select>
+                                                                    </div>
 
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <thead>
+                                                            <tr>
+                                                                <?php
+                                                                if($vRow->getMercancia()->getConformeFactura() != 0){
+                                                                    ?>
+                                                                    <input type="hidden" name="txtConforme" value="1" />
+                                                                    <th colspan="2">Mercancia (Estado actual: <?php echo($vRow->getMercancia()->getConformeFactura() == 1 ? 'Conforme a factura' : ''); ?>) </th>
+                                                                    <?php
+                                                                }else if($vRow->getMercancia()->getFaltante() != 0){
+                                                                    ?>
+                                                                    <input type="hidden" name="txtFaltante" value="1">
+                                                                    <input type="hidden" name="txtCantidad1" value="<?php  echo ($vRow->getMercancia()->getCantidad());?>" >
+                                                                    <th colspan="2">Mercancia (Estado actual: <?php echo($vRow->getMercancia()->getFaltante() == 1 ? 'Faltante' : ''); ?>, Cantidad: <?php echo $vRow->getMercancia()->getCantidad(); ?>) </th>
+                                                                    <?php
+                                                                }else if($vRow->getMercancia()->getSobrante() != 0){
+                                                                    ?>
+                                                                    <input type="hidden" name="txtSobrante" value="1">
+                                                                    <input type="hidden" name="txtCantidad2" value="<?php  echo ($vRow->getMercancia()->getCantidad());?>" >
+                                                                    <th colspan="2">Mercancia (Estado actual: <?php echo($vRow->getMercancia()->getSobrante() == 1 ? 'Sobrante' : ''); ?>, Cantidad: <?php echo $vRow->getMercancia()->getCantidad(); ?>) </th>
+                                                                    <?php
+                                                                }
+                                                                ?>
+                                                                <th colspan="2">Previo</th>
+                                                            </tr>
+                                                            </thead>
+                                                        </tr>
+                                                        <tr>
+                                                            <td colspan="2" rowspan="1">
+                                                                <div class="form-group">
+                                                                    <label class="control-label col-md-4 col-sm-4 col-xs-12">Mercancía</label>
+                                                                    <div class="col-md-7 col-sm-9 col-xs-12">
+                                                                        <select class="form-control" name="mercancia" id="mercancia<?php echo $nCon;?>">
+                                                                            <option value="1">Conforme a Factura</option>
+                                                                            <option value="2">Faltante</option>
+                                                                            <option value="3">Sobrante</option>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                                <br/><br/>
+                                                                <div class="form-group">
+                                                                    <label class="control-label col-md-4 col-sm-2 col-xs-3" for="txtCanMer1">Cantidad</span>
+                                                                    </label>
+                                                                    <div class="col-md-7 col-sm-6 col-xs-12">
+                                                                        <input type="text" id="txtCanMer1<?php echo $nCon;?>" name="txtCanMer1"  class="form-control col-md-7 col-xs-12" />
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td colspan="2" rowspan="1">
+                                                                <div class="form-group">
                                                                     <div class="col-md-4 col-sm-9 col-xs-12">
                                                                         <div class="checkbox">
                                                                             <label>
-                                                                                <?php $separacion = $vRow->getPrevio()->getSeparacion(); ?>
-                                                                                <input type="checkbox" class="flat" name="Previos[]" id="bultosPresen2" value="Separacion" <?php echo ($separacion == 1 ? 'Checked="Checked"' : ''); ?> > Separacion
+                                                                                <?php $DesYCon = $vRow->getPrevio()->getDesYCon();?>
+                                                                                <input type="checkbox" class="flat" name="Previos[]" id="DesYCon" value="DesYCon" <?php echo ($DesYCon == 1 ? 'Checked="Checked"' : ''); ?> > DesYCon
                                                                             </label>
                                                                         </div>
                                                                         <div class="checkbox">
                                                                             <label>
-                                                                                <?php $ocular = $vRow->getPrevio()->getOcular(); ?>
-                                                                                <input type="checkbox" class="flat" name="Previos[]" id="bultosPresen3" value="Ocular" <?php echo ($ocular == 1 ? 'Checked="Checked"' : ''); ?> > Ocular
+                                                                                <?php $Separacion = $vRow->getPrevio()->getSeparacion(); ?>
+                                                                                <input type="checkbox" class="flat" name="Previos[]" id="Separacion" value="Separacion" <?php echo ($Separacion == 1 ? 'Checked="Checked"' : ''); ?> > Separación
                                                                             </label>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-4 col-sm-9 col-xs-12">
                                                                         <div class="checkbox">
                                                                             <label>
-                                                                                <?php $revision = $vRow->getPrevio()->getRevConAutoridad(); ?>
-                                                                                <input type="checkbox" class="flat" name="Previos[]" id="bultosPresen4" value="RevisionC/Autoridad" <?php echo ($revision == 1 ? 'Checked="Checked"' : ''); ?>> Revisión C/Autoridad
+                                                                                <?php $Ocular = $vRow->getPrevio()->getOcular(); ?>
+                                                                                <input type="checkbox" class="flat" name="Previos[]" id="Ocular" value="Ocular" <?php echo ($Ocular == 1 ? 'Checked="Checked"' : ''); ?> > Ocular
                                                                             </label>
                                                                         </div>
                                                                         <div class="checkbox">
                                                                             <label>
-                                                                                <?php $etiquetado = $vRow->getPrevio()->getEtiquetado(); ?>
-                                                                                <input type="checkbox" class="flat" name="Previos[]" id="bultosPresen5" value="Etiquetado" <?php echo ($etiquetado == 1 ? 'Checked="Checked"' : ''); ?> > Etiquetado
+                                                                                <?php $Revision = $vRow->getPrevio()->getRevConAutoridad(); ?>
+                                                                                <input type="checkbox" class="flat" name="Previos[]" id="RevisiónC/Autoridad" value="RevisionC/Autoridad" <?php echo ($vRow->getPrevio()->getRevConAutoridad() == 1 ? 'Checked="Checked"' : ''); ?> > Revisión C/Autoridad
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-4 col-sm-9 col-xs-12">
+                                                                        <div class="checkbox">
+                                                                            <label>
+                                                                                <?php $Etiquetado = $vRow->getPrevio()->getEtiquetado();?>
+                                                                                <input type="checkbox" class="flat" name="Previos[]" id="Etiquetado" value="Etiquetado" <?php echo ($Etiquetado == 1 ? 'Checked="Checked"' : ''); ?> > Etiquetado
                                                                             </label>
                                                                         </div>
                                                                     </div>
@@ -952,8 +1024,68 @@ if(isset($_POST['txtRef']) && !empty($_POST['txtRef'])){
                                                         </tr>
                                                         </tbody>
                                                     </table>
+                                                    <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+                                                    <script>
+                                                        $(function(){
+                                                            $("#btnCarga").click(function () {
+                                                                var url = "../Controladores/actualizacionPrevios.php";
+                                                                $.ajax({
+                                                                    type: "POST",
+                                                                    url : url,
+                                                                    data : $("#cargaSuelta").serialize(),
+                                                                    success: function(data)
+                                                                    {
+                                                                        $("#respuesta").html(data);
+                                                                    }
+                                                                });
+                                                                return true;
+                                                            });
+                                                        });
+                                                    </script>
+                                                    <script>
+                                                        $(document).ready(function () {
+                                                            $("#txtCantiDañados<?php echo $nCon;?>").attr({
+                                                                disabled : true
+                                                            });
+                                                            $("#bDañados<?php echo $nCon;?>").change(function () {
+                                                                if($("#bDañados<?php echo $nCon;?>").val() == '1'){
+                                                                    $("#txtCantiDañados<?php echo $nCon;?>").attr({
+                                                                        disabled : false
+                                                                    });
+                                                                }else if($("#bDañados<?php echo $nCon;?>").val() == '0'){
+                                                                    $("#txtCantiDañados<?php echo $nCon;?>").attr({
+                                                                        disabled : true
+                                                                    });
+                                                                }else{
+                                                                    $("#txtCantiDañados<?php echo $nCon;?>").attr({
+                                                                        disabled : true
+                                                                    });
+                                                                }
+                                                            });
+                                                        })
+                                                    </script>
+                                                    <!-- Validar radios seleccionados -->
+                                                    <!-- Validar select's seleccionados -->
+                                                    <script>
+                                                        $(document).ready(function () {
+                                                            $("#txtCanMer1<?php echo $nCon;?>").attr({
+                                                                disabled : true
+                                                            });
+                                                            $("#mercancia<?php echo $nCon;?>").change(function () {
+                                                                if($("#mercancia<?php echo $nCon;?>").val() == '2' || $("#mercancia<?php echo $nCon;?>").val() == '3'){
+                                                                    $("#txtCanMer1<?php echo $nCon;?>").attr({
+                                                                        disabled : false
+                                                                    });
+                                                                }else if($("#mercancia<?php echo $nCon;?>").val() == '1'){
+                                                                    $("#txtCanMer1<?php echo $nCon;?>").attr({
+                                                                        disabled : true
+                                                                    });
+                                                                }
+                                                            });
+                                                        })
+                                                    </script>
                                                     <div align="center">
-                                                        <input type="button" id="btnCarga"  value="Guardar" class="btn btn-round btn-primary"  />
+                                                        <input type="button" id="btnCarga"  value="Actualizar" class="btn btn-round btn-primary"  />
                                                     </div>
                                                     <div id="respuesta"></div>
                                                 </div>

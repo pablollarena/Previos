@@ -5,6 +5,8 @@
  * Date: 25/01/2017
  * Time: 05:21 PM
  */
+ini_set("session.cookie_lifetime","7200");
+ini_set("session.gc_maxlifetime","7200");
 include_once ("../Modelos/Menu.php");
 include_once ("../Modelos/Persona.php");
 include_once ("../Modelos/Sir76Contenedores.php");
@@ -726,8 +728,8 @@ if($sErr != ""){
                                                                                         <div class="col-md-4 col-sm-9 col-xs-12">
                                                                                             <select class="form-control" name="txtFumigado">
                                                                                                 <option value="">Seleccione</option>
-                                                                                                <option value="si">SI</option>
-                                                                                                <option value="no">NO</option>
+                                                                                                <option value="SI">SI</option>
+                                                                                                <option value="NO">NO</option>
                                                                                             </select>
                                                                                         </div>
 
@@ -1137,10 +1139,10 @@ if($sErr != ""){
                                                                         <div class="form-group">
                                                                             <label class="control-label col-md-3 col-sm-4 col-xs-12">FUMIGADO</label>
                                                                             <div class="col-md-3 col-sm-9 col-xs-12">
-                                                                                <select class="form-control" name="fumigado">
+                                                                                <select class="form-control" name="txtFumigado">
                                                                                     <option value="">Seleccione</option>
-                                                                                    <option value="si">SI</option>
-                                                                                    <option value="no">NO</option>
+                                                                                    <option value="SI">SI</option>
+                                                                                    <option value="NO">NO</option>
                                                                                 </select>
                                                                             </div>
 

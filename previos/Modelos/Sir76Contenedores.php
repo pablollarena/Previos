@@ -623,8 +623,8 @@ class Sir76Contenedores
         $oAD2 = new AccesoDatos2();
         $sQuery = "";
         $nAfec = 0;
-        if ($tipoOperacion == 1){
-            if ($this->getReferencia60()->getRerefencia() == "" and $this->getNumero() == ""){
+        if ($tipoOperacion == 'content'){
+            if ($this->getReferencia60()->getReferencia() == "" and $this->getNumero() == ""){
                 throw new Exception("Sir76Contenedores->actualizarInfoReferencia(): error, faltan datos");
             }else{
                 $sQuery = "EXEC [Previos].dbo.actualizarDatosCarga '".$this->getNumero()."',
@@ -632,12 +632,11 @@ class Sir76Contenedores
                 ".$this->getConten()->getTamaño().",
                 ".$this->getConten()->getPeso().",
                 '".$this->getConten()->getTipo()."',
-                '".$this->getConten()->getSelloOrigen()."',
                 '".$this->getConten()->getSelloColocado()."',
                 ".$this->getConten()->getPesoCarga().",
                 ".$this->getConten()->getCantidadBultos().",
                 ".$this->getConten()->getBultosDañados().",
-                ".$this->getConten()->getCantBulDañados.",
+                ".$this->getConten()->getCantBultDañados().",
                 ".$this->getConten()->getPalletsMadera().",
                 ".$this->getConten()->getSacos().",
                 ".$this->getConten()->getHuacalesMadera().",
@@ -650,13 +649,13 @@ class Sir76Contenedores
                 ".$this->getConten()->getCuñetes().",
                 ".$this->getConten()->getCont1000L().",
                 ".$this->getConten()->getGranel().",
-                ".$this->getConten()->getOtros().",
+                '".$this->getConten()->getOtros()."',
                 ".$this->getConten()->getAveriasOrigen().",
                 ".$this->getConten()->getAveriasRecinto().",
                 ".$this->getConten()->getFumigado().",
                 '".$this->getReferencia60()->getReferencia()."',
                 1,
-                ".$this->getConten()->getRecintoPrevio().",
+                '".$this->getConten()->getRecintoPrevio()."',
                 ".$this->getDaño()->getOrigen().",
                 ".$this->getDaño()->getRecinto().",
                 ".$this->getDaño()->getFrente().",
@@ -683,21 +682,20 @@ class Sir76Contenedores
                 $nAfec = $oAD2->ejecutaComando($sQuery);
                 $oAD2->Desconecta();
             }
-        }else if($tipoOperacion == 2){
+        }else if($tipoOperacion == 'CargaSuelta'){
             if($this->getReferencia60()->getReferencia() == ""){
                 throw new Exception("Sir76Contenedores->actualizarInfoReferencia(): error, faltan datos");
             }else{
                 $sQuery = "EXEC [Previos].dbo.actualizarDatosCarga 'Sin Contenedor',
                 ".$this->getConten()->getIMO().",
-                ".$this->getConten()->getTamaño().",
-                ".$this->getConten()->getPeso().",
-                '".$this->getConten()->getTipo()."',
-                '".$this->getConten()->getSelloOrigen()."',
+                0,
+                ".$this->getConten()->getPesoCarga().",
+                'no',
                 '".$this->getConten()->getSelloColocado()."',
                 ".$this->getConten()->getPesoCarga().",
                 ".$this->getConten()->getCantidadBultos().",
                 ".$this->getConten()->getBultosDañados().",
-                ".$this->getConten()->getCantBulDañados.",
+                ".$this->getConten()->getCantBultDañados().",
                 ".$this->getConten()->getPalletsMadera().",
                 ".$this->getConten()->getSacos().",
                 ".$this->getConten()->getHuacalesMadera().",
@@ -710,13 +708,13 @@ class Sir76Contenedores
                 ".$this->getConten()->getCuñetes().",
                 ".$this->getConten()->getCont1000L().",
                 ".$this->getConten()->getGranel().",
-                ".$this->getConten()->getOtros().",
+                '".$this->getConten()->getOtros()."',
                 ".$this->getConten()->getAveriasOrigen().",
                 ".$this->getConten()->getAveriasRecinto().",
-                ".$this->getConten()->getFumigado().",
+                '".$this->getConten()->getFumigado()."',
                 '".$this->getReferencia60()->getReferencia()."',
                 2,
-                ".$this->getConten()->getRecintoPrevio().",
+                '".$this->getConten()->getRecintoPrevio()."',
                 0,
                 0,
                 0,

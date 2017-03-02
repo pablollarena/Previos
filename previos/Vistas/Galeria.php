@@ -278,8 +278,8 @@ if($sErr != ""){
     .magnify-large {
         position: absolute;
         display: none;
-        width: 200px;
-        height: 200px;
+        width: 300px;
+        height: 300px;
 
         -webkit-box-shadow: 0 0 0 7px rgba(255, 255, 255, 0.55), 0 0 7px 7px rgba(0, 0, 0, 0.25), inset 0 0 40px 2px rgba(0, 0, 0, 0.25);
         -moz-box-shadow: 0 0 0 7px rgba(255, 255, 255, 0.55), 0 0 7px 7px rgba(0, 0, 0, 0.25), inset 0 0 40px 2px rgba(0, 0, 0, 0.25);

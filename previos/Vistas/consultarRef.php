@@ -5,7 +5,8 @@
  * Date: 16/01/2017
  * Time: 12:55
  */
-
+ini_set("session.cookie_lifetime","7200");
+ini_set("session.gc_maxlifetime","7200");
 include_once ("../Modelos/cat_user.php");
 include_once ("../Modelos/Menu.php");
 include_once ("../Modelos/cat_clientes.php");
