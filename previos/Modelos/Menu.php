@@ -112,6 +112,18 @@ class Menu
                         )
                     ),
                     'icon' => 'fa fa-camera'
+                ),
+                array(
+                    'titulo' => 'Galeria',
+                    'subcategoria' => array(
+                        array(
+                            'id' => 'consultar2',
+                            'titulo' => 'Consultar Galería',
+                            'enlace' => '../Vistas/consultarGal.php',
+                            'icono'  => 'fa fa-folder'
+                        )
+                    ),
+                    'icon' => 'fa fa-folder'
                 )
             );
         }

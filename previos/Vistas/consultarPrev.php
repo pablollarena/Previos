@@ -209,7 +209,7 @@ if($sErr != ""){
                                                                         txtFecha.value='<?php echo $vRow->getSir675()->getSeleccion();?>';
                                                                         txtRecinto.value='<?php echo $vRow->getSir311()->getCiudad(); ?>';" /> </td>
                                                     <td><?php echo $vRow->getIdReferencia();?></td>
-                                                    <td><?php  echo  $vRow->getCatCli()->getNom1();?></td>
+                                                    <td><?php  echo $vRow->getCatCli()->getNom1();?></td>
                                                     <td><?php  echo $vRow->getSir132()->getDescrip(); ?></td>
                                                     <td><?php echo $vRow->getSir311()->getCiudad(); ?></td>
                                                     <td><?php echo $vRow->getSir675()->getSeleccion();?></td>

@@ -57,14 +57,14 @@ if (isset($_SESSION['sUser']) and !empty($_SESSION['sUser'])){
 <div class="col-md-12 col-sm-6 col-xs-12">
     <div class="x_panel">
         <div class="x_title">
-            <h2>Panel de Observaciones <small>(Fecha de registro de Observación: <?php echo $dFecha->format('Y-m-d');?>)</small></h2>
+            <h2>Panel de Observaciones</h2>
             <div class="clearfix"></div>
         </div>
         <div class="x_content">
             <form id="guardarOb">
                 <input type="hidden" value="<?php echo $_POST['txtRef'] ;?>" name="txtRef">
                 <input type="hidden" value="<?php echo $sNick;?>" name="txtNick" >
-                <input type="hidden" value="<?php echo $dFecha->format('Y-m-d');?>" name="dFechaReg">
+                <input type="hidden" value="<?php echo $dFecha->format('Y-m-d H:m:s');?>" name="dFechaReg">
                 <div class="form-group">
                     <label class="control-label col-md-6 col-sm-3 col-xs-12">Ingrese la observación: </label>
                     <textarea class="resizable_textarea form-control" name="txtObservacion" ></textarea>

@@ -388,34 +388,42 @@ if($sErr != ""){
         <!-- page content -->
         <div class="right_col" role="main">
             <div class="">
+                <div class="clearfix"></div>
+
                 <div class="row">
-                    <div class="container">
-                               <div class="row">
-                                   <?php
-                                   $nCon = 0;
-                                   if($arrImg != null){
-                                       foreach ($arrImg as $vImg){
-                                           ?>
-                                           <div class="col-md-6">
-                                               <div class="image view view-first">
-                                                   <img data-toggle="magnify" src="<?php echo $vImg->getRutaArchivo()."/".$vImg->getNombreArchivo(); ?>"style="width: 100%; display: block;" class="img-responsive img-rounded center-block" alt="image">
-                                               </div>
-                                               <br/><br/>
-                                           </div> <!--/.cool-md-12-->
-                                           <?php
-                                           $nCon ++;
-                                       }
+                    <div class="x_panel">
+                        <div class="x_content">
 
-                                   }
+                            <div class="container">
 
-                                   ?>
+                                <?php
+                                $nCon = 0;
+                                if($arrImg != null){
+                                    foreach ($arrImg as $vImg){
+                                        ?>
+                                        <div class="col-md-6">
+                                            <div class="image view view-first">
+                                                <img data-toggle="magnify" src="<?php echo $vImg->getRutaArchivo()."/".$vImg->getNombreArchivo(); ?>"style="width: 100%; display: block;" class="img-responsive img-rounded center-block" alt="image">
+                                            </div>
+                                            <br/><br/>
+                                        </div> <!--/.cool-md-12-->
+                                        <?php
+                                        $nCon ++;
+                                    }
 
-                               </div><!--/.row-->
+                                }
 
-                           </div>
+                                ?>
+
+                                <!--/.row-->
+
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
+
     </div>
 </div>
     <!-- jQuery -->

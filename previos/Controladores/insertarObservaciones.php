@@ -3,6 +3,7 @@
 include_once ("../Modelos/Observaciones.php");
 session_start();
 $oObservaciones = new Observaciones();
+$dFecha = new DateTime();
 
 
    if(isset($_SESSION['sUser']) && !empty($_SESSION['sUser'])){

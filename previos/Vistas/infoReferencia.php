@@ -250,7 +250,7 @@ if($sErr != ""){
                                             </div>
                                             <div class="col-md-2 col-sm-6 col-xs-12">
                                                 <input type="submit" id="txtNombre" name="txtNombre" class="btn btn-success btn-lg"
-                                                       value="Ver Items">
+                                                       value="Ver Facturas">
                                             </div>
                                         </div>
 
@@ -290,9 +290,11 @@ if($sErr != ""){
                                             foreach ($arrObservacion as $item) {
                                                 ?>
                                                 <tr>
-                                                    <td width="60%"><?php echo $item->getObservacion();?></td>
-                                                    <td width="20%"><?php echo $item->getUsuario();?></td>
-                                                    <td width="20%"><?php echo $item->getFecha();?></td>
+                                                    <td>
+                                                        <textarea rows="3" cols="80" disabled><?php echo $item->getObservacion();?></textarea>
+                                                    </td>
+                                                    <td><?php echo strtoupper($item->getUsuario());?></td>
+                                                    <td><?php echo $item->getFecha();?></td>
                                                 </tr>
                                                 <?php
                                             }
@@ -358,11 +360,11 @@ if($sErr != ""){
                                                                                 <input type="text" id="txtPeso" name="txtPeso" required="required" class="form-control col-md-7 col-xs-12"
                                                                                        value="<?php echo $vRow->getPeso(); ?>" disabled>
                                                                             </div>
-                                                                            <label class="control-label col-md-1 col-sm-1 col-xs-3" >Sellos</span>
+                                                                            <label class="control-label col-md-1 col-sm-1 col-xs-3" >Sello de Origen</span>
                                                                             </label>
                                                                             <div class="col-md-3 col-sm-6 col-xs-12">
                                                                                 <input type="text" id="txtSellos" name="txtSellos" required="required" class="form-control col-md-7 col-xs-12"
-                                                                                       value="<?php echo $vRow->getSir107()->getSellos(); ?>" disabled>
+                                                                                       value="<?php echo $vRow->getSir107()->getSellos(); ?>" >
                                                                             </div>
                                                                             <label class="control-label col-md-1 col-sm-4 col-xs-12">IMO</label>
                                                                             <div class="col-md-3 col-sm-9 col-xs-12">
@@ -807,6 +809,7 @@ if($sErr != ""){
                                                                             </tr>
                                                                             </tbody>
                                                                         </table>
+                                                                        <div id="ok"></div>
                                                                         <!--Función para enviar los formularios de cada contenedor al controlador-->
                                                                         <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
                                                                         <script>
@@ -827,19 +830,7 @@ if($sErr != ""){
                                                                             });
                                                                         </script>
                                                                         <!-- Validación de formularios -->
-                                                                        <script type="text/javascript" src="http://code.jquery.com/jquery-1.8.3.js"></script>
 
-                                                                        <script type="text/javascript">
-                                                                            function validarFormulario(){
-                                                                                JQuery.validator.messages.required = 'Campo requerido';
-                                                                                $("#btn_enviar<?php echo $nCon;?>").click(function(){
-                                                                                    var valida = $("#frmContent<?php echo $nCon;?>").valid();
-                                                                                    if(valida){
-                                                                                        alert('El formulario es correcto');
-                                                                                    }
-                                                                                });
-                                                                            }
-                                                                        </script>
                                                                         <!-- Validación de formularios -->
                                                                         <!-- Validar select's seleccionados -->
                                                                         <script>
@@ -1001,7 +992,7 @@ if($sErr != ""){
                                                                             <label class="control-label col-md-2 col-sm-3 col-xs-12" for="txtCantiDañados">Cantidad</span>
                                                                             </label>
                                                                             <div class="col-md-4 col-sm-6 col-xs-12">
-                                                                                <input type="text" id="txtCantiDañados" name="txtCantiDañados" required="required" class="form-control col-md-7 col-xs-12"
+                                                                                <input type="text" id="txtCantiDañados" name="txtCantiDañados" class="form-control col-md-7 col-xs-12"
                                                                                 >
                                                                             </div>
                                                                         </div>

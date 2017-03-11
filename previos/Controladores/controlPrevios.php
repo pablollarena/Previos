@@ -44,6 +44,7 @@ if(isset($_SESSION['sUser']) && !empty($_SESSION['sUser'])){
             $oContendor->getConten()->setSelloColocado($_POST['txtSelloColocado']);
             $oContendor->getConten()->setPeso($_POST['txtPeso1']);
             $oContendor->getConten()->setIMO($_POST['imo']);
+            $oContendor->getConten()->setSelloOrigen($_POST['txtSellos']);
 
             $v1 = 0; $v2 =0; $v3 = 0; $v4 = 0; $v5 = 0; $v6 = 0; $v7 = 0; $v8 = 0; $v9 = 0; $v10 = 0; $v11 = 0; $v12 = 0;
             for( $i = 0 ; $i < count($daños); $i ++){
@@ -142,20 +143,23 @@ if(isset($_SESSION['sUser']) && !empty($_SESSION['sUser'])){
             }else if($_POST['averias'] ==  0){
                 $oContendor->getConten()->setAveriasRecinto(1);
                 $oContendor->getConten()->setAveriasOrigen(0);
+            }else{
+                $oContendor->getConten()->setAveriasRecinto(0);
+                $oContendor->getConten()->setAveriasOrigen(0);
             }
+
             $oContendor->getConten()->setFumigado($_POST['txtFumigado']);
             if ($_POST['mercancia'] == 1){
                 $oContendor->getMercancia()->setConformeFactura(1);
                 $oContendor->getMercancia()->setFaltante(0);
                 $oContendor->getMercancia()->setSobrante(0);
                 $oContendor->getMercancia()->setCantidad(0);
-
             }else if ($_POST['mercancia'] == 2){
                 $oContendor->getMercancia()->setFaltante(1);
                 $oContendor->getMercancia()->setCantidad($_POST['txtCanMer1']);
                 $oContendor->getMercancia()->setConformeFactura(0);
                 $oContendor->getMercancia()->setSobrante(0);
-            }else if( $_POST['mercancia' == 3])
+            }else if( $_POST['mercancia'] == 3)
             {
                 $oContendor->getMercancia()->setSobrante(1);
                 $oContendor->getMercancia()->setCantidad($_POST['txtCanMer1']);

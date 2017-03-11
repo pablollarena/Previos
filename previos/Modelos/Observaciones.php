@@ -99,7 +99,7 @@ class Observaciones
                     $oObser->getSir60()->setReferencia($vRow[0]);
                     $oObser->setObservacion($vRow[1]);
                     $oObser->setUsuario($vRow[2]);
-                    $oObser->setFecha(date_format($vRow[3],'Y-m-d'));
+                    $oObser->setFecha(date_format($vRow[3],'Y-m-d H:i:s'));
                     $vObj[$i] = $oObser;
                     $i =  $i + 1;
                 }

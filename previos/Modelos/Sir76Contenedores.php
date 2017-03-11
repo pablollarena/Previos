@@ -203,7 +203,7 @@ class Sir76Contenedores
     }
 
     function  buscarContenedoresPorRef2(){
-        $oAD = new AccesoDatos();
+        $oAD2 = new AccesoDatos2();
         $sQuery = "";
         $rst = null;
         $vObj = null;
@@ -216,28 +216,46 @@ class Sir76Contenedores
             throw new Exception("Sir76Contenedores->buscarContenedoresPorRef(): faltan datos");
         }else{
             if($nTipo == 1){
-                $sQuery = "exec [1G_TRIMEX].[dbo].ConsultarContenedorPorRef '".$this->getReferencia60()->getReferencia()."'; ";
-
-                $rst = $oAD->ejecutaQuery($sQuery);
-                $oAD->Desconecta();
+                $sQuery = "EXEC [Previos].[dbo].buscarContenedoresPorReferencia2 '".$this->getReferencia60()->getReferencia()."';";
+                $rst = $oAD2->ejecutaQuery($sQuery);
+                $oAD2->Desconecta();
                 if($rst){
                     foreach ($rst as $vRow){
                         $oSir76 = new Sir76Contenedores();
-                        $oSir76->setSir74(new Sir74ConocimientosMaritimos());
-                        $oSir76->setSir107(new Sir107ContenedorSello());
-                        $oSir76->setSir09(new Sir09TiposContenedor());
-                        $oSir76->setNumero( $vRow[0]);
-                        $oSir76->getSir74()->setNumeroBL($vRow[1]);
-                        $oSir76->setPeso($vRow[2]);
-                        $oSir76->getSir107()->setSellos($vRow[3]);
-                        $oSir76->getSir09()->setDimension($vRow[4]);
-                        $oSir76->getSir09()->setIniciales($vRow[5]);
-                        $oSir76->setConten($this->buscarInfoContenedor($vRow[0], $this->getReferencia60()->getReferencia(), $nTipo));
+                        $oSir76->setConten(new Contenedor());
+                        $oSir76->getConten()->setNumeroContenedor($vRow[0]);
+                        $oSir76->getConten()->setIMO($vRow[1]);
+                        $oSir76->getConten()->setTamaño($vRow[2]);
+                        $oSir76->getConten()->setPeso($vRow[3]);
+                        $oSir76->getConten()->setTipo($vRow[4]);
+                        $oSir76->getConten()->setSelloOrigen($vRow[5]);
+                        $oSir76->getConten()->setSelloColocado($vRow[6]);
+                        $oSir76->getConten()->setPesoCarga($vRow[7]);
+                        $oSir76->getConten()->setCantidadBultos($vRow[8]);
+                        $oSir76->getConten()->setBultosDañados($vRow[9]);
+                        $oSir76->getConten()->setCantBultDañados($vRow[10]);
+                        $oSir76->getConten()->setPalletsMadera($vRow[11]);
+                        $oSir76->getConten()->setSacos($vRow[12]);
+                        $oSir76->getConten()->setHuacalesMadera($vRow[13]);
+                        $oSir76->getConten()->setPalletsPlastico($vRow[14]);
+                        $oSir76->getConten()->setSuperBolsas($vRow[15]);
+                        $oSir76->getConten()->setCajasMadera($vRow[16]);
+                        $oSir76->getConten()->setCartonada($vRow[17]);
+                        $oSir76->getConten()->setBidones($vRow[18]);
+                        $oSir76->getConten()->setRacksMetalicos($vRow[19]);
+                        $oSir76->getConten()->setCuñetes($vRow[20]);
+                        $oSir76->getConten()->setCont1000L($vRow[21]);
+                        $oSir76->getConten()->setGranel($vRow[22]);
+                        $oSir76->getConten()->setOtros($vRow[23]);
+                        $oSir76->getConten()->setAveriasOrigen($vRow[24]);
+                        $oSir76->getConten()->setAveriasRecinto($vRow[25]);
+                        $oSir76->getConten()->setFumigado($vRow[26]);
+                        $oSir76->getConten()->setRecintoPrevio($vRow[27]);
                         $oSir76->setDaño($this->buscarDañosConten($this->getReferencia60()->getReferencia(),$vRow[0]));
                         $oSir76->setMercancia($this->buscarMercanciaConten($vRow[0], $this->getReferencia60()->getReferencia(), $nTipo));
                         $oSir76->setPrevio($this->buscarInfoPrevio($vRow[0], $this->getReferencia60()->getReferencia(),  $nTipo));
                         $vObj[$i] = $oSir76;
-                        $i=$i+1;
+                        $i = $i + 1;
                     }
                 }
             }else if($nTipo == 2){
@@ -261,7 +279,7 @@ class Sir76Contenedores
         }else{
             if($nTipo == 1){
                 $sQuery = "exec [Previos].[dbo].buscarInfoConten '".$nNumCon."','".$sNumRef."';";
-
+                //var_dump($sQuery);
                 $rst = $oAD2->ejecutaQuery($sQuery);
                 $oAD2->Desconecta();
                 if($rst){

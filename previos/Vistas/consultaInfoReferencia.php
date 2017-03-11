@@ -40,32 +40,32 @@ if(isset($_POST['txtRef']) && !empty($_POST['txtRef'])){
                                     <?php
                                     if($arrConte){
                                         foreach ($arrConte as $vRow){
-                                            if($vRow->getNumero() != ""){
+                                            if($vRow->getConten()->getNumeroContenedor() != ""){
                                                 ?>
                                                 <div class="x_content">
                                                     <form name="frmContent<?php echo $nCon;?>" id="frmContent<?php echo $nCon;?>">
                                                         <input type="hidden" name="txtRef" value="<?php echo $sRef;?>"/>
                                                         <input type="hidden" name="operacion" value="content"/>
-                                                        <input type="hidden" name="txtNumConten" value="<?php echo $vRow->getNumero();?>"/>
+                                                        <input type="hidden" name="txtNumConten" value="<?php echo $vRow->getConten()->getNumeroContenedor();?>"/>
                                                         <div class="panel">
-                                                            <a class="panel-heading" role="tab" data-toggle="collapse" data-parent="#accordion" href="#<?php echo $vRow->getNumero();?>" aria-expanded="false" aria-controls="<?php echo $vRow->getNumero();?>">
-                                                                <h5 class="panel-title">CONTENEDOR <?php echo $vRow->getNumero();?></h5>  <h5 class=""> NUM-BL: <?php echo ($vRow->getSir74()->getNumeroBL()== "" ? "NO TIENE BL" : $vRow->getSir74()->getNumeroBL()) ; ?></h5>
+                                                            <a class="panel-heading" role="tab" data-toggle="collapse" data-parent="#accordion" href="#<?php echo $vRow->getConten()->getNumeroContenedor();?>" aria-expanded="false" aria-controls="<?php  echo $vRow->getConten()->getNumeroContenedor();?>">
+                                                                <h5 class="panel-title">CONTENEDOR <?php echo $vRow->getConten()->getNumeroContenedor();?></h5>
 
                                                             </a>
-                                                            <div id="<?php echo $vRow->getNumero();?>" class="panel-collapse collapse in" role="tabpanel">
+                                                            <div id="<?php echo $vRow->getConten()->getNumeroContenedor();?>" class="panel-collapse collapse in" role="tabpanel">
                                                                 <div class="panel-body">
                                                                     <div class="form-group">
                                                                         <label class="control-label col-md-1 col-sm-1 col-xs-1" >Peso</span>
                                                                         </label>
                                                                         <div class="col-md-3 col-sm-6 col-xs-12">
                                                                             <input type="text" id="txtPeso" name="txtPeso" required="required" class="form-control col-md-7 col-xs-12"
-                                                                                   value="<?php echo $vRow->getPeso(); ?>" disabled>
+                                                                                   value="<?php echo $vRow->getConten()->getPeso(); ?>" disabled>
                                                                         </div>
                                                                         <label class="control-label col-md-1 col-sm-1 col-xs-3" >Sellos</span>
                                                                         </label>
                                                                         <div class="col-md-3 col-sm-6 col-xs-12">
                                                                             <input type="text" id="txtSellos" name="txtSellos" required="required" class="form-control col-md-7 col-xs-12"
-                                                                                   value="<?php echo $vRow->getSir107()->getSellos(); ?>" disabled>
+                                                                                   value="<?php echo $vRow->getConten()->getSelloOrigen(); ?>" disabled>
                                                                         </div>
                                                                         <label class="control-label col-md-1 col-sm-4 col-xs-12">IMO</label>
                                                                         <div class="col-md-3 col-sm-6 col-xs-12">
