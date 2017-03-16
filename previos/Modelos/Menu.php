@@ -148,7 +148,7 @@ class Menu
                         array(
                             'id' => 'consultar2',
                             'titulo' => 'Reportes por Partida',
-                            'enlace' => '../Vistas/consultaBitacoraPartidas.php',
+                            'enlace' => '../Vistas/consTodosRef.php',
                             'icono'  => 'fa fa-folder'
                         )
                     ),

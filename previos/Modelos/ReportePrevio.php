@@ -408,5 +408,29 @@ class ReportePrevio
         return $vObj;
     }
 
+    function buscarReferencias(){
+        $oAD2 = new AccesoDatos();
+        $sQuery = "";
+        $vObj = null;
+        $rst = null;
+        $i = 0;
+        $oRep = null;
+        $sQuery = "EXEC [Previos].[dbo].consultarTodosReferencias";
+        $rst = $oAD2->ejecutaQuery($sQuery);
+        $oAD2->Desconecta();
+        if($rst){
+            foreach ($rst as $vRow){
+                $oRep = new ReportePrevio();
+                $oRep->setSir60(new Sir60Referencias());
+                $oRep->getSir60()->setReferencia($vRow[0]);
+                $vObj[$i] = $oRep;
+                $i = $i + 1;
+            }
+        }else{
+            $vObj = false;
+        }
+        return $vObj;
+    }
+
 
 }
