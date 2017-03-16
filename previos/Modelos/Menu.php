@@ -109,6 +109,11 @@ class Menu
                             'id' => 'consultar2',
                             'titulo' => 'Modificar InfoReferencia',
                             'enlace' => '../Vistas/buscarRefMod.php'
+                        ),
+                        array(
+                            'id' => 'consultar2',
+                            'titulo' => 'Modificar Partidas',
+                            'enlace' => '../Vistas/buscarPartidas.php'
                         )
                     ),
                     'icon' => 'fa fa-camera'
@@ -120,6 +125,30 @@ class Menu
                             'id' => 'consultar2',
                             'titulo' => 'Consultar Galería',
                             'enlace' => '../Vistas/consultarGal.php',
+                            'icono'  => 'fa fa-folder'
+                        )
+                    ),
+                    'icon' => 'fa fa-folder'
+                ),
+                array(
+                    'titulo' => 'Bitácoras',
+                    'subcategoria' => array(
+                        array(
+                            'id' => 'consultar2',
+                            'titulo' => 'Consultar Bitácora por Partida',
+                            'enlace' => '../Vistas/consultaBitacoraPartidas.php',
+                            'icono'  => 'fa fa-folder'
+                        )
+                    ),
+                    'icon' => 'fa fa-folder'
+                ),
+                array(
+                    'titulo' => 'Reportes',
+                    'subcategoria' => array(
+                        array(
+                            'id' => 'consultar2',
+                            'titulo' => 'Reportes por Partida',
+                            'enlace' => '../Vistas/consultaBitacoraPartidas.php',
                             'icono'  => 'fa fa-folder'
                         )
                     ),

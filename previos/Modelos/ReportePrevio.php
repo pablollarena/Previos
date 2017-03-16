@@ -289,7 +289,124 @@ class ReportePrevio
             }
         }
         return $bRet;
+    }
+
+    function buscarInfoPartida(){
+        $oAD2 = new AccesoDatos2();
+        $sQuery = "";
+        $rst = null;
+        $bRet = false;
+        if($this->getSir60()->getReferencia() == ""  && $this->getSir52()->getNumero() == "" and $this->getSir52()->getItem() == 0){
+            throw new Exception("ReportePrevio->buscarInfoPartida(): error, faltan datos");
+        }else{
+            $sQuery = "EXEC [Previos].[dbo].buscarDatosPartida '".$this->getSir60()->getReferencia()."','".$this->getSir52()->getNumero()."',".$this->getSir52()->getItem().";";
+            $rst = $oAD2->ejecutaQuery($sQuery);
+            $oAD2->Desconecta();
+            if($rst){
+                $this->setCant($rst[0][0]);
+                $this->setCompleta($rst[0][1]);
+                $this->setFaltante($rst[0][2]);
+                $this->setSobrante($rst[0][3]);
+                $this->setPieza($rst[0][4]);
+                $this->setJuego($rst[0][5]);
+                $this->setOtro($rst[0][6]);
+                $this->setOrigen($rst[0][7]);
+                $this->setPesoAprox($rst[0][8]);
+                $bRet = true;
+            }
+        }
+    }
+
+    function  updatePartida($sUsuario,$sAccion){
+        $oAD = new AccesoDatos2();
+        $sQuery = "";
+        $nAfec = 0;
+
+        if ($this->getSir60()->getReferencia() == ""  && $this->getSir52()->getNumero() == "" and $this->getSir52()->getItem() == 0)
+        {
+            throw  new Exception("ReportePrevio->updatePartida() : error faltan datos");
+        }else{
+
+            $sQuery = "exec [Previos].[dbo].updatePartidas '".$this->getSir60()->getReferencia()."',
+                                                            '".$this->getSir52()->getNumero()."',
+                                                            ".$this->getSir52()->getItem().",
+                                                            ".$this->getCant().",
+                                                             ".$this->getCompleta().",
+                                                             ".$this->getFaltante().",
+                                                             ".$this->getSobrante().",
+                                                             ".$this->getPieza().",
+                                                             ".$this->getJuego().",
+                                                             ".$this->getOtro().",
+                                                             '".$this->getOrigen()."',
+                                                             ".$this->getPesoAprox().",
+                                                             '".$this->getObservaciones()."',
+                                                             '".$sUsuario."',
+                                                             '".$sAccion."';";
+            $nAfec = $oAD->ejecutaComando($sQuery);
+        }
+        return $nAfec;
 
     }
+
+    function  estadoReferencia(){
+        $oAD = new AccesoDatos();
+        $sQuery = "";
+        $rst = null;
+        $bBand = false;
+
+        if ($this->getSir60()->getReferencia() == "")
+        {
+            throw new Exception("ReportePrevio->estadoReferencia() : error faltan datos");
+        }else {
+            $sQuery = "exec [1G_TRIMEX].[dbo].buscarEstadoReferencia'".$this->getSir60()->getReferencia()."';";
+            $rst = $oAD->ejecutaQuery($sQuery);
+            $oAD->Desconecta();
+
+            if ($rst != null){
+              $bBand = true;
+            }
+        }
+        return $bBand;
+    }
+
+    function buscarReporteReferencia(){
+        $oAD2 = new AccesoDatos2();
+        $sQuery = "";
+        $rst = null;
+        $vObj = null;
+        $i = 0;
+        $oReporte = null;
+        if($this->getSir60()->getReferencia() == ""){
+            throw new Exception("ReportePrevio->buscarReportePrevio(): error, faltan datos");
+        }else{
+            $sQuery = "EXEC [Previos].[dbo].reportePartidas '".$this->getSir60()->getReferencia()."';";
+            $rst = $oAD2->ejecutaQuery($sQuery);
+            $oAD2->Desconecta();
+            if ($rst){
+                foreach ($rst as $vRow){
+                    $oReporte = new ReportePrevio();
+                    $oReporte->setSir52(new Facturas());
+                    $oReporte->getSir52()->setNumero($vRow[0]);
+                    $oReporte->getSir52()->setItem($vRow[1]);
+                    $oReporte->setCant($vRow[2]);
+                    $oReporte->setCompleta($vRow[3]);
+                    $oReporte->setFaltante($vRow[4]);
+                    $oReporte->setSobrante($vRow[5]);
+                    $oReporte->setPieza($vRow[6]);
+                    $oReporte->setJuego($vRow[7]);
+                    $oReporte->setOtro($vRow[8]);
+                    $oReporte->setOrigen($vRow[9]);
+                    $oReporte->setPesoAprox($vRow[10]);
+                    $oReporte->setObservaciones($vRow[11]);
+                    $vObj[$i] = $oReporte;
+                    $i = $i + 1;
+                }
+            }else{
+                $vObj = false;
+            }
+        }
+        return $vObj;
+    }
+
 
 }
