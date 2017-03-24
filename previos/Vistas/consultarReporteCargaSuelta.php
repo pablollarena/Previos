@@ -10,12 +10,12 @@ ini_set("session.gc_maxlifetime","7200");
 include_once ("../Modelos/Menu.php");
 include_once ("../Modelos/Persona.php");
 include_once ("../Modelos/Sir60Referencias.php");
-include_once ("../Modelos/ReportePrevio.php");
+include_once ("../Modelos/Sir76Contenedores.php");
 session_start();
 $oMenu = new Menu();
 $oPers = new Persona();
 $oRef = new Sir60Referencias();
-$oRep = new ReportePrevio();
+$oRep = new Sir76Contenedores();
 $sErr ="";
 $sNom = "";
 $nGrp = 0;
@@ -36,7 +36,7 @@ if(isset($_SESSION['sUser']) && !empty($_SESSION['sUser'])){
         $sErr = "Error en el menú";
     }
 
-    $arrRef = $oRep->buscarReferencias();
+    $arrRef = $oRep->buscarReferenciaCargaSuelta();
 
 }else{
     $sErr = "Faltan datos de Sesión";
@@ -173,7 +173,7 @@ if($sErr != ""){
                 <div class="row">
                     <div class="col-md-12 col-sm-12 col-xs-12">
 
-                        <form id="frmPrevios" action="../Controladores/reportePartida.php" method="post">
+                        <form id="frmPrevios" action="../Controladores/reporteCargaSuelta.php" method="post">
                             <input type="hidden" name="txtRef" />
                             <div class="col-md-12 col-sm-12 col-xs-12">
                                 <div class="x_panel">
@@ -195,9 +195,9 @@ if($sErr != ""){
                                                 foreach ($arrRef as $vRow){
                                                     ?>
                                                     <tr>
-                                                        <td><?php echo $vRow->getSir60()->getReferencia();?></td>
+                                                        <td><?php echo $vRow->getReferencia60()->getReferencia();?></td>
                                                         <td><input type="submit" value="Generar Reporte" class="btn btn-primary"
-                                                                   onclick="txtRef.value='<?php echo $vRow->getSir60()->getReferencia();?>';" /> </td>
+                                                                   onclick="txtRef.value='<?php echo $vRow->getReferencia60()->getReferencia();?>';" /> </td>
                                                     </tr>
                                                     <?php
                                                 }

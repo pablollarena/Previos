@@ -305,10 +305,10 @@ if(isset($_SESSION['sUser']) && !empty($_SESSION['sUser'])){
             $oCarga->getConten()->setTipo($_POST['txtTipo1']);
         }
         $oCarga->getConten()->setIMO($_POST['txtIMO']);
-        $oCarga->getConten()->setBL($_POST['Peso']);
+        $oCarga->getConten()->setBL($_POST['txtBL']);
         $oCarga->getConten()->setSelloOrigen($_POST['txtSellos']);
         $oCarga->getConten()->setSelloColocado($_POST['txtSelloColocado']);
-        $oCarga->getConten()->setPesoCarga($_POST['txtBL']);
+        $oCarga->getConten()->setPesoCarga($_POST['Peso']);
         $oCarga->getConten()->setCantidadBultos($_POST['txtCantiBultos']);
 
         if ($_POST['bDañados'] == 1) {

@@ -677,7 +677,7 @@ if(isset($_POST['txtRef']) && !empty($_POST['txtRef'])){
                                                         <label class="control-label col-md-1 col-sm-1 col-xs-3" >Peso</span>
                                                         </label>
                                                         <div class="col-md-3 col-sm-6 col-xs-12">
-                                                            <input type="text" id="txtBL" name="txtBL" required="required" value="<?php echo $vRow->getConten()->getBL(); ?> " class="form-control col-md-7 col-xs-12" />
+                                                            <input type="text" id="txtBL" name="txtBL" required="required" value="<?php echo $vRow->getConten()->getPeso(); ?> " class="form-control col-md-7 col-xs-12" />
                                                         </div>
                                                         <label class="control-label col-md-1 col-sm-4 col-xs-12">IMO: <?php echo ($vRow->getConten()->getIMO() == 1 ? 'SI' : 'NO');?> </label>
                                                         <div class="col-md-3 col-sm-3 col-xs-12">
@@ -700,7 +700,7 @@ if(isset($_POST['txtRef']) && !empty($_POST['txtRef'])){
                                                         </label>
                                                         <div class="col-md-3 col-sm-6 col-xs-12">
                                                             <input type="text" id="Peso" name="Peso" required="required" class="form-control col-md-7 col-xs-12"
-                                                                   value="<?php echo $vRow->getConten()->getPeso(); ?>"  >
+                                                                   value="<?php echo $vRow->getConten()->getBL(); ?>"  >
                                                         </div>
                                                     </div>
                                                     <br/>

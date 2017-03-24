@@ -279,12 +279,12 @@ class Sir76Contenedores
         }else{
             if($nTipo == 1){
                 $sQuery = "exec [Previos].[dbo].buscarInfoConten '".$nNumCon."','".$sNumRef."';";
-                //var_dump($sQuery);
+
                 $rst = $oAD2->ejecutaQuery($sQuery);
                 $oAD2->Desconecta();
                 if($rst){
                     $oContenedor = new Contenedor();
-                    $oContenedor->setNumeroContenedor($rst[0][1]);
+                    $oContenedor->setNumeroContenedor($rst[0][0]);
                     $oContenedor->setIMO($rst[0][1]);
                     $oContenedor->setTamaño($rst[0][2]);
                     $oContenedor->setPeso($rst[0][3]);
@@ -316,13 +316,14 @@ class Sir76Contenedores
             }else if($nTipo == 2){
                 $sQuery = "exec [Previos].[dbo].consultarCargaSuelta '".$sNumRef."';";
                 $rst = $oAD2->ejecutaQuery($sQuery);
+                //var_dump($sQuery);
                 $oAD2->Desconecta();
                 if($rst){
                     $oContenedor = new Contenedor();
                     $oContenedor->setSelloOrigen($rst [0][0]);
                     $oContenedor->setSelloColocado($rst [0][1]);
-                    $oContenedor->setPeso($rst[0][2]);
-                    $oContenedor->setBL($rst [0][3]);
+                    $oContenedor->setBL($rst [0][2]);
+                    $oContenedor->setPeso($rst[0][3]);
                     $oContenedor->setIMO($rst[0][4]);
                     $oContenedor->setCantidadBultos($rst [0][5]);
                     $oContenedor->setBultosDañados($rst[0][6]);
@@ -405,6 +406,7 @@ class Sir76Contenedores
                 }
             }else if($nTipo == 2){
                 $sQuery = "exec [Previos].[dbo].consultarMercanciaCS '".$Referencia60."';";
+
                 $rst = $oAD2->ejecutaQuery($sQuery);
                 $oAD2->Desconecta();
                 if($rst){
@@ -762,6 +764,59 @@ class Sir76Contenedores
 
         }
         return $nAfec;
+    }
+
+    function buscarReferenciaCargaContenerizada(){
+        $oAD = new AccesoDatos2();
+        $sQuery = "";
+        $rst = null;
+        $vObj = null;
+        $i = 0;
+        $oRefe = null;
+        $sQuery = "exec [Previos].[dbo].reporteCargaContenerizada;";
+        $rst=$oAD->ejecutaQuery($sQuery);
+        $oAD->Desconecta();
+        if ($rst)
+        {
+            foreach ($rst as $vROw)
+            {
+                $oRefe = new Sir76Contenedores();
+                $oRefe->setReferencia60(new  Sir60Referencias());
+                $oRefe->getReferencia60()->setReferencia($vROw[0]);
+                $vObj[$i] =$oRefe;
+                $i= $i+1;
+            }
+
+        }else{
+            $vObj = false;
+        }
+        return $vObj;
+    }
+    function buscarReferenciaCargaSuelta(){
+        $oAD = new AccesoDatos2();
+        $sQuery = "";
+        $rst = null;
+        $vObj = null;
+        $i = 0;
+        $oRefe = null;
+        $sQuery = "exec [Previos].[dbo].reporteCargaSuelta;";
+        $rst=$oAD->ejecutaQuery($sQuery);
+        $oAD->Desconecta();
+        if ($rst)
+        {
+            foreach ($rst as $vROw)
+            {
+                $oRefe = new Sir76Contenedores();
+                $oRefe->setReferencia60(new  Sir60Referencias());
+                $oRefe->getReferencia60()->setReferencia($vROw[0]);
+                $vObj[$i] =$oRefe;
+                $i= $i+1;
+            }
+
+        }else{
+            $vObj = false;
+        }
+        return $vObj;
     }
 
 }
