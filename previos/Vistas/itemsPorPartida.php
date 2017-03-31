@@ -243,7 +243,7 @@ if($sErr != ""){
                                                                         <table class="table table-bordered">
                                                                             <tbody>
                                                                             <tr>
-                                                                                <td>
+                                                                                <td colspan="1">
                                                                                     <div class="form-group">
                                                                                         <label
                                                                                             class="control-label col-md-4 col-sm-3 col-xs-12">Factura</label>
@@ -258,7 +258,7 @@ if($sErr != ""){
                                                                                         </div>
                                                                                     </div>
                                                                                 </td>
-                                                                                <td>
+                                                                                <td colspan="1">
                                                                                     <div class="form-group">
                                                                                         <label
                                                                                             class="control-label col-md-3 col-sm-3 col-xs-12">Cantidad</label>
@@ -271,12 +271,12 @@ if($sErr != ""){
                                                                                         </div>
                                                                                     </div>
                                                                                 </td>
-                                                                                <td>
+                                                                                <td colspan="3">
                                                                                     <label
                                                                                         class="control-label col-md-3 col-sm-3 col-xs-12">Mercancía</label>
                                                                                     <div
                                                                                         class="col-md-6 col-sm-9 col-xs-12">
-                                                                                        <select name="Mercancia"
+                                                                                        <select name="Mercancia" id="Mercancia<?php echo $nCont;?>"
                                                                                                 class="select2_single form-control"
                                                                                                 tabindex="-1">
                                                                                             <option value="">
@@ -293,10 +293,23 @@ if($sErr != ""){
                                                                                             </option>
                                                                                         </select>
                                                                                     </div>
+                                                                                    <br/><br/><br/>
+                                                                                    <div class="clearfix"></div>
+                                                                                    <div class="form-group">
+                                                                                        <label
+                                                                                                class="control-label col-md-3 col-sm-3 col-xs-12">Cantidad Sobrante</label>
+                                                                                        <div
+                                                                                                class="col-md-6 col-sm-9 col-xs-12">
+                                                                                            <input type="text"
+                                                                                                   class="form-control"
+                                                                                                   name="txtCantidad"
+                                                                                                   id="txtCantidad<?php echo $nCont;?>">
+                                                                                        </div>
+                                                                                    </div>
                                                                                 </td>
                                                                             </tr>
                                                                             <tr>
-                                                                                <td>
+                                                                                <td colspan="1">
                                                                                     <div class="form-group">
                                                                                         <label
                                                                                             class="control-label col-md-4 col-sm-3 col-xs-12">Presentación</label>
@@ -321,7 +334,7 @@ if($sErr != ""){
                                                                                         </div>
                                                                                     </div>
                                                                                 </td>
-                                                                                <td>
+                                                                                <td colspan="2">
                                                                                     <div class="form-group">
                                                                                         <label
                                                                                             class="control-label col-md-3 col-sm-3 col-xs-12">Origen</label>
@@ -334,7 +347,7 @@ if($sErr != ""){
                                                                                         </div>
                                                                                     </div>
                                                                                 </td>
-                                                                                <td>
+                                                                                <td colspan="2">
                                                                                     <div class="form-group">
                                                                                         <label
                                                                                             class="control-label col-md-3 col-sm-3 col-xs-12">Peso
@@ -350,7 +363,7 @@ if($sErr != ""){
                                                                                 </td>
                                                                             </tr>
                                                                             <tr>
-                                                                                <td colspan="3" rowspan="1">
+                                                                                <td colspan="5" rowspan="1">
                                                                                     <div class="form-group">
                                                                                         <label
                                                                                             class="control-label col-md-2 col-sm-3 col-xs-12">Observaciones</label>
@@ -366,7 +379,7 @@ if($sErr != ""){
 
                                                                             </tr>
                                                                             <tr>
-                                                                                <td colspan="3" rowspan="1">
+                                                                                <td colspan="5" rowspan="1">
                                                                                     <div align="center">
                                                                                       <?php
                                                                                       if ($dHab == false){
@@ -401,6 +414,28 @@ if($sErr != ""){
                                                                                     return true;
                                                                                 });
                                                                             });
+                                                                        </script>
+                                                                        <script>
+                                                                            $(document).ready(function () {
+                                                                                $("#txtCantidad<?php echo $nCont;?>").attr({
+                                                                                    disabled : true
+                                                                                });
+                                                                                $("#Mercancia<?php echo $nCont;?>").change(function () {
+                                                                                    if($("#Mercancia<?php echo $nCont;?>").val() == 'SOBR'){
+                                                                                        $("#txtCantidad<?php echo $nCont;?>").attr({
+                                                                                            disabled : false
+                                                                                        });
+                                                                                    }else if($("#Mercancia<?php echo $nCont;?>").val() != 'SOBR'){
+                                                                                        $("#txtCantidad<?php echo $nCont;?>").attr({
+                                                                                            disabled : true
+                                                                                        });
+                                                                                    }else{
+                                                                                        $("#txtCantidad<?php echo $nCont;?>").attr({
+                                                                                            disabled : true
+                                                                                        });
+                                                                                    }
+                                                                                });
+                                                                            })
                                                                         </script>
 
                                                                         <div id="respuesta"></div>

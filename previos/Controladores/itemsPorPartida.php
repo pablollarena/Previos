@@ -30,14 +30,17 @@ if (isset($_SESSION['sUser']) && !empty($_SESSION['sUser'])){
              $oReporte->setCompleta(1);
              $oReporte->setSobrante(0);
              $oReporte->setFaltante(0);
+             $oReporte->setCantidadSobrante(0);
          }else if( $_POST['Mercancia'] == 'FALT'){
              $oReporte->setCompleta(0);
              $oReporte->setSobrante(0);
              $oReporte->setFaltante(1);
+             $oReporte->setCantidadSobrante(0);
          }else if ($_POST['Mercancia'] == 'SOBR'){
              $oReporte->setCompleta(0);
              $oReporte->setSobrante(1);
              $oReporte->setFaltante(0);
+             $oReporte->setCantidadSobrante($_POST['txtCantidad']);
          }
 
 
@@ -57,6 +60,8 @@ if (isset($_SESSION['sUser']) && !empty($_SESSION['sUser'])){
          $oReporte->setOrigen($_POST['txtOrigen']);
          $oReporte->setPesoAprox($_POST['txtPesoAprox']);
          $oReporte->setObservaciones($_POST['txtObservaciones']);
+
+
 
          try{
              if($oReporte->insertarReportePrevio() == 1){

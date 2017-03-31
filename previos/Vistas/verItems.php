@@ -304,10 +304,7 @@ if($sErr != ""){
                                                                                     <div class="form-group">
                                                                                         <label class="control-label col-md-2 col-sm-3 col-xs-12">Observaciones</label>
                                                                                         <div class="col-md-10 col-sm-9 col-xs-12">
-                                                                                            <textarea class="form-control" disabled>
-                                                                                                <?php  echo $vRow->getObservaciones(); ?>
-                                                                                            </textarea>
-
+                                                                                            <textarea class="form-control" disabled><?php  echo $vRow->getObservaciones(); ?></textarea>
                                                                                         </div>
                                                                                     </div>
                                                                                 </td>

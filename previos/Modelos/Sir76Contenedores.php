@@ -819,4 +819,31 @@ class Sir76Contenedores
         return $vObj;
     }
 
+    function buscarConPorRef(){
+        $oAD2 = new AccesoDatos2();
+        $sQuery = "";
+        $vObj = null;
+        $rst = null;
+        $i = 0;
+        $oCon = null;
+        if($this->getReferencia60()->getReferencia() == ""){
+            throw new Exception("Sir76Contenedores->buscarConPorRef(): error, faltan datos");
+        }else{
+            $sQuery = "EXEC [Previos].[dbo].buscarContPorRef '".$this->getReferencia60()->getReferencia()."';";
+            $rst = $oAD2->ejecutaQuery($sQuery);
+            $oAD2->Desconecta();
+            if($rst){
+                foreach ($rst as $vRow){
+                    $oCon = new Sir76Contenedores();
+                    $oCon->setNumero($vRow[0]);
+                    $vObj[$i] = $oCon;
+                    $i = $i + 1;
+                }
+            }else{
+                $vObj = false;
+            }
+        }
+        return $vObj;
+    }
+
 }

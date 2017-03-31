@@ -67,13 +67,13 @@ if (isset($_POST['txtRef1']) && !empty($_POST['txtRef1']) && isset($_POST['txtFa
          $oRep->setPieza(0);
          $oRep->setJuego(1);
          $oRep->getOtro(0);
-         $sCadena = $sCadena.";se modifico la presentaacion a juego";
+         $sCadena = $sCadena.";se modificó la presentación a juego";
      }else if($_POST['presentacion'] == 3)
      {
          $oRep->setPieza(0);
          $oRep->setJuego(0);
          $oRep->getOtro(1);
-         $sCadena = $sCadena.";se modifico la presentaacion a Otro";
+         $sCadena = $sCadena.";se modificó la presentación a Otro";
      }else if($oReporte->getPieza() == 1 and $_POST['presentacion'] == ""){
          $oRep->setPieza(1);
          $oRep->setJuego(0);

@@ -25,10 +25,10 @@ class PDF extends FPDF{
     }
 
     function ImprovedTabla($header,$header2,$header3,$header4,$data){
-        $w = array(2,1,1,1.5,1,1.5,1.5,1,1.3,1.3,1.3,1.3,1,1,1);
-        $x = array(1,1,1.2,1,1,1,1,1,10.5);
-        $y = array(1.2,1.2,1.1,1.2,1.1,1.2,1.2,1.2,1.2,1.1,1.2,1.2,1.2,1.2,1.1,1.1);
-        $z = array(1.2,1,1,1,1,0.8,1,1,1.5,9.2);
+        $w = array(2,1,1,1.5,1,1.7,1.9,1,1.3,1.3,1.3,1.3,1,1,1);
+        $x = array(1,1,1.2,1,1,1,1,1,11.1);
+        $y = array(1.2,1.2,1.1,1.2,1.1,1.2,1.3,1.3,1.2,1.1,1.2,1.3,1.3,1.3,1.1,1.2);
+        $z = array(1.2,1,1,1,1,0.8,1,1,1.5,9.8);
 
         foreach ($data as $vRow){
             $this->Cell(0,0.7,'---------------------------------------------------------------------------------------------------------------------------------------------------------',0,0,'C');
@@ -68,9 +68,11 @@ class PDF extends FPDF{
             $this->Cell($x[5],0.7,$vRow->getConten()->getCuñetes() == 1 ? 'X': '',1,0,'LR');
             $this->Cell($x[6],0.7,$vRow->getConten()->getCont1000L() == 1 ? 'X': '',1,0,'LR');
             $this->Cell($x[7],0.7,$vRow->getConten()->getGranel() == 1 ? 'X': '',1,0,'LR');
-            $this->Cell($x[8],0.7,$vRow->getConten()->getOtros(),1,1);
+            $this->MultiCell($x[8],0.3,$vRow->getConten()->getOtros(),1,1);
 
 
+            $this->Ln();
+            $this->Ln();
             $this->Ln();
 
             for ($k = 0;$k<count($header3);$k++)
@@ -110,7 +112,7 @@ class PDF extends FPDF{
             $this->Cell($z[6],0.7,$vRow->getPrevio()->getEtiquetado() == 1 ? 'X': '',1,0,'LR');
             $this->Cell($z[7],0.7,$vRow->getPrevio()->getSeparacion() == 1 ? 'X': '',1,0,'LR');
             $this->Cell($z[8],0.7,$vRow->getPrevio()->getRevConAutoridad() == 1 ? 'X': '',1,0,'LR');
-            $this->Cell($z[9],0.7,utf8_decode($vRow->getDaño()->getOtros()),1,0,'LR');
+            $this->MultiCell($z[9],0.3,utf8_decode($vRow->getDaño()->getOtros()),1,1);
             $this->Ln();
 
 

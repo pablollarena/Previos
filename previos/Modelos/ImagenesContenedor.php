@@ -78,7 +78,7 @@ class ImagenesContenedor
         if($this->getSir60()->getReferencia() == "" && $this->getSir76()->getNumero() == ""){
             throw new Exception("ImagenesContenedor->buscarImagenesContenedor(): error, faltan datos");
         }else{
-            $sQuery=  "EXEC [Previos].[dbo].buscarImagenesContenedor '".$this->getSir60()->getNumero()."','".$this->getSir76()->getNumero()."';";
+            $sQuery=  "EXEC [Previos].[dbo].buscarImagenesContenedor '".$this->getSir60()->getReferencia()."','".$this->getSir76()->getNumero()."';";
             $rst = $oAD2->ejecutaQuery($sQuery);
             $oAD2->Desconecta();
             if($rst){
@@ -100,7 +100,7 @@ class ImagenesContenedor
         $oAD2 = new AccesoDatos2();
         $sQuery = "";
         $nAfec = 0;
-        if($this->getSir60()->getReferencia() == "" && $this->getSir76()->getNumero() == ""){
+        if($this->getSir60()->getReferencia() == ""){
             throw new Exception("ImagenesContenedor->insertarImagenContenedor(): error, faltan datos");
         }else{
             $sQuery = "EXEC [Previos].[dbo].insertarImagenesContenedor '".$this->getSir60()->getReferencia()."',

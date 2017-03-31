@@ -123,8 +123,20 @@ class Menu
                     'subcategoria' => array(
                         array(
                             'id' => 'consultar2',
-                            'titulo' => 'Consultar Galería',
+                            'titulo' => 'Consultar Galería(Partida)',
                             'enlace' => '../Vistas/consultarGal.php',
+                            'icono'  => 'fa fa-folder'
+                        ),
+                        array(
+                            'id' => 'consultar2',
+                            'titulo' => 'Consultar Galería(Contenedor)',
+                            'enlace' => '../Vistas/consultarGalCon.php',
+                            'icono'  => 'fa fa-folder'
+                        ),
+                        array(
+                            'id' => 'consultar2',
+                            'titulo' => 'Consultar Galería(Sobrantes)',
+                            'enlace' => '../Vistas/consultarGalSobrantes.php',
                             'icono'  => 'fa fa-folder'
                         )
                     ),

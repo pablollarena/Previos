@@ -240,7 +240,7 @@ if($sErr != ""){
                                                                                         </div>
                                                                                     </div>
                                                                                 </td>
-                                                                                <td>
+                                                                                <td bgcolor="<?php echo $vRow->getSobrante() == 1 ? '#ffd700' : '';?>">
 
 
                                                                                     <div class="col-md-4 col-sm-9 col-xs-12">
@@ -256,13 +256,14 @@ if($sErr != ""){
                                                                                         }else if($vRow->getSobrante() == 1){
                                                                                             ?>
                                                                                             <label class="control-label col-md-2 col-sm-3 col-xs-12">Mercancía: Sobrante  </label>
+
                                                                                             <?php
                                                                                         }
                                                                                         ?>
 
                                                                                     </div>
                                                                                     <div class="col-md-7 col-sm-9 col-xs-12">
-                                                                                        <select class="form-control" name="mercancia" id="mercancia">
+                                                                                        <select class="form-control" name="mercancia" id="mercancia" disabled>
                                                                                             <option value="">Seleccione</option>
                                                                                             <option value="1">Completa</option>
                                                                                             <option value="2">Faltante</option>
@@ -324,9 +325,7 @@ if($sErr != ""){
                                                                                     <div class="form-group">
                                                                                         <label class="control-label col-md-2 col-sm-3 col-xs-12">Observaciones: <b>Nota: No borrar Observaciones, solo agregar debajo de lo ya escrito. </b></label>
                                                                                         <div class="col-md-10 col-sm-9 col-xs-12">
-                                                                                            <textarea class="form-control" rows="8"  name="observaciones">
-                                                                                                <?php  echo $vRow->getObservaciones(); ?>
-                                                                                            </textarea>
+                                                                                            <textarea class="form-control" rows="8"  name="observaciones" wrap="hard"><?php  echo $vRow->getObservaciones(); ?></textarea>
 
                                                                                         </div>
                                                                                     </div>

@@ -26,6 +26,19 @@ class ReportePrevio
     private $sOrigen = "";
     private $nPesoAprox = 0;
     private $sObservaciones = "";
+    private $nCantidadSobrante = 0;
+
+
+    public function getCantidadSobrante()
+    {
+        return $this->nCantidadSobrante;
+    }
+
+
+    public function setCantidadSobrante($nCantidadSobrante)
+    {
+        $this->nCantidadSobrante = $nCantidadSobrante;
+    }
 
 
     public function getAD()
@@ -217,7 +230,8 @@ class ReportePrevio
              ".$this->getOtro().",
              '".$this->getOrigen()."',
              ".$this->getPesoAprox().",
-             '".$this->getObservaciones()."';";
+             '".$this->getObservaciones()."',
+             ".$this->getCantidadSobrante().";";
 
             $nAfec = $oAD->ejecutaComando($sQuery);
             $oAD->Desconecta();
@@ -398,6 +412,7 @@ class ReportePrevio
                     $oReporte->setOrigen($vRow[9]);
                     $oReporte->setPesoAprox($vRow[10]);
                     $oReporte->setObservaciones($vRow[11]);
+                    $oReporte->setCantidadSobrante($vRow[12]);
                     $vObj[$i] = $oReporte;
                     $i = $i + 1;
                 }

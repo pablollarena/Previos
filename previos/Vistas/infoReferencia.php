@@ -40,16 +40,46 @@ if(isset($_SESSION['sUser']) && !empty($_SESSION['sUser'])){
     $oObservacion->setSir60(new Sir60Referencias());
     $oObservacion->getSir60()->setReferencia($_POST['txtRef']);
 
-    if($oObservacion->validaReferencia() == true){
-        $bBandera = true;
-        $arrObservacion = $oObservacion->buscarTodosObser();
-        $oContededor->setReferencia60(new Sir60Referencias());
-        $oContededor->getReferencia60()->setReferencia($sRef);
-        $arrConte = $oContededor->buscarContenedoresPorRef();
-    }else{
-        $arrConte = null;
-        $arrObservacion = null;
+
+    if(isset($_POST['txtRef']) && !empty($_POST['txtRef'])){
+        if($oObservacion->validaReferencia() == true){
+            $bBandera = true;
+            $arrObservacion = $oObservacion->buscarTodosObser();
+            $oContededor->setReferencia60(new Sir60Referencias());
+            $oContededor->getReferencia60()->setReferencia($sRef);
+            $arrConte = $oContededor->buscarContenedoresPorRef();
+            setcookie('cCliente',$sCliente,time()+60*30);
+            setcookie('cFecha',$dFecha,time()+60*30);
+            setcookie('cRecinto',$sRecinto,time()+60*30);
+            setcookie('cRef',$sRef,time()+60*30);
+            $_SESSION['sConten'] = $oContededor;
+        }else{
+            $arrConte = null;
+            $arrObservacion = null;
+        }
+    }else if(isset($_SESSION['sConten']) && !empty($_SESSION['sConten'])){
+        $oCon = $_SESSION['sConten'];
+        $sRef1 = $oCon->getReferencia60()->getReferencia();
+        $oObservacion->setSir60(new Sir60Referencias());
+        $oObservacion->getSir60()->setReferencia($sRef1);
+        $sRef = $_COOKIE['cRef'];
+        $sCliente = $_COOKIE['cCliente'];
+        $dFecha = $_COOKIE['cFecha'];
+        $sRecinto = $_COOKIE['cRecinto'];
+        if($oObservacion->validaReferencia() == true){
+            $bBandera = true;
+            $arrObservacion = $oObservacion->buscarTodosObser();
+            $oContededor->setReferencia60(new Sir60Referencias());
+            $oContededor->getReferencia60()->setReferencia($sRef1);
+            $arrConte = $oContededor->buscarContenedoresPorRef();
+            $nMsj = 1;
+        }else{
+            $arrConte = null;
+            $arrObservacion = null;
+            $nMsj = 0;
+        }
     }
+
 
     $nCon = 0;
     if($oPers->getReferen() == 1){
@@ -338,7 +368,7 @@ if($sErr != ""){
                                             $bHab = false;
                                             if($arrConte != null){
                                                 foreach ($arrConte as $vRow){
-                                                    $bHab = $oContededor->validaContenedor($sRef, $vRow->getNumero());
+                                                    $bHab = $oContededor->validaContenedor($sRef != "" ? $sRef : $sRef1, $vRow->getNumero());
 
                                                     ?>
                                                     <div class="x_content">
@@ -892,6 +922,32 @@ if($sErr != ""){
                                                                 </div>
                                                             </div>
                                                         </form>
+                                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#m<?php echo $nCon;?>">Cargar Fotos del Contenedor</button>
+                                                        <div class="modal fade bs-example-modal-2g" id="m<?php echo $nCon;?>" tabindex="-1" role="dialog" aria-hidden="true">
+                                                            <form action="../Controladores/cargaFotosConten.php" method="post" enctype="multipart/form-data">
+                                                                <input type="hidden" name="txtnRef" value="<?php echo  $sRef != "" ? $sRef : $sRef1;?>">
+                                                                <input type="hidden" name="txtCont" value="<?php echo $vRow->getNumero();?>">
+                                                                <div class="modal-dialog modal-lg">
+                                                                    <div class="modal-content">
+
+                                                                        <div class="modal-header">
+                                                                            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
+                                                                            </button>
+                                                                            <h4 class="modal-title" id="myModalLabel">Selección de Archivos</h4>
+                                                                        </div>
+                                                                        <div class="modal-body">
+                                                                            <input type="file" name="FileImg[]" multiple>
+                                                                        </div>
+                                                                        <div class="modal-footer">
+                                                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                                            <input type="submit"  class="btn btn-primary" value="Guardar" name="btnFotos">
+                                                                        </div>
+
+                                                                    </div>
+                                                                </div>
+
+                                                            </form>
+                                                        </div>
                                                     </div>
                                                     <?php
                                                     $nCon = $nCon + 1;
@@ -1297,6 +1353,26 @@ if($sErr != ""){
                                 ?>
 
 
+                            </div>
+                            <div>
+                                <?php
+                                if($nMsj == 1){
+
+                                    echo " <script src='../../vendors/pnotify/dist/pnotify.js'></script> ";
+                                    echo "<script src='../../vendors/pnotify/dist/pnotify.buttons.js' ></script> ";
+                                    echo "<script src='../../vendors/pnotify/dist/pnotify.nonblock.js' ></script> ";
+                                    echo " <script>
+                                                                            $(document).ready(function() {
+                                                                                new PNotify({
+                                                                                    title: 'Éxito',
+                                                                                    text: 'Información guardada correctamente',
+                                                                                    type: 'success',
+                                                                                    styling: 'bootstrap3'
+                                                                                });
+                                                                            });
+                                                                        </script> ";
+                                }
+                                ?>
                             </div>
                         </div>
 
