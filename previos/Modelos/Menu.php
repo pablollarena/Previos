@@ -76,7 +76,31 @@ class Menu
                             'titulo' => 'Consultar Galería',
                             'enlace' => '../Vistas/consultarGal.php',
                             'icono'  => 'fa fa-folder'
-                        )
+                        ),
+                        array(
+                            'id' => 'consultar2',
+                            'titulo' => 'Consultar Galería(Sobrantes)',
+                            'enlace' => '../Vistas/consultarGalSobrantes.php',
+                            'icono'  => 'fa fa-folder'
+                        ),
+                                array(
+                                    'id' => 'consultar2',
+                                    'titulo' => 'Reportes por Partida',
+                                    'enlace' => '../Vistas/consTodosRef.php',
+                                    'icono'  => 'fa fa-folder'
+                                ),
+                                array(
+                                    'id' => 'consultar2',
+                                    'titulo' => 'Reportes Carga Contenerizada',
+                                    'enlace' => '../Vistas/consultarReporteCargaContenerida.php',
+                                    'icono'  => 'fa fa-folder'
+                                ),
+                                array(
+                                    'id' => 'consultar2',
+                                    'titulo' => 'Reportes Carga Suelta',
+                                    'enlace' => '../Vistas/consultarReporteCargaSuelta.php',
+                                    'icono'  => 'fa fa-folder'
+                                )
                     ),
                     'icon' => 'fa fa-folder'
                 )

@@ -55,7 +55,7 @@ for($i = 0;$i<=count($sObs);$i++){
 }
 
 if($nReg == 1){
-    echo  "ÉXITO";
+    header("Location: ../Vistas/SobrantesPartidas.php");
 }else{
     echo  $sErr;
 }
